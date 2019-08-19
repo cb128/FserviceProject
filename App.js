@@ -12,11 +12,14 @@ import {createAppContainer, createStackNavigator} from 'react-navigation';
 import SplashScreen from 'react-native-splash-screen';
 
 import Login from './src/Login';
-import HomeScreen from './src/HomeScreen';
-import DetailsScreen from './src/DetailScreen';
+import ListCampaign from './src/ListCampaign';
+import DetailCampaign from './src/DetailCampaign';
+import AddingCustomer from './src/AddingCustomer';
+import ListCustomer from './src/ListCustomer';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
+  backgroundColor: '#ffb900',
 };
 
 const RootStack = createStackNavigator(
@@ -28,21 +31,54 @@ const RootStack = createStackNavigator(
         header: null,
       },
     },
-    HomeScreen: {
-      screen: HomeScreen,
+    ListCampaign: {
+      screen: ListCampaign,
       navigationOptions: {
-        title: 'HomeScreen',
+        title: 'Danh Sách Chiến Dịch',
         headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
         headerLeft: null,
       },
     },
-    Details: {
-      screen: DetailsScreen,
+    DetailCampaign: {
+      screen: DetailCampaign,
       navigationOptions: {
-        title: 'DetailScreen',
+        title: 'Thông Tin Chiến Dịch',
         headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       },
     },
+    ListCustomer: {
+      screen: ListCustomer,
+      navigationOptions: {
+        title: 'Danh Sách Khách Hàng',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    AddingCustomer: {
+      screen: AddingCustomer,
+      navigationOptions: {
+        title: 'Thêm Khách Hàng',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+  },
+  {
+    headerLayoutPreset: 'center',
   },
   {
     initialRouteName: 'LoginScreen',

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Platform} from 'react-native';
-import {View, StyleSheet} from 'react-native';
+import {View, Image, StyleSheet} from 'react-native';
 import Form from './Form';
 
 const headerStyle = {
@@ -16,7 +16,13 @@ class Login extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Form type="ĐĂNG NHẬP" />
+        <Image
+          style={{marginTop: 100}}
+          source={require('../src/assets/images/logo_services.png')}
+        />
+        <View style={styles.container}>
+          <Form type="Login" />
+        </View>
       </View>
     );
   }
@@ -25,7 +31,7 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'white',
   },

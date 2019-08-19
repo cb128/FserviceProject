@@ -57,7 +57,7 @@ class Form extends React.Component {
         };
         if (ld.email != null && ld.password != null) {
           if (ld.email === email && ld.password === password) {
-            this.props.navigation.navigate('HomeScreen');
+            this.props.navigation.navigate('ListCampaign');
           } else {
             // eslint-disable-next-line no-alert
             alert('Email and Password does not exist!');
@@ -86,7 +86,7 @@ class Form extends React.Component {
           onChangeText={email => this.setState({email})}
           underlineColorAndroid="rgba(0,0,0,0)"
           placeholder="Email"
-          placeholderTextColor="#002f6c"
+          placeholderTextColor="#000000"
           selectionColor="#fff"
           keyboardType="email-address"
           onSubmitEditing={() => this.password.focus()}
@@ -98,13 +98,13 @@ class Form extends React.Component {
           underlineColorAndroid="rgba(0,0,0,0)"
           placeholder="Password"
           secureTextEntry={true}
-          placeholderTextColor="#002f6c"
+          placeholderTextColor="#000000"
           ref={input => (this.password = input)}
         />
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.saveData}>
-            {this.props.type}
+            {this.props.type === 'Login' ? 'Đăng Nhập' : 'Đăng Ký'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -123,20 +123,20 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: '#002f6c',
+    color: '#000000',
     marginVertical: 10,
   },
   button: {
     width: 300,
-    backgroundColor: '#4f83cc',
+    backgroundColor: '#ffb900',
     borderRadius: 25,
     marginVertical: 10,
     paddingVertical: 12,
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: '500',
-    color: '#ffffff',
+    fontWeight: 'bold',
+    color: '#000000',
     textAlign: 'center',
   },
 });
