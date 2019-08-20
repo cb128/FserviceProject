@@ -39,7 +39,7 @@ class DetailCampaign extends React.Component {
     const {navigate} = this.props.navigation;
     let list = [
       {
-        name: 'Tổng Danh Sách Khách Hàng',
+        name: 'Danh Sách Khách Hàng',
         icon: 'people',
         badgeValue: 100,
         key: 1,
