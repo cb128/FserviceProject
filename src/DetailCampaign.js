@@ -20,15 +20,20 @@ class DetailCampaign extends React.Component {
       title={item.name}
       leftIcon={{name: item.icon}}
       badge={{
-        value: 3,
-        textStyle: {color: 'white'},
+        value: 100,
+        textStyle: {color: 'black'},
+        status: 'warning',
         containerStyle: {alignItems: 'center'},
       }}
-      containerStyle={{borderBottomWidth: 1}}
+      // eslint-disable-next-line react-native/no-inline-styles
+      containerStyle={{
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+      }}
       onPress={() => this.props.navigation.navigate('ListCustomer')}
     />
   );
-
   componentDidMount() {
     this.getDetailCampaign();
   }
@@ -36,7 +41,6 @@ class DetailCampaign extends React.Component {
   getDetailCampaign = () => {};
 
   render() {
-    const {navigate} = this.props.navigation;
     let list = [
       {
         name: 'Danh Sách Khách Hàng',
@@ -70,7 +74,8 @@ class DetailCampaign extends React.Component {
       },
     ];
     return (
-      <View>
+      // eslint-disable-next-line react-native/no-inline-styles
+      <View style={{flex: 1, backgroundColor: '#e6e8ee'}}>
         <FlatList
           keyExtractor={this.keyExtractor}
           data={list}

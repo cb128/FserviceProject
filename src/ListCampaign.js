@@ -22,7 +22,12 @@ class ListCampaign extends React.Component {
       title={item.name}
       leftIcon={<Icon name={'record-voice-over'} />}
       rightIcon={<Icon name={'chevron-right'} />}
-      containerStyle={{borderBottomWidth: 1}}
+      // eslint-disable-next-line react-native/no-inline-styles
+      containerStyle={{
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+      }}
       onPress={() => this.props.navigation.navigate('DetailCampaign')}
     />
   );
@@ -53,7 +58,7 @@ class ListCampaign extends React.Component {
       },
     ];
     return (
-      <View>
+      <View style={styles.container}>
         <FlatList
           keyExtractor={this.keyExtractor}
           data={list}
@@ -67,8 +72,7 @@ class ListCampaign extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#e6e8ee',
   },
   inputBox: {
     width: 300,

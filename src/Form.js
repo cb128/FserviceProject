@@ -1,5 +1,9 @@
 import React from 'react';
-import {withNavigation} from 'react-navigation';
+import {
+  withNavigation,
+  StackActions,
+  NavigationActions,
+} from 'react-navigation';
 import {
   View,
   Text,
@@ -9,6 +13,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+
+const resetAction = StackActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({routeName: 'ListCampaign'})],
+});
 
 class Form extends React.Component {
   constructor(props) {
@@ -57,7 +66,7 @@ class Form extends React.Component {
         };
         if (ld.email != null && ld.password != null) {
           if (ld.email === email && ld.password === password) {
-            this.props.navigation.navigate('ListCampaign');
+            this.props.navigation.dispatch(resetAction);
           } else {
             // eslint-disable-next-line no-alert
             alert('Email and Password does not exist!');
