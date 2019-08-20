@@ -19,6 +19,8 @@ class ListCustomer extends React.Component {
       <Icon
         name="person-add"
         color="black"
+        // eslint-disable-next-line react-native/no-inline-styles
+        iconStyle={{marginRight: 15}}
         onPress={() => {
           navigation.navigate('AddingCustomer');
         }}
