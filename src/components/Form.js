@@ -57,7 +57,7 @@ class Form extends React.Component {
         };
         if (ld.email != null && ld.password != null) {
           if (ld.email === email && ld.password === password) {
-            this.props.navigation.navigate('ListCampaign');
+            this.props.navigation.navigate('App');
           } else {
             // eslint-disable-next-line no-alert
             alert('Email and Password does not exist!');

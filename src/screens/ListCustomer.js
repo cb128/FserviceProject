@@ -14,7 +14,6 @@ class ListCustomer extends React.Component {
   }
 
   static navigationOptions = ({navigation, screenProps}) => ({
-    title: 'My Profile!',
     headerRight: (
       <Icon
         name="person-add"
