@@ -5,7 +5,6 @@ import {ListItem, Icon} from 'react-native-elements';
 
 class AddingCustomer extends React.Component {
   static navigationOptions = ({navigation, screenProps}) => ({
-    title: 'My Profile!',
     headerRight: (
       <TouchableOpacity
         style={{backgroundColor: '#ffb900', marginRight: 15}}
