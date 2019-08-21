@@ -21,6 +21,7 @@ class ListCampaign extends React.Component {
         name="exit-to-app"
         color="black"
         // eslint-disable-next-line react-native/no-inline-styles
+        underlayColor="#ffb900"
         iconStyle={{marginRight: 15}}
         onPress={() => {
           navigation.navigate('Auth');
