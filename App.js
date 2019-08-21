@@ -26,53 +26,58 @@ const headerStyle = {
   backgroundColor: '#ffb900',
 };
 
-const AppStack = createStackNavigator({
-  ListCampaign: {
-    screen: ListCampaign,
-    navigationOptions: {
-      title: 'Danh Sách Chiến Dịch',
-      headerStyle,
-      headerTintColor: '#000',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-      headerLeft: null,
-    },
-  },
-  DetailCampaign: {
-    screen: DetailCampaign,
-    navigationOptions: {
-      title: 'Thông Tin Chiến Dịch',
-      headerStyle,
-      headerTintColor: '#000',
-      headerTitleStyle: {
-        fontWeight: 'bold',
+const AppStack = createStackNavigator(
+  {
+    ListCampaign: {
+      screen: ListCampaign,
+      navigationOptions: {
+        title: 'Danh Sách Chiến Dịch',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        headerLeft: null,
       },
     },
-  },
-  ListCustomer: {
-    screen: ListCustomer,
-    navigationOptions: {
-      title: 'Danh Sách Khách Hàng',
-      headerStyle,
-      headerTintColor: '#000',
-      headerTitleStyle: {
-        fontWeight: 'bold',
+    DetailCampaign: {
+      screen: DetailCampaign,
+      navigationOptions: {
+        title: 'Thông Tin Chiến Dịch',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    ListCustomer: {
+      screen: ListCustomer,
+      navigationOptions: {
+        title: 'Danh Sách Khách Hàng',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    AddingCustomer: {
+      screen: AddingCustomer,
+      navigationOptions: {
+        title: 'Thêm Khách Hàng',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       },
     },
   },
-  AddingCustomer: {
-    screen: AddingCustomer,
-    navigationOptions: {
-      title: 'Thêm Khách Hàng',
-      headerStyle,
-      headerTintColor: '#000',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    },
+  {
+    headerLayoutPreset: 'center',
   },
-});
+);
 
 const AuthStack = createStackNavigator({
   LoginScreen: {
