@@ -8,7 +8,7 @@ class AddingCustomer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedIndex: 1,
+      selectedIndex: 0,
     };
   }
 
@@ -24,7 +24,12 @@ class AddingCustomer extends React.Component {
     ),
   });
 
-  handleIndexChange() {}
+  handleIndexChange = index => {
+    this.setState({
+      ...this.state,
+      selectedIndex: index,
+    });
+  };
 
   render() {
     return (
