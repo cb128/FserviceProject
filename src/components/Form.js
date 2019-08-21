@@ -1,5 +1,6 @@
 import React from 'react';
 import {withNavigation} from 'react-navigation';
+import {loginApp} from '../api/ApiHelpers';
 import {
   View,
   Text,
@@ -49,20 +50,18 @@ class Form extends React.Component {
       this.login();
     } else if (this.props.type === 'Login') {
       try {
-        // let loginValue = await AsyncStorage.getItem('loginDetails');
-        // let ld = JSON.parse(loginValue);
-        let ld = {
-          email: 'abc',
-          password: '123',
-        };
-        if (ld.email != null && ld.password != null) {
-          if (ld.email === email && ld.password === password) {
-            this.props.navigation.navigate('App');
-          } else {
-            // eslint-disable-next-line no-alert
-            alert('Email and Password does not exist!');
-          }
-        }
+        loginApp(email, password)
+          .then(responseData => {
+            if (responseData.code === 1) {
+              this.props.navigation.navigate('App');
+            } else {
+              // eslint-disable-next-line no-alert
+              alert('Email and Password does not exist!');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
       } catch (error) {
         // eslint-disable-next-line no-alert
         alert(error);
