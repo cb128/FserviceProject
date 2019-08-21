@@ -111,6 +111,11 @@ class ListCustomer extends React.Component {
   render() {
     return (
       <View>
+        <View style={styles.headerView}>
+          <Text style={styles.headerText}>
+            Chiến dịch FUOFFLINE : 112 khách hàng
+          </Text>
+        </View>
         <SearchBar
           round
           searchIcon={{size: 24}}
@@ -118,6 +123,10 @@ class ListCustomer extends React.Component {
           onClear={text => this.searchFilterFunction('')}
           placeholder="Type Here..."
           value={this.state.search}
+          containerStyle={{backgroundColor: '#ffffff'}}
+          // eslint-disable-next-line react-native/no-inline-styles
+          inputContainerStyle={{backgroundColor: '#e6e6e6'}}
+          lightTheme
         />
         <FlatList
           keyExtractor={this.keyExtractor}
@@ -130,17 +139,19 @@ class ListCustomer extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  headerView: {
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    height: 50,
+  },
+  headerText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginLeft: 20,
+  },
   subtitleView: {
     flexDirection: 'column',
     paddingTop: 5,
-  },
-  ratingImage: {
-    height: 19.21,
-    width: 100,
-  },
-  ratingText: {
-    paddingLeft: 10,
-    color: 'grey',
   },
 });
 

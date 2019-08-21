@@ -50,7 +50,9 @@ class Form extends React.Component {
       this.login();
     } else if (this.props.type === 'Login') {
       try {
-        loginApp(email, password)
+        let emailTest = 'caothangspkt8993@gmail.com';
+        let passwordTest = '12344321';
+        loginApp(emailTest, passwordTest)
           .then(responseData => {
             if (responseData.code === 1) {
               this.props.navigation.navigate('App');
