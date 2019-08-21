@@ -17,7 +17,7 @@ class AddingCustomer extends React.Component {
       <TouchableOpacity
         style={{backgroundColor: '#ffb900', marginRight: 15}}
         onPress={() => navigation.goBack()}>
-        <Text style={{color: 'black', fontWeight: 'bold', fontSize: 16}}>
+        <Text style={{color: 'black', fontWeight: 'bold', fontSize: 18}}>
           Lưu
         </Text>
       </TouchableOpacity>

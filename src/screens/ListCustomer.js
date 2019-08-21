@@ -113,7 +113,7 @@ class ListCustomer extends React.Component {
       <View>
         <View style={styles.headerView}>
           <Text style={styles.headerText}>
-            Chiến dịch FUOFFLINE : 112 khách hàng
+            CHIẾN DỊCH FUOFFLINE : 112 khách hàng
           </Text>
         </View>
         <SearchBar
