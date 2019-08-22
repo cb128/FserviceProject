@@ -1,6 +1,24 @@
 import React from 'react';
-import {View, FlatList, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, FlatList, Alert, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+
+const logoutApp = () => {
+  Alert.alert(
+    'Bạn có muốn thoát ứng dụng không?',
+    '',
+    [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => this.props.navigation.navigate('Auth')},
+    ],
+    {cancelable: false},
+  );
+};
+
+let _this = null;
 
 class ListCampaign extends React.Component {
   constructor(props) {
@@ -15,20 +33,42 @@ class ListCampaign extends React.Component {
     };
   }
 
-  static navigationOptions = ({navigation}) => ({
-    headerRight: (
-      <Icon
-        name="exit-to-app"
-        color="black"
-        // eslint-disable-next-line react-native/no-inline-styles
-        underlayColor="#ffb900"
-        iconStyle={{marginRight: 15}}
-        onPress={() => {
-          navigation.navigate('Auth');
-        }}
-      />
-    ),
-  });
+  _showalert() {
+    Alert.alert(
+      'Bạn có muốn thoát ứng dụng không?',
+      '',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.props.navigation.navigate('Auth');
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  }
+
+  static navigationOptions = ({navigation}) => {
+    const {state} = navigation;
+    return {
+      headerTitle: 'New Task',
+      headerRight: (
+        <Icon
+          name="exit-to-app"
+          color="black"
+          underlayColor="#ffb900"
+          iconStyle={{marginRight: 15}}
+          onPress={() => state.params.handleLogout()}
+        />
+      ),
+    };
+  };
 
   keyExtractor = (item, index) => index.toString();
 
@@ -55,6 +95,7 @@ class ListCampaign extends React.Component {
   );
 
   componentDidMount() {
+    this.props.navigation.setParams({handleLogout: () => this._showalert()});
     this.getListCampaign();
   }
 
