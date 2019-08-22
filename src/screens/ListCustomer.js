@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 
@@ -75,6 +75,13 @@ class ListCustomer extends React.Component {
           <Text style={styles.ratingText}>DOB day</Text>
         </View>
       }
+      rightElement={() => (
+        <View>
+          <TouchableOpacity style={styles.touchOpacity}>
+            <Text style={styles.touchOpacityText}>Cập nhật</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       containerStyle={{borderBottomWidth: 1}}
     />
   );
@@ -152,6 +159,15 @@ const styles = StyleSheet.create({
   subtitleView: {
     flexDirection: 'column',
     paddingTop: 5,
+  },
+  touchOpacity: {
+    width: 80,
+    backgroundColor: '#ffb900',
+  },
+  touchOpacityText: {
+    color: 'black',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 

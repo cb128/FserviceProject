@@ -2,24 +2,6 @@ import React from 'react';
 import {View, FlatList, Alert, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 
-const logoutApp = () => {
-  Alert.alert(
-    'Bạn có muốn thoát ứng dụng không?',
-    '',
-    [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'OK', onPress: () => this.props.navigation.navigate('Auth')},
-    ],
-    {cancelable: false},
-  );
-};
-
-let _this = null;
-
 class ListCampaign extends React.Component {
   constructor(props) {
     super(props);
@@ -57,7 +39,6 @@ class ListCampaign extends React.Component {
   static navigationOptions = ({navigation}) => {
     const {state} = navigation;
     return {
-      headerTitle: 'New Task',
       headerRight: (
         <Icon
           name="exit-to-app"
