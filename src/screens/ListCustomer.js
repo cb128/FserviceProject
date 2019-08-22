@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 
@@ -62,6 +62,7 @@ class ListCustomer extends React.Component {
   renderItem = ({item}) => (
     <ListItem
       title={item.title}
+      titleStyle={{fontWeight: 'bold'}}
       leftAvatar={{
         source: {
           uri:
@@ -77,11 +78,10 @@ class ListCustomer extends React.Component {
       }
       rightElement={() => (
         <View>
-          <TouchableOpacity style={styles.touchOpacity}>
-            <Text style={styles.touchOpacityText}>Cập nhật</Text>
-          </TouchableOpacity>
+          <Icon name="account-edit" type="material-community" size={30} />
         </View>
       )}
+      // eslint-disable-next-line react-native/no-inline-styles
       containerStyle={{borderBottomWidth: 1}}
     />
   );
@@ -119,9 +119,24 @@ class ListCustomer extends React.Component {
     return (
       <View>
         <View style={styles.headerView}>
-          <Text style={styles.headerText}>
-            CHIẾN DỊCH FUOFFLINE : 112 khách hàng
-          </Text>
+          <View style={{justifyContent: 'center', marginRight: 15, flex: 1}}>
+            <Text style={{textAlign: 'right'}}>Chiến dịch</Text>
+            <Text
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'right',
+              }}>
+              FU-OFFLINE
+            </Text>
+          </View>
+          <View style={{justifyContent: 'center', marginLeft: 15, flex: 1}}>
+            <Text style={{textAlign: 'left'}}>Số Khách hàng</Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'left'}}>
+              100
+            </Text>
+          </View>
         </View>
         <SearchBar
           round
@@ -147,9 +162,10 @@ class ListCustomer extends React.Component {
 
 const styles = StyleSheet.create({
   headerView: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#ffb900',
+    flexDirection: 'row',
     justifyContent: 'center',
-    height: 50,
+    height: 100,
   },
   headerText: {
     fontWeight: 'bold',
@@ -159,15 +175,6 @@ const styles = StyleSheet.create({
   subtitleView: {
     flexDirection: 'column',
     paddingTop: 5,
-  },
-  touchOpacity: {
-    width: 80,
-    backgroundColor: '#ffb900',
-  },
-  touchOpacityText: {
-    color: 'black',
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
 });
 
