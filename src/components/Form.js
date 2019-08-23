@@ -90,7 +90,7 @@ class Form extends React.Component {
           placeholderTextColor="#000000"
           selectionColor="#fff"
           keyboardType="email-address"
-          onSubmitEditing={() => this.password.focus()}
+          // onSubmitEditing={() => this.password.focus()}
         />
 
         <TextInput

@@ -2,15 +2,19 @@ import React from 'react';
 import {Platform} from 'react-native';
 import {
   View,
-  ScrollView,
+  KeyboardAvoidingView,
   Image,
   StyleSheet,
   Dimensions,
   Animated,
   Keyboard,
+  TextInput,
+  ScrollView,
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Form from '../components/Form';
+import logo from '../assets/images/logo_services.png';
+import slogan from '../assets/images/img_slogan.png';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
@@ -20,8 +24,10 @@ const window = Dimensions.get('window');
 export const IMAGE_HEIGHT = window.width / 3;
 export const IMAGE_HEIGHT_SMALL = window.width / 7;
 
-export const SLOGAN_HEIGHT = 150;
+export const SLOGAN_HEIGHT = 200;
 export const SLOGAN_HEIGHT_SMALL = 0;
+
+const keyboardVerticalOffset = Platform.OS === 'ios' ? 40 : 0;
 
 class Login extends React.Component {
   constructor(props) {
@@ -32,7 +38,7 @@ class Login extends React.Component {
     this.sloganHeight = new Animated.Value(SLOGAN_HEIGHT);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.keyboardWillShowSub = Keyboard.addListener(
       'keyboardWillShow',
       this.keyboardWillShow,
@@ -87,43 +93,26 @@ class Login extends React.Component {
     headerStyle,
   };
 
+  _scrollToInput(reactNode) {
+    // Add a 'scroll' ref to your ScrollView
+    this.scroll.props.scrollToFocusedInput(reactNode);
+  }
+
   render() {
     return (
-      <Animated.View
-        style={[styles.container, {paddingBottom: this.keyboardHeight}]}>
-        <Animated.Image
-          source={require('../assets/images/logo_services.png')}
-          style={[styles.logo, {height: this.imageHeight}]}
-        />
-        {/* <Image
-          source={require('../assets/images/logo_services.png')}
-          style={styles.logo}
-        /> */}
-        <Form type="Login" />
-        <Animated.Image
-          source={require('../assets/images/img_slogan.png')}
-          style={[
-            {
-              height: 150,
-              marginTop: 50,
-              marginBottom: 0,
-              width: Dimensions.get('window').width,
-            },
-            {height: this.imageHeight},
-          ]}
-        />
-        {/* <Image
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            height: 150,
-            marginTop: 50,
-            marginBottom: 0,
-            width: Dimensions.get('window').width,
-          }}
-          resizeMode="stretch"
-          source={require('../assets/images/img_slogan.png')}
-        /> */}
-      </Animated.View>
+      <KeyboardAwareScrollView style={{flex: 1}}>
+        <ScrollView>
+          <Animated.Image
+            source={logo}
+            style={[styles.logo, {height: this.imageHeight}]}
+          />
+          <Form type="Login" />
+          <Animated.Image
+            source={slogan}
+            style={[styles.slogan, {height: this.imageHeight}]}
+          />
+        </ScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -131,9 +120,9 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
     backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   logo: {
     height: IMAGE_HEIGHT,
@@ -141,6 +130,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     marginTop: 20,
+    alignSelf: 'center',
+  },
+  slogan: {
+    width: Dimensions.get('window').width,
+    height: SLOGAN_HEIGHT,
+    resizeMode: 'stretch',
+    marginTop: 100,
+  },
+  input: {
+    height: 50,
+    backgroundColor: '#fff',
+    marginHorizontal: 10,
+    marginVertical: 5,
+    width: window.width - 30,
+  },
+  register: {
+    marginBottom: 20,
+    width: window.width - 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
+    backgroundColor: '#ffae',
   },
 });
 
