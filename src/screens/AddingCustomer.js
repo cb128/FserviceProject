@@ -8,8 +8,10 @@ import {
   StyleSheet,
 } from 'react-native';
 import {Input, Image} from 'react-native-elements';
+import ImagePicker from 'react-native-image-picker';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
+import cameraImage from '../assets/images/ico_camera.png';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -17,6 +19,10 @@ class AddingCustomer extends React.Component {
     this.state = {
       selectedGenderIndex: 0,
       selectedCategoryIndex: 0,
+      avatarSource: null,
+      avatarPath: {},
+      frontIDPath: {},
+      bottomIDPath: {},
     };
     this.phoneInfos = [
       {id: '1', title: 'TT cuộc gọi', value: ''},
@@ -61,6 +67,7 @@ class AddingCustomer extends React.Component {
     this.categoryInfos = [{id: '1', title: 'Phân loại', value: ''}];
   }
 
+  // Set up navigation bar
   static navigationOptions = ({navigation, screenProps}) => ({
     headerRight: (
       <TouchableOpacity
@@ -73,14 +80,55 @@ class AddingCustomer extends React.Component {
     ),
   });
 
-  updateGenderIndex(selectedGenderIndex) {
-    this.setState({selectedGenderIndex});
-  }
+  // Change state of the button group (segment control in ios)
+  updateGenderIndex = index => {
+    this.setState({
+      ...this.state,
+      selectedGenderIndex: index,
+    });
+  };
 
-  updateCatergoryIndex(selectedCategoryIndex) {
-    this.setState({selectedCategoryIndex});
-  }
+  updateCatergoryIndex = index => {
+    this.setState({
+      ...this.state,
+      selectedCategoryIndex: index,
+    });
+  };
 
+  // Get image from gallery
+  chooseFile = () => {
+    var options = {
+      title: 'Select Image',
+      customButtons: [
+        {name: 'customOptionKey', title: 'Choose Photo from Custom Option'},
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+        alert(response.customButton);
+      } else {
+        let source = response;
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        this.setState({
+          avatarPath: source,
+        });
+      }
+    });
+  };
+
+  // Render item for section list
   renderItem = ({item, index, section}) => {
     const inputLayout = (
       <Input
@@ -90,8 +138,21 @@ class AddingCustomer extends React.Component {
       />
     );
 
+    const {avatarPath} = this.state;
+
     const imageLayout = (
-      <Image source={placeHolderImage} style={styles.imageView} />
+      <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
+        <Image
+          source={avatarPath.uri ? {uri: avatarPath.uri} : placeHolderImage}
+          style={styles.imageView}
+        />
+        <TouchableOpacity onPress={() => this.chooseFile()}>
+          <Image
+            source={cameraImage}
+            style={{width: 25, height: 25, marginLeft: 20}}
+          />
+        </TouchableOpacity>
+      </View>
     );
 
     const {selectedGenderIndex} = this.state;
@@ -111,7 +172,7 @@ class AddingCustomer extends React.Component {
         values={['TSA', 'DSA']}
         tabsContainerStyle={styles.segment}
         selectedIndex={this.state.selectedCategoryIndex}
-        onTabPress={this.pdateCatergoryIndex}
+        onTabPress={this.updateCatergoryIndex}
       />
     );
 
