@@ -68,7 +68,7 @@ class AddingCustomer extends React.Component {
   }
 
   // Set up navigation bar
-  static navigationOptions = ({navigation, screenProps}) => ({
+  static navigationOptions = ({navigation}) => ({
     headerRight: (
       <TouchableOpacity
         style={{backgroundColor: '#ffb900', marginRight: 15}}
@@ -96,7 +96,7 @@ class AddingCustomer extends React.Component {
   };
 
   // Get image from gallery
-  chooseFile = () => {
+  chooseFile = ({item}) => {
     var options = {
       title: 'Select Image',
       customButtons: [
@@ -116,20 +116,31 @@ class AddingCustomer extends React.Component {
         console.log('ImagePicker Error: ', response.error);
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
+        // eslint-disable-next-line no-alert
         alert(response.customButton);
       } else {
         let source = response;
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-        this.setState({
-          avatarPath: source,
-        });
+        if (item.id === '27') {
+          this.setState({
+            avatarPath: source,
+          });
+        } else if (item.id === '28') {
+          this.setState({
+            frontIDPath: source,
+          });
+        } else if (item.id === '29') {
+          this.setState({
+            bottomIDPath: source,
+          });
+        }
       }
     });
   };
 
   // Render item for section list
-  renderItem = ({item, index, section}) => {
+  renderItem = ({item, section}) => {
     const inputLayout = (
       <Input
         style={styles.input}
@@ -138,15 +149,22 @@ class AddingCustomer extends React.Component {
       />
     );
 
-    const {avatarPath} = this.state;
+    let imagePath = {};
+    if (item.id === '27') {
+      imagePath = this.state.avatarPath;
+    } else if (item.id === '28') {
+      imagePath = this.state.frontIDPath;
+    } else if (item.id === '29') {
+      imagePath = this.state.bottomIDPath;
+    }
 
     const imageLayout = (
       <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
         <Image
-          source={avatarPath.uri ? {uri: avatarPath.uri} : placeHolderImage}
+          source={imagePath.uri ? {uri: imagePath.uri} : placeHolderImage}
           style={styles.imageView}
         />
-        <TouchableOpacity onPress={() => this.chooseFile()}>
+        <TouchableOpacity onPress={() => this.chooseFile({item})}>
           <Image
             source={cameraImage}
             style={{width: 25, height: 25, marginLeft: 20}}
@@ -154,9 +172,6 @@ class AddingCustomer extends React.Component {
         </TouchableOpacity>
       </View>
     );
-
-    const {selectedGenderIndex} = this.state;
-    const {selectedCategoryIndex} = this.state;
 
     const genderGroupLayout = (
       <SegmentedControlTab
