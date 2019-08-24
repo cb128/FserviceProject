@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 class ListCustomer extends React.Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class ListCustomer extends React.Component {
         // eslint-disable-next-line react-native/no-inline-styles
         iconStyle={{marginRight: 15}}
         onPress={() => {
-          navigation.navigate('AddingCustomer');
+          navigation.navigate('AddingCustomer', {title: 'Thêm Khách Hàng'});
         }}
       />
     ),
@@ -77,12 +78,22 @@ class ListCustomer extends React.Component {
         </View>
       }
       rightElement={() => (
-        <View>
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate('AddingCustomer', {
+              title: 'Chỉnh Sửa Thông Tin',
+            })
+          }>
           <Icon name="account-edit" type="material-community" size={30} />
-        </View>
+        </TouchableOpacity>
       )}
       // eslint-disable-next-line react-native/no-inline-styles
       containerStyle={{borderBottomWidth: 1}}
+      onPress={() =>
+        this.props.navigation.navigate('AddingCustomer', {
+          title: 'Chỉnh Sửa Thông Tin',
+        })
+      }
     />
   );
 

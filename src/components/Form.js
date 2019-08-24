@@ -49,25 +49,28 @@ class Form extends React.Component {
       );
       this.login();
     } else if (this.props.type === 'Login') {
-      try {
-        let emailTest = 'caothangspkt8993@gmail.com';
-        let passwordTest = '12344321';
-        loginApp(emailTest, passwordTest)
-          .then(responseData => {
-            if (responseData.code === 1) {
-              this.props.navigation.navigate('App');
-            } else {
-              // eslint-disable-next-line no-alert
-              alert('Email and Password does not exist!');
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
-      } catch (error) {
-        // eslint-disable-next-line no-alert
-        alert(error);
-      }
+      this.props.navigation.navigate('App');
+
+      // Temporary disable fetch api
+      // try {
+      //   let emailTest = 'caothangspkt8993@gmail.com';
+      //   let passwordTest = '12344321';
+      //   loginApp(emailTest, passwordTest)
+      //     .then(responseData => {
+      //       if (responseData.code === 1) {
+      //         this.props.navigation.navigate('App');
+      //       } else {
+      //         // eslint-disable-next-line no-alert
+      //         alert('Email and Password does not exist!');
+      //       }
+      //     })
+      //     .catch(error => {
+      //       console.error(error);
+      //     });
+      // } catch (error) {
+      //   // eslint-disable-next-line no-alert
+      //   alert(error);
+      // }
     }
   };
 

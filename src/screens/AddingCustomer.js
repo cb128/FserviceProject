@@ -69,6 +69,7 @@ class AddingCustomer extends React.Component {
 
   // Set up navigation bar
   static navigationOptions = ({navigation}) => ({
+    title: `${navigation.state.params.title}`,
     headerRight: (
       <TouchableOpacity
         style={{backgroundColor: '#ffb900', marginRight: 15}}
@@ -141,14 +142,50 @@ class AddingCustomer extends React.Component {
 
   // Render item for section list
   renderItem = ({item, section}) => {
+    // input style
     const inputLayout = (
       <Input
-        style={styles.input}
+        containerStyle={styles.input}
+        inputStyle={{fontSize: 16}}
         placeholder="Chưa có thông tin"
         onPress={null}
       />
     );
 
+    // selection style
+    const arrayOption = [
+      {id: '1', title: 'Option 1'},
+      {id: '2', title: 'Option 2'},
+      {id: '3', title: 'Option 3'},
+      {id: '4', title: 'Option 4'},
+      {id: '5', title: 'Option 5'},
+      {id: '6', title: 'Option 6'},
+    ];
+    const selectionLayout = (
+      <View>
+        <TouchableOpacity
+          style={{marginRight: 20}}
+          onPress={() =>
+            this.props.navigation.navigate('SelectionScreen', {
+              titleString: item.title,
+              dataItem: arrayOption,
+            })
+          }>
+          <Text
+            style={{
+              marginLeft: 23,
+              marginTop: 10,
+              color: 'gray',
+              fontSize: 16,
+            }}>
+            Chưa có thông tin
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.separator} />
+      </View>
+    );
+
+    // image style
     let imagePath = {};
     if (item.id === '27') {
       imagePath = this.state.avatarPath;
@@ -173,6 +210,7 @@ class AddingCustomer extends React.Component {
       </View>
     );
 
+    // button group type
     const genderGroupLayout = (
       <SegmentedControlTab
         values={['Nam', 'Nữ']}
@@ -192,7 +230,9 @@ class AddingCustomer extends React.Component {
     );
 
     let subView;
-    if (section.index === 1 && item.id === '5') {
+    if (section.index === 0) {
+      subView = selectionLayout;
+    } else if (section.index === 1 && item.id === '5') {
       subView = genderGroupLayout;
     } else if (
       section.index === 1 &&
@@ -241,7 +281,7 @@ class AddingCustomer extends React.Component {
 const styles = StyleSheet.create({
   container: {flex: 1},
   title: {marginLeft: 20, marginTop: 20, fontWeight: 'bold', fontSize: 16},
-  input: {marginLeft: 20},
+  input: {marginLeft: 10},
   segment: {marginLeft: 15, marginRight: 15, marginTop: 15},
   SectionHeaderStyle: {
     fontSize: 17,
@@ -254,6 +294,12 @@ const styles = StyleSheet.create({
     height: 100,
     marginLeft: 20,
     marginTop: 10,
+  },
+  separator: {
+    marginLeft: 20,
+    marginTop: 10,
+    height: 1,
+    backgroundColor: 'gray',
   },
 });
 

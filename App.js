@@ -20,6 +20,7 @@ import ListCampaign from './src/screens/ListCampaign';
 import DetailCampaign from './src/screens/DetailCampaign';
 import AddingCustomer from './src/screens/AddingCustomer';
 import ListCustomer from './src/screens/ListCustomer';
+import SelectionScreen from './src/screens/SelectionScreen';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
@@ -70,7 +71,16 @@ const AppStack = createStackNavigator(
     AddingCustomer: {
       screen: AddingCustomer,
       navigationOptions: {
-        title: 'Thêm Khách Hàng',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    SelectionScreen: {
+      screen: SelectionScreen,
+      navigationOptions: {
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {
