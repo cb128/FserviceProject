@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, FlatList, Alert, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class ListCampaign extends React.Component {
   constructor(props) {
@@ -15,7 +16,7 @@ class ListCampaign extends React.Component {
     };
   }
 
-  _showalert() {
+  showAlert() {
     Alert.alert(
       'Bạn có muốn thoát ứng dụng không?',
       '',
@@ -28,6 +29,7 @@ class ListCampaign extends React.Component {
         {
           text: 'OK',
           onPress: () => {
+            this.removeUserData();
             this.props.navigation.navigate('Auth');
           },
         },
@@ -35,6 +37,12 @@ class ListCampaign extends React.Component {
       {cancelable: false},
     );
   }
+
+  removeUserData = () => {
+    try {
+      AsyncStorage.removeItem('loginDetails');
+    } catch (exception) {}
+  };
 
   static navigationOptions = ({navigation}) => {
     const {state} = navigation;
@@ -75,8 +83,10 @@ class ListCampaign extends React.Component {
     />
   );
 
-  componentDidMount() {
-    this.props.navigation.setParams({handleLogout: () => this._showalert()});
+  async componentDidMount() {
+    this.props.navigation.setParams({
+      handleLogout: () => this.showAlert(),
+    });
     this.getListCampaign();
   }
 

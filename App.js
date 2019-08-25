@@ -15,6 +15,7 @@ import {
 } from 'react-navigation';
 import SplashScreen from 'react-native-splash-screen';
 
+import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import Login from './src/screens/Login';
 import ListCampaign from './src/screens/ListCampaign';
 import DetailCampaign from './src/screens/DetailCampaign';
@@ -107,11 +108,12 @@ const AuthStack = createStackNavigator({
 const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
+      AuthLoading: AuthLoadingScreen,
       App: AppStack,
       Auth: AuthStack,
     },
     {
-      initialRouteName: 'Auth',
+      initialRouteName: 'AuthLoading',
     },
   ),
 );
