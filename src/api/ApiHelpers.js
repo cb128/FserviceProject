@@ -1,13 +1,15 @@
 export const loginApp = (email, password) => {
-  email = email.toLowerCase().trim();
-  password = password.toLowerCase().trim();
-  const URL = `https://cinqsmilevn.homelog.jp/api/mobile_v2/api1?email=${email}&password=${password}`;
-  return fetch(URL, {
+  let formdata = new FormData();
+  formdata.append('function', 'login');
+  formdata.append('username', email);
+  formdata.append('password', password);
+
+  return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
     method: 'POST',
-    dataType: 'jsonp',
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
+      Authorization:
+        'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
     },
+    body: formdata,
   }).then(response => response.json());
 };

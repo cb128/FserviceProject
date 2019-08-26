@@ -20,66 +20,34 @@ class Form extends React.Component {
     };
   }
 
-  saveData = async () => {
+  handleLogin = async () => {
     const {email, password} = this.state;
 
-    //save data with async storage
-    let loginDetails = {
-      email: email,
-      password: password,
-    };
-
-    if (this.props.type !== 'Login') {
-      try {
-        await AsyncStorage.setItem(
-          'loginDetails',
-          JSON.stringify(loginDetails),
-        );
-      } catch (e) {
-        // saving error
-      }
-
-      Keyboard.dismiss();
+    try {
+      loginApp(email, password)
+        .then(responseData => {
+          if (responseData && responseData.MaNguoiDung) {
+            // Save local data
+            let loginDetails = {
+              email: email,
+              password: password,
+              userID: responseData.MaNguoiDung,
+            };
+            AsyncStorage.setItem('loginDetails', JSON.stringify(loginDetails));
+            // Navigate App stack
+            this.props.navigation.navigate('App');
+          } else {
+            // eslint-disable-next-line no-alert
+            alert('Tài khoản không hợp lệ!');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    } catch (error) {
       // eslint-disable-next-line no-alert
-      alert(
-        'You successfully registered. Email: ' +
-          email +
-          ' password: ' +
-          password,
-      );
-      this.login();
-    } else if (this.props.type === 'Login') {
-      this.props.navigation.navigate('App');
-
-      // Temporary disable fetch api
-      // try {
-      //   let emailTest = 'caothangspkt8993@gmail.com';
-      //   let passwordTest = '12344321';
-      //   loginApp(emailTest, passwordTest)
-      //     .then(responseData => {
-      //       if (responseData.code === 1) {
-      //         this.props.navigation.navigate('App');
-      //       } else {
-      //         // eslint-disable-next-line no-alert
-      //         alert('Email and Password does not exist!');
-      //       }
-      //     })
-      //     .catch(error => {
-      //       console.error(error);
-      //     });
-      // } catch (error) {
-      //   // eslint-disable-next-line no-alert
-      //   alert(error);
-      // }
+      alert(error);
     }
-  };
-
-  showData = async () => {
-    let loginDetails = await AsyncStorage.getItem('loginDetails');
-    let ld = JSON.parse(loginDetails);
-
-    // eslint-disable-next-line no-alert
-    alert('email:' + ld.email + ' ' + 'password:' + ld.password);
   };
 
   render() {
@@ -89,7 +57,7 @@ class Form extends React.Component {
           style={styles.inputBox}
           onChangeText={email => this.setState({email})}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Email"
+          placeholder="Tên đăng nhập"
           placeholderTextColor="#000000"
           selectionColor="#fff"
           keyboardType="email-address"
@@ -100,14 +68,14 @@ class Form extends React.Component {
           style={styles.inputBox}
           onChangeText={password => this.setState({password})}
           underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Password"
+          placeholder="Mật khẩu"
           secureTextEntry={true}
           placeholderTextColor="#000000"
           ref={input => (this.password = input)}
         />
 
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText} onPress={this.saveData}>
+          <Text style={styles.buttonText} onPress={this.handleLogin}>
             {this.props.type === 'Login' ? 'Đăng Nhập' : 'Đăng Ký'}
           </Text>
         </TouchableOpacity>
