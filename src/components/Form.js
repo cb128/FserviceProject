@@ -22,31 +22,40 @@ class Form extends React.Component {
 
   handleLogin = async () => {
     const {email, password} = this.state;
+    let emailParam = email.toLowerCase().trim();
+    let passwordParam = password.toLowerCase().trim();
 
-    try {
-      loginApp(email, password)
-        .then(responseData => {
-          if (responseData && responseData.MaNguoiDung) {
-            // Save local data
-            let loginDetails = {
-              email: email,
-              password: password,
-              userID: responseData.MaNguoiDung,
-            };
-            AsyncStorage.setItem('loginDetails', JSON.stringify(loginDetails));
-            // Navigate App stack
-            this.props.navigation.navigate('App');
-          } else {
-            // eslint-disable-next-line no-alert
-            alert('Tài khoản không hợp lệ!');
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    } catch (error) {
-      // eslint-disable-next-line no-alert
-      alert(error);
+    if (emailParam === '' && password === '') {
+      alert('Vui lòng nhập đầy đủ thông tin');
+    } else {
+      try {
+        loginApp(emailParam, passwordParam)
+          .then(responseData => {
+            if (responseData && responseData.MaNguoiDung) {
+              // Save local data
+              let loginDetails = {
+                email: email,
+                password: password,
+                userID: responseData.MaNguoiDung,
+              };
+              AsyncStorage.setItem(
+                'loginDetails',
+                JSON.stringify(loginDetails),
+              );
+              // Navigate App stack
+              this.props.navigation.navigate('App');
+            } else {
+              // eslint-disable-next-line no-alert
+              alert('Tài khoản không hợp lệ!');
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      } catch (error) {
+        // eslint-disable-next-line no-alert
+        alert(error);
+      }
     }
   };
 
