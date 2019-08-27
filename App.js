@@ -7,21 +7,24 @@
  */
 
 import React from 'react';
-import {Platform} from 'react-native';
+import {Platform, Dimensions} from 'react-native';
 import {
   createAppContainer,
   createStackNavigator,
   createSwitchNavigator,
+  createDrawerNavigator,
 } from 'react-navigation';
 import SplashScreen from 'react-native-splash-screen';
 
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';
 import Login from './src/screens/Login';
+import CategoryCampaign from './src/screens/CategoryCampaign';
 import ListCampaign from './src/screens/ListCampaign';
 import DetailCampaign from './src/screens/DetailCampaign';
 import AddingCustomer from './src/screens/AddingCustomer';
 import ListCustomer from './src/screens/ListCustomer';
 import SelectionScreen from './src/screens/SelectionScreen';
+import SideMenu from './src/screens/SideMenu';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
@@ -30,16 +33,26 @@ const headerStyle = {
 
 const AppStack = createStackNavigator(
   {
-    ListCampaign: {
-      screen: ListCampaign,
+    CategoryCampaign: {
+      screen: CategoryCampaign,
       navigationOptions: {
-        title: 'Danh Sách Chiến Dịch',
+        title: 'Loại Dự Án',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        headerLeft: null,
+      },
+    },
+    ListCampaign: {
+      screen: ListCampaign,
+      navigationOptions: {
+        title: 'Danh Sách Dự Án',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
       },
     },
     DetailCampaign: {
@@ -95,6 +108,16 @@ const AppStack = createStackNavigator(
   },
 );
 
+const DrawerNavigator = createDrawerNavigator(
+  {
+    AppStack,
+  },
+  {
+    contentComponent: SideMenu,
+    drawerWidth: Dimensions.get('window').width - 120,
+  },
+);
+
 const AuthStack = createStackNavigator({
   LoginScreen: {
     screen: Login,
@@ -109,7 +132,7 @@ const AppContainer = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack,
+      App: DrawerNavigator,
       Auth: AuthStack,
     },
     {

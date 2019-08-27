@@ -1,7 +1,12 @@
 import React from 'react';
-import {View, FlatList, Alert, StyleSheet} from 'react-native';
+import {
+  View,
+  FlatList,
+  Alert,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
-import AsyncStorage from '@react-native-community/async-storage';
 
 class ListCampaign extends React.Component {
   constructor(props) {
@@ -15,49 +20,6 @@ class ListCampaign extends React.Component {
       refreshing: false,
     };
   }
-
-  showAlert() {
-    Alert.alert(
-      'Bạn có muốn thoát ứng dụng không?',
-      '',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'OK',
-          onPress: () => {
-            this.removeUserData();
-            this.props.navigation.navigate('Auth');
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  }
-
-  removeUserData = () => {
-    try {
-      AsyncStorage.removeItem('loginDetails');
-    } catch (exception) {}
-  };
-
-  static navigationOptions = ({navigation}) => {
-    const {state} = navigation;
-    return {
-      headerRight: (
-        <Icon
-          name="exit-to-app"
-          color="black"
-          underlayColor="#ffb900"
-          iconStyle={{marginRight: 15}}
-          onPress={() => state.params.handleLogout()}
-        />
-      ),
-    };
-  };
 
   keyExtractor = (item, index) => index.toString();
 
@@ -84,9 +46,6 @@ class ListCampaign extends React.Component {
   );
 
   async componentDidMount() {
-    this.props.navigation.setParams({
-      handleLogout: () => this.showAlert(),
-    });
     this.getListCampaign();
   }
 
