@@ -24,6 +24,7 @@ import DetailCampaign from './src/screens/DetailCampaign';
 import AddingCustomer from './src/screens/AddingCustomer';
 import ListCustomer from './src/screens/ListCustomer';
 import SelectionScreen from './src/screens/SelectionScreen';
+import ChangePassword from './src/screens/ChangePassword';
 import SideMenu from './src/screens/SideMenu';
 
 const headerStyle = {
@@ -95,6 +96,17 @@ const AppStack = createStackNavigator(
     SelectionScreen: {
       screen: SelectionScreen,
       navigationOptions: {
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    ChangePassword: {
+      screen: ChangePassword,
+      navigationOptions: {
+        title: 'Đổi Mật Khẩu',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {

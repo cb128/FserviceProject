@@ -49,10 +49,11 @@ class SideMenu extends React.Component {
   };
 
   render() {
+    const {navigation} = this.props;
     return (
       <View style={styles.container}>
         <ScrollView>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={styles.headerView}>
             <Image
               source={
                 this.state.avatarPath.uri
@@ -61,7 +62,9 @@ class SideMenu extends React.Component {
               }
               style={styles.imageView}
             />
-            <Text style={{marginLeft: 10}}>Nguyen Van A</Text>
+            <Text style={{marginLeft: 10, fontSize: 20, fontWeight: 'bold'}}>
+              Nguyen Van A
+            </Text>
           </View>
           <View>
             <Text style={styles.sectionHeadingStyle}>Thông tin cá nhân</Text>
@@ -73,7 +76,11 @@ class SideMenu extends React.Component {
           <View>
             <Text style={styles.sectionHeadingStyle}>Cài đặt</Text>
             <View style={styles.navSectionStyle}>
-              <Text style={styles.navItemStyle}>Đổi mật khẩu</Text>
+              <Text
+                style={styles.navItemStyle}
+                onPress={() => navigation.navigate('ChangePassword')}>
+                Đổi mật khẩu
+              </Text>
             </View>
           </View>
         </ScrollView>
@@ -89,16 +96,14 @@ class SideMenu extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
     flex: 1,
   },
   navItemStyle: {
     padding: 10,
   },
-  navSectionStyle: {
-    backgroundColor: 'lightgrey',
-  },
+  navSectionStyle: {},
   sectionHeadingStyle: {
+    backgroundColor: 'lightgrey',
     paddingVertical: 10,
     paddingHorizontal: 5,
   },
@@ -110,8 +115,13 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginLeft: 20,
-    marginTop: 10,
+    marginVertical: 20,
     borderRadius: 50,
+  },
+  headerView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffb900',
   },
 });
 

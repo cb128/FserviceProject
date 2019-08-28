@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   Keyboard,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import InputView from '../components/InputView';
 
 class Form extends React.Component {
   constructor(props) {
@@ -59,28 +61,41 @@ class Form extends React.Component {
     }
   };
 
+  handleEmail = email => {
+    if (email) {
+      this.setState({
+        email: email,
+      });
+    }
+  };
+
+  handlePassword = password => {
+    if (password) {
+      this.setState({
+        password: password,
+      });
+    }
+  };
+
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-          style={styles.inputBox}
-          onChangeText={email => this.setState({email})}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Tên đăng nhập"
-          placeholderTextColor="#000000"
-          selectionColor="#fff"
-          keyboardType="email-address"
-          // onSubmitEditing={() => this.password.focus()}
+        <InputView
+          ref={passwordView => {
+            this.passwordView = passwordView;
+          }}
+          callback={this.handleEmail}
+          label={'Tên Đăng nhập'}
+          isUserName={true}
         />
 
-        <TextInput
-          style={styles.inputBox}
-          onChangeText={password => this.setState({password})}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Mật khẩu"
-          secureTextEntry={true}
-          placeholderTextColor="#000000"
-          ref={input => (this.password = input)}
+        <InputView
+          ref={passwordView => {
+            this.passwordView = passwordView;
+          }}
+          callback={this.handlePassword}
+          label={'Mật khẩu'}
+          isUserName={false}
         />
 
         <TouchableOpacity style={styles.button}>
@@ -108,11 +123,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {
-    width: 300,
     backgroundColor: '#ffb900',
-    borderRadius: 25,
-    marginVertical: 10,
-    paddingVertical: 12,
+    width: Dimensions.get('window').width - 60,
+    marginTop: 30,
+    justifyContent: 'center',
+    height: 50,
+    borderRadius: 5,
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 16,
