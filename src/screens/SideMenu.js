@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import {Image} from 'react-native-elements';
+import {Icon, Image, Divider} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
@@ -66,29 +66,43 @@ class SideMenu extends React.Component {
               Nguyen Van A
             </Text>
           </View>
-          <View>
-            <Text style={styles.sectionHeadingStyle}>Thông tin cá nhân</Text>
-            <View style={styles.navSectionStyle}>
-              <Text style={styles.navItemStyle}>Chức vụ: Leader</Text>
-              <Text style={styles.navItemStyle}>Phòng ban: Sale</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.sectionHeadingStyle}>Cài đặt</Text>
-            <View style={styles.navSectionStyle}>
-              <Text
-                style={styles.navItemStyle}
-                onPress={() => navigation.navigate('ChangePassword')}>
-                Đổi mật khẩu
-              </Text>
-            </View>
-          </View>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('Profile')}>
+            <Icon
+              containerStyle={styles.typeIcon}
+              name="md-person"
+              type="ionicon"
+              size={24}
+            />
+            <Text style={styles.menuText}>Trang Cá Nhân</Text>
+          </TouchableOpacity>
+          <Divider style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('ChangePassword')}>
+            <Icon
+              containerStyle={styles.typeIcon}
+              name="md-settings"
+              type="ionicon"
+              size={24}
+            />
+            <Text style={styles.menuText}>Đổi Mật Khẩu</Text>
+          </TouchableOpacity>
+          <Divider style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => this.showAlert()}>
+            <Icon
+              containerStyle={styles.typeIcon}
+              name="logout"
+              type="material-community"
+              size={24}
+            />
+            <Text style={styles.menuText}>Đổi Mật Khẩu</Text>
+          </TouchableOpacity>
+          <Divider style={styles.separator} />
         </ScrollView>
-        <TouchableOpacity
-          style={styles.footerContainer}
-          onPress={() => this.showAlert()}>
-          <Text>Đăng xuất tài khoản</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -97,19 +111,6 @@ class SideMenu extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  navItemStyle: {
-    padding: 10,
-  },
-  navSectionStyle: {},
-  sectionHeadingStyle: {
-    backgroundColor: 'lightgrey',
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-  },
-  footerContainer: {
-    padding: 20,
-    backgroundColor: 'lightgrey',
   },
   imageView: {
     width: 100,
@@ -122,6 +123,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffb900',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 20,
+    paddingLeft: 15,
+    paddingHorizontal: 5,
+  },
+  typeIcon: {},
+  menuText: {
+    marginLeft: 15,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  separator: {
+    marginVertical: 2,
   },
 });
 

@@ -25,6 +25,7 @@ import AddingCustomer from './src/screens/AddingCustomer';
 import ListCustomer from './src/screens/ListCustomer';
 import SelectionScreen from './src/screens/SelectionScreen';
 import ChangePassword from './src/screens/ChangePassword';
+import Profile from './src/screens/Profile';
 import SideMenu from './src/screens/SideMenu';
 
 const headerStyle = {
@@ -114,6 +115,17 @@ const AppStack = createStackNavigator(
         },
       },
     },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: 'Trang Cá Nhân',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
   },
   {
     headerLayoutPreset: 'center',
@@ -156,6 +168,7 @@ const AppContainer = createAppContainer(
 export default class App extends React.Component {
   componentDidMount() {
     SplashScreen.hide();
+    console.disableYellowBox = true;
   }
 
   render() {
