@@ -119,7 +119,12 @@ const AppStack = createStackNavigator(
       screen: Profile,
       navigationOptions: {
         title: 'Trang Cá Nhân',
-        headerStyle,
+        headerStyle: {
+          marginTop: Platform.OS === 'android' ? 0 : 0,
+          backgroundColor: '#ffb900',
+          elevation: 0,
+          shadowColor: 'transparent',
+        },
         headerTintColor: '#000',
         headerTitleStyle: {
           fontWeight: 'bold',

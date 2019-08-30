@@ -9,8 +9,16 @@ import {
 } from 'react-native';
 import {Icon, Image, Divider} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
-
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
+
+const arrUserData = [
+  {name: 'Nguyen Van A', image: ''},
+  {title: 'Phong Ban', value: 'Kinh Doanh'},
+  {title: 'Chuc Vu', value: 'Leader'},
+  {title: 'Ngay Vao Lam', value: '1/1/2019'},
+  {title: 'Line', value: '111'},
+  {title: 'Don Vi', value: 'CALL CENTER FSERVICES'},
+];
 
 class SideMenu extends React.Component {
   constructor(props) {
@@ -68,7 +76,12 @@ class SideMenu extends React.Component {
           </View>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => navigation.navigate('Profile')}>
+            onPress={() => {
+              navigation.navigate('Profile', {
+                isCumtomer: false,
+                arrayData: arrUserData,
+              });
+            }}>
             <Icon
               containerStyle={styles.typeIcon}
               name="md-person"
