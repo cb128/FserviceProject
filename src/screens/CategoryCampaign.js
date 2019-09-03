@@ -1,13 +1,14 @@
 import React from 'react';
 import {View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+import {getListGroup} from '../api/ApiHelpers';
 
 class CategoryCampaign extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      data: [],
+      dataSource: [],
       page: 1,
       seed: 1,
       error: null,
@@ -31,11 +32,25 @@ class CategoryCampaign extends React.Component {
     };
   };
 
+  componentDidMount() {
+    this.getCategoryList();
+  }
+
+  getCategoryList = async () => {
+    let response = await getListGroup();
+    let responseData = await response.json();
+    if (responseData) {
+      this.setState({
+        dataSource: responseData,
+      });
+    }
+  };
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({item}) => (
     <ListItem
-      title={item.TenSanPham}
+      title={item.TenNhomNganh}
       leftIcon={<Icon name={'record-voice-over'} />}
       rightIcon={<Icon name={'chevron-right'} />}
       // eslint-disable-next-line react-native/no-inline-styles
@@ -51,249 +66,20 @@ class CategoryCampaign extends React.Component {
         shadowOpacity: 0.5,
         elevation: 3,
       }}
-      onPress={() => this.props.navigation.navigate('ListCampaign')}
+      onPress={() =>
+        this.props.navigation.navigate('ListCampaign', {
+          nhomNganhID: item.NhomNganhID,
+        })
+      }
     />
   );
 
-  async componentDidMount() {
-    this.getListCampaign();
-  }
-
-  getListCampaign = () => {};
-
   render() {
-    let list = [
-      {
-        ID: 6,
-        MaSanPham: 'VAY',
-        TenSanPham: 'VAY',
-      },
-      {
-        ID: 7,
-        MaSanPham: 'THE',
-        TenSanPham: 'THE',
-      },
-      {
-        ID: 8,
-        MaSanPham: 'HDD',
-        TenSanPham: 'Hóa Đơn Điện',
-      },
-      {
-        ID: 9,
-        MaSanPham: 'TM',
-        TenSanPham: 'Tiền Mặt',
-      },
-      {
-        ID: 11,
-        MaSanPham: 'BH',
-        TenSanPham: 'Bảo Hiểm',
-      },
-      {
-        ID: 12,
-        MaSanPham: 'TD',
-        TenSanPham: 'Tự Doanh',
-      },
-      {
-        ID: 13,
-        MaSanPham: 'HK&CMND',
-        TenSanPham: 'Hộ Khẩu Và CMND',
-      },
-      {
-        ID: 14,
-        MaSanPham: 'SLM2',
-        TenSanPham: 'SLM2',
-      },
-      {
-        ID: 15,
-        MaSanPham: 'BCH03',
-        TenSanPham: 'BCH03',
-      },
-      {
-        ID: 16,
-        MaSanPham: 'BCH02',
-        TenSanPham: 'BCH02',
-      },
-      {
-        ID: 17,
-        MaSanPham: 'BCBF01',
-        TenSanPham: 'BCBF01',
-      },
-      {
-        ID: 18,
-        MaSanPham: 'BCLI1',
-        TenSanPham: 'BCLI1',
-      },
-      {
-        ID: 19,
-        MaSanPham: 'BCBF02',
-        TenSanPham: 'BCBF02',
-      },
-      {
-        ID: 20,
-        MaSanPham: 'BCL01',
-        TenSanPham: 'BCL01',
-      },
-      {
-        ID: 10,
-        MaSanPham: 'CK',
-        TenSanPham: 'Chuyển Khoản',
-      },
-      {
-        ID: 21,
-        MaSanPham: 'SLLI1',
-        TenSanPham: 'SLLI1',
-      },
-      {
-        ID: 22,
-        MaSanPham: 'SLL1',
-        TenSanPham: 'SLL1',
-      },
-      {
-        ID: 23,
-        MaSanPham: 'SLL2',
-        TenSanPham: 'SLL2',
-      },
-      {
-        ID: 24,
-        MaSanPham: 'SLL3',
-        TenSanPham: 'SLL3',
-      },
-      {
-        ID: 25,
-        MaSanPham: 'BCM01',
-        TenSanPham: 'BCM01',
-      },
-      {
-        ID: 26,
-        MaSanPham: 'BCM02',
-        TenSanPham: 'BCM02',
-      },
-      {
-        ID: 27,
-        MaSanPham: 'SLBF02',
-        TenSanPham: 'SLBF02',
-      },
-      {
-        ID: 28,
-        MaSanPham: 'BCL02',
-        TenSanPham: 'BCL02',
-      },
-      {
-        ID: 29,
-        MaSanPham: 'SCA',
-        TenSanPham: 'SCA',
-      },
-      {
-        ID: 30,
-        MaSanPham: 'SCB',
-        TenSanPham: 'SCB',
-      },
-      {
-        ID: 31,
-        MaSanPham: 'SCHI',
-        TenSanPham: 'SCHI',
-      },
-      {
-        ID: 32,
-        MaSanPham: 'BKAC01',
-        TenSanPham: 'BKAC01',
-      },
-      {
-        ID: 33,
-        MaSanPham: 'BKAC02',
-        TenSanPham: 'BKAC02',
-      },
-      {
-        ID: 34,
-        MaSanPham: 'HCL01',
-        TenSanPham: 'HCL01',
-      },
-      {
-        ID: 35,
-        MaSanPham: 'HCL02',
-        TenSanPham: 'HCL02',
-      },
-      {
-        ID: 36,
-        MaSanPham: 'HCM01',
-        TenSanPham: 'HCM01',
-      },
-      {
-        ID: 37,
-        MaSanPham: 'HCM02',
-        TenSanPham: 'HCM02',
-      },
-      {
-        ID: 38,
-        MaSanPham: 'BF01',
-        TenSanPham: 'BF01',
-      },
-      {
-        ID: 39,
-        MaSanPham: 'BF02',
-        TenSanPham: 'BF02',
-      },
-      {
-        ID: 40,
-        MaSanPham: 'BF03',
-        TenSanPham: 'BF03',
-      },
-      {
-        ID: 41,
-        MaSanPham: 'BF04',
-        TenSanPham: 'BF04',
-      },
-      {
-        ID: 42,
-        MaSanPham: 'LIC01',
-        TenSanPham: 'LIC01',
-      },
-      {
-        ID: 43,
-        MaSanPham: 'LIC02',
-        TenSanPham: 'LIC02',
-      },
-      {
-        ID: 44,
-        MaSanPham: 'LIC03',
-        TenSanPham: 'LIC03',
-      },
-      {
-        ID: 45,
-        MaSanPham: 'MBIL',
-        TenSanPham: 'MBIL',
-      },
-      {
-        ID: 46,
-        MaSanPham: 'THETM',
-        TenSanPham: 'THẺ TIỀN MẶT VIETCREDIT',
-      },
-      {
-        ID: 47,
-        MaSanPham: 'HKDCGP',
-        TenSanPham: 'THE VAY HKD CO GIAY PHEP DKKD',
-      },
-      {
-        ID: 48,
-        MaSanPham: 'KCTTN',
-        TenSanPham: 'THE VAY KHONG CHUNG TU THU NHAP',
-      },
-      {
-        ID: 49,
-        MaSanPham: 'TCTDK',
-        TenSanPham: 'THE VAY KH TCTD KHAC',
-      },
-      {
-        ID: 50,
-        MaSanPham: 'HKDKGP',
-        TenSanPham: 'THE VAY HKD KHONG CO GIAY PHEP DKKD',
-      },
-    ];
     return (
       <View style={styles.container}>
         <FlatList
           keyExtractor={this.keyExtractor}
-          data={list}
+          data={this.state.dataSource}
           renderItem={this.renderItem}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{marginTop: 10}}

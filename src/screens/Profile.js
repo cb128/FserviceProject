@@ -123,6 +123,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 20,
     borderRadius: 50,
+    borderColor: 'black',
+    borderWidth: 1,
   },
   footerContainer: {
     padding: 20,

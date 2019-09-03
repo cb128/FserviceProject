@@ -11,20 +11,12 @@ import {Icon, Image, Divider} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
 
-const arrUserData = [
-  {name: 'Nguyen Van A', image: ''},
-  {title: 'Phong Ban', value: 'Kinh Doanh'},
-  {title: 'Chuc Vu', value: 'Leader'},
-  {title: 'Ngay Vao Lam', value: '1/1/2019'},
-  {title: 'Line', value: '111'},
-  {title: 'Don Vi', value: 'CALL CENTER FSERVICES'},
-];
-
 class SideMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       avatarPath: {},
+      name: '',
     };
   }
 
@@ -50,6 +42,18 @@ class SideMenu extends React.Component {
     );
   }
 
+  getUserData = async () => {
+    let userData;
+    try {
+      const retrievedItem = await AsyncStorage.getItem('loginDetails');
+      userData = JSON.parse(retrievedItem);
+    } catch (exception) {
+      console.log('Error');
+    }
+
+    return userData;
+  };
+
   removeUserData = () => {
     try {
       AsyncStorage.removeItem('loginDetails');
@@ -58,6 +62,26 @@ class SideMenu extends React.Component {
 
   render() {
     const {navigation} = this.props;
+    let localData = this.getUserData();
+    let arrUserData = [];
+    if (localData) {
+      localData.then(data => {
+        this.setState({
+          avatarPath: data.hinh,
+          name: data.hoTen,
+        });
+
+        arrUserData = [
+          {name: data.hoTen, image: data.hinh},
+          {title: 'Phòng Ban', value: data.tenPhongBan},
+          {title: 'Chức Vụ', value: data.tenChucVu},
+          {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
+          {title: 'Line', value: data.line},
+          {title: 'Đơn Vị', value: data.tenDonVi},
+        ];
+      });
+    }
+
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -112,7 +136,7 @@ class SideMenu extends React.Component {
               type="material-community"
               size={24}
             />
-            <Text style={styles.menuText}>Đổi Mật Khẩu</Text>
+            <Text style={styles.menuText}>Đăng xuất</Text>
           </TouchableOpacity>
           <Divider style={styles.separator} />
         </ScrollView>
@@ -131,6 +155,8 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginVertical: 20,
     borderRadius: 50,
+    borderColor: 'black',
+    borderWidth: 1,
   },
   headerView: {
     flexDirection: 'row',

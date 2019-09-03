@@ -31,29 +31,34 @@ class Form extends React.Component {
       alert('Vui lòng nhập đầy đủ thông tin');
     } else {
       try {
-        loginApp(emailParam, passwordParam)
-          .then(responseData => {
-            if (responseData && responseData.MaNguoiDung) {
-              // Save local data
-              let loginDetails = {
-                email: email,
-                password: password,
-                userID: responseData.MaNguoiDung,
-              };
-              AsyncStorage.setItem(
-                'loginDetails',
-                JSON.stringify(loginDetails),
-              );
-              // Navigate App stack
-              this.props.navigation.navigate('App');
-            } else {
-              // eslint-disable-next-line no-alert
-              alert('Tài khoản không hợp lệ!');
-            }
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        let response = await loginApp(emailParam, passwordParam);
+        let responseData = await response.json();
+        if (responseData) {
+          let {PhongBan, ChucVu, DonVi} = responseData;
+
+          let loginDetails = {
+            email: email,
+            password: password,
+            nguoiDungID: responseData.NguoiDungID,
+            maNguoiDung: responseData.MaNguoiDung,
+            hoTen: responseData.HoTen,
+            hinh: responseData.Hinh,
+            tenPhongBan: PhongBan.TenPhongBan,
+            tenChucVu: ChucVu.TenChucVu,
+            line: responseData.Line,
+            tenDonVi: DonVi.TenDonVi,
+            ngayVaoLam: responseData.NgayVaoLam,
+          };
+          await AsyncStorage.setItem(
+            'loginDetails',
+            JSON.stringify(loginDetails),
+          );
+          // Navigate App stack
+          this.props.navigation.navigate('App');
+        } else {
+          // eslint-disable-next-line no-alert
+          alert('Tài khoản không hợp lệ!');
+        }
       } catch (error) {
         // eslint-disable-next-line no-alert
         alert(error);
