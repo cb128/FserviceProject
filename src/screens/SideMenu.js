@@ -15,8 +15,9 @@ class SideMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      avatarPath: {},
+      avatarPath: '',
       name: '',
+      arrUserData: [],
     };
   }
 
@@ -63,22 +64,20 @@ class SideMenu extends React.Component {
   render() {
     const {navigation} = this.props;
     let localData = this.getUserData();
-    let arrUserData = [];
     if (localData) {
       localData.then(data => {
         this.setState({
-          avatarPath: data.hinh,
           name: data.hoTen,
+          avatarPath: data.hinh,
+          arrUserData: [
+            {name: data.hoTen, image: data.hinh},
+            {title: 'Phòng Ban', value: data.tenPhongBan},
+            {title: 'Chức Vụ', value: data.tenChucVu},
+            {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
+            {title: 'Line', value: data.line},
+            {title: 'Đơn Vị', value: data.tenDonVi},
+          ],
         });
-
-        arrUserData = [
-          {name: data.hoTen, image: data.hinh},
-          {title: 'Phòng Ban', value: data.tenPhongBan},
-          {title: 'Chức Vụ', value: data.tenChucVu},
-          {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
-          {title: 'Line', value: data.line},
-          {title: 'Đơn Vị', value: data.tenDonVi},
-        ];
       });
     }
 
@@ -88,14 +87,14 @@ class SideMenu extends React.Component {
           <View style={styles.headerView}>
             <Image
               source={
-                this.state.avatarPath.uri
-                  ? {uri: this.state.avatarPath.uri}
+                this.state.avatarPath
+                  ? {uri: this.state.avatarPath}
                   : placeHolderImage
               }
               style={styles.imageView}
             />
             <Text style={{marginLeft: 10, fontSize: 20, fontWeight: 'bold'}}>
-              Nguyen Van A
+              {this.state.name}
             </Text>
           </View>
           <TouchableOpacity
@@ -103,7 +102,7 @@ class SideMenu extends React.Component {
             onPress={() => {
               navigation.navigate('Profile', {
                 isCumtomer: false,
-                arrayData: arrUserData,
+                arrayData: this.state.arrUserData,
               });
             }}>
             <Icon
