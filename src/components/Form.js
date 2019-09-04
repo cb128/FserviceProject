@@ -4,9 +4,7 @@ import {loginApp} from '../api/ApiHelpers';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
-  Keyboard,
   StyleSheet,
   Dimensions,
 } from 'react-native';
@@ -105,7 +103,7 @@ class Form extends React.Component {
 
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText} onPress={this.handleLogin}>
-            {this.props.type === 'Login' ? 'Đăng Nhập' : 'Đăng Ký'}
+            {this.props.type === 'Login' ? 'ĐĂNG NHẬP' : 'ĐĂNG KÝ'}
           </Text>
         </TouchableOpacity>
       </View>

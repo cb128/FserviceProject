@@ -65,19 +65,8 @@ class CategoryCampaign extends React.Component {
       title={item.TenNhomNganh}
       leftIcon={<Icon name={'record-voice-over'} />}
       rightIcon={<Icon name={'chevron-right'} />}
-      // eslint-disable-next-line react-native/no-inline-styles
-      containerStyle={{
-        marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10,
-        height: 70,
-        borderBottomWidth: 0,
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 5},
-        shadowRadius: 10,
-        shadowOpacity: 0.5,
-        elevation: 3,
-      }}
+      titleStyle={styles.titleStyle}
+      containerStyle={styles.itemStyle}
       onPress={() =>
         this.props.navigation.navigate('ListCampaign', {
           nhomNganhID: item.NhomNganhID,
@@ -112,32 +101,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#e6e8ee',
   },
-  inputBox: {
-    width: 300,
-    backgroundColor: '#eeeeee',
-    borderRadius: 25,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: '#002f6c',
-    marginVertical: 10,
-  },
-  button: {
-    width: 300,
-    backgroundColor: '#ffb900',
-    borderRadius: 25,
-    marginVertical: 10,
-    paddingVertical: 12,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#000000',
-    textAlign: 'center',
-  },
   activityIndicator: {
     position: 'absolute',
     marginLeft: Dimensions.get('window').width / 2 - 10,
     marginTop: Dimensions.get('window').height / 2 - 10,
+  },
+  itemStyle: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    height: 70,
+    borderBottomWidth: 0,
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 5},
+    shadowRadius: 10,
+    shadowOpacity: 0.5,
+    elevation: 3,
+  },
+  titleStyle: {
+    fontWeight: 'bold',
+    fontFamily: 'Roboto',
   },
 });
 
