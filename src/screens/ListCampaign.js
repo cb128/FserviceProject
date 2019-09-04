@@ -24,6 +24,10 @@ class ListCampaign extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.getListCampaign();
+  }
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({item}) => (
@@ -33,13 +37,13 @@ class ListCampaign extends React.Component {
       rightIcon={<Icon name="chevron-right" />}
       titleStyle={styles.titleStyle}
       containerStyle={styles.itemStyle}
-      onPress={() => this.props.navigation.navigate('DetailCampaign')}
+      onPress={this._goToDetaiProject.bind(this)}
     />
   );
 
-  async componentDidMount() {
-    this.getListCampaign();
-  }
+  _goToDetaiProject = () => {
+    this.props.navigation.navigate('DetailCampaign');
+  };
 
   getListCampaign = async () => {
     let nhomNganhID = this.props.navigation.getParam('nhomNganhID', '');
@@ -101,6 +105,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   titleStyle: {
+    fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'Roboto',
   },

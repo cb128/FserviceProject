@@ -21,6 +21,26 @@ class SideMenu extends React.Component {
     };
   }
 
+  componentDidMount() {
+    let localData = this.getUserData();
+    if (localData) {
+      localData.then(data => {
+        this.setState({
+          name: data.hoTen,
+          avatarPath: data.hinh,
+          arrUserData: [
+            {name: data.hoTen, image: data.hinh},
+            {title: 'Phòng Ban', value: data.tenPhongBan},
+            {title: 'Chức Vụ', value: data.tenChucVu},
+            {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
+            {title: 'Line', value: data.line},
+            {title: 'Đơn Vị', value: data.tenDonVi},
+          ],
+        });
+      });
+    }
+  }
+
   showAlert() {
     Alert.alert(
       'Bạn có muốn thoát ứng dụng không?',
@@ -61,26 +81,15 @@ class SideMenu extends React.Component {
     } catch (exception) {}
   };
 
+  _goToProfile = () => {
+    this.props.navigation.navigate('Profile', {
+      isCumtomer: false,
+      arrayData: this.state.arrUserData,
+    });
+  };
+
   render() {
     const {navigation} = this.props;
-    let localData = this.getUserData();
-    if (localData) {
-      localData.then(data => {
-        this.setState({
-          name: data.hoTen,
-          avatarPath: data.hinh,
-          arrUserData: [
-            {name: data.hoTen, image: data.hinh},
-            {title: 'Phòng Ban', value: data.tenPhongBan},
-            {title: 'Chức Vụ', value: data.tenChucVu},
-            {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
-            {title: 'Line', value: data.line},
-            {title: 'Đơn Vị', value: data.tenDonVi},
-          ],
-        });
-      });
-    }
-
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -97,14 +106,7 @@ class SideMenu extends React.Component {
               {this.state.name}
             </Text>
           </View>
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => {
-              navigation.navigate('Profile', {
-                isCumtomer: false,
-                arrayData: this.state.arrUserData,
-              });
-            }}>
+          <TouchableOpacity style={styles.menuItem} onPress={this._goToProfile}>
             <Icon
               containerStyle={styles.typeIcon}
               name="md-person"

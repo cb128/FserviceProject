@@ -67,13 +67,15 @@ class CategoryCampaign extends React.Component {
       rightIcon={<Icon name={'chevron-right'} />}
       titleStyle={styles.titleStyle}
       containerStyle={styles.itemStyle}
-      onPress={() =>
-        this.props.navigation.navigate('ListCampaign', {
-          nhomNganhID: item.NhomNganhID,
-        })
-      }
+      onPress={this._goToListCampaign.bind(this, {item})}
     />
   );
+
+  _goToListCampaign = ({item}) => {
+    this.props.navigation.navigate('ListCampaign', {
+      nhomNganhID: item.NhomNganhID,
+    });
+  };
 
   render() {
     return (

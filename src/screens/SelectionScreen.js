@@ -12,13 +12,18 @@ class SelectionScreen extends React.Component {
   renderItem = ({item}) => {
     return (
       <View>
-        <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+        <TouchableOpacity onPress={this._goBack.bind(this)}>
           <Text style={styles.title}>{item.title}</Text>
         </TouchableOpacity>
         <Divider />
       </View>
     );
   };
+
+  _goBack = () => {
+    this.props.navigation.goBack();
+  };
+
   render() {
     const {navigation} = this.props;
     const dataSource = navigation.getParam('dataItem', {});

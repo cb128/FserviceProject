@@ -89,13 +89,15 @@ class ListCustomer extends React.Component {
       )}
       // eslint-disable-next-line react-native/no-inline-styles
       containerStyle={{borderBottomWidth: 1}}
-      onPress={() =>
-        this.props.navigation.navigate('AddingCustomer', {
-          title: 'Chỉnh Sửa Thông Tin',
-        })
-      }
+      onPress={this._goToUpdateCustomer.bind(this)}
     />
   );
+
+  _goToUpdateCustomer = () => {
+    this.props.navigation.navigate('AddingCustomer', {
+      title: 'Chỉnh Sửa Thông Tin',
+    });
+  };
 
   searchFilterFunction(text) {
     //passing the inserted text in text input

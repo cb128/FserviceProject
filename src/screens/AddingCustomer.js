@@ -13,6 +13,15 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
 import cameraImage from '../assets/images/ico_camera.png';
 
+const arrayOption = [
+  {id: '1', title: 'Option 1'},
+  {id: '2', title: 'Option 2'},
+  {id: '3', title: 'Option 3'},
+  {id: '4', title: 'Option 4'},
+  {id: '5', title: 'Option 5'},
+  {id: '6', title: 'Option 6'},
+];
+
 class AddingCustomer extends React.Component {
   constructor(props) {
     super(props);
@@ -140,6 +149,13 @@ class AddingCustomer extends React.Component {
     });
   };
 
+  _goToSelectionScreen = ({item}) => {
+    this.props.navigation.navigate('SelectionScreen', {
+      titleString: item.title,
+      dataItem: arrayOption,
+    });
+  };
+
   // Render item for section list
   renderItem = ({item, section}) => {
     // input style
@@ -148,29 +164,15 @@ class AddingCustomer extends React.Component {
         containerStyle={styles.input}
         inputStyle={{fontSize: 16}}
         placeholder="Chưa có thông tin"
-        onPress={null}
       />
     );
 
     // selection style
-    const arrayOption = [
-      {id: '1', title: 'Option 1'},
-      {id: '2', title: 'Option 2'},
-      {id: '3', title: 'Option 3'},
-      {id: '4', title: 'Option 4'},
-      {id: '5', title: 'Option 5'},
-      {id: '6', title: 'Option 6'},
-    ];
     const selectionLayout = (
       <View>
         <TouchableOpacity
           style={{marginRight: 20}}
-          onPress={() =>
-            this.props.navigation.navigate('SelectionScreen', {
-              titleString: item.title,
-              dataItem: arrayOption,
-            })
-          }>
+          onPress={this._goToSelectionScreen.bind(this, {item})}>
           <Text
             style={{
               marginLeft: 23,
@@ -201,7 +203,7 @@ class AddingCustomer extends React.Component {
           source={imagePath.uri ? {uri: imagePath.uri} : placeHolderImage}
           style={styles.imageView}
         />
-        <TouchableOpacity onPress={() => this.chooseFile({item})}>
+        <TouchableOpacity onPress={this.chooseFile.bind(this, {item})}>
           <Image
             source={cameraImage}
             style={{width: 25, height: 25, marginLeft: 20}}
