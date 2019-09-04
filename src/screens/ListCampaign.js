@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+import {getListProject} from '../api/ApiHelpers';
 
 class ListCampaign extends React.Component {
   constructor(props) {
@@ -25,9 +26,9 @@ class ListCampaign extends React.Component {
 
   renderItem = ({item}) => (
     <ListItem
-      title={item.name}
-      leftIcon={<Icon name={'record-voice-over'} />}
-      rightIcon={<Icon name={'chevron-right'} />}
+      title={item.TenNhomKhachHang}
+      leftIcon={<Icon name="project" type="octicon" />}
+      rightIcon={<Icon name="chevron-right" />}
       // eslint-disable-next-line react-native/no-inline-styles
       containerStyle={{
         marginTop: 10,
@@ -49,32 +50,23 @@ class ListCampaign extends React.Component {
     this.getListCampaign();
   }
 
-  getListCampaign = () => {};
+  getListCampaign = async () => {
+    let nhomNganhID = this.props.navigation.getParam('nhomNganhID', '');
+    let response = await getListProject(nhomNganhID);
+    let responseData = await response.json();
+    if (responseData) {
+      this.setState({
+        data: responseData,
+      });
+    }
+  };
 
   render() {
-    let list = [
-      {
-        name: 'FUOFFLINE',
-        icon: 'campaign',
-      },
-      {
-        name: 'TPBANK',
-        icon: 'campaign',
-      },
-      {
-        name: 'OCBBANK',
-        icon: 'campaign',
-      },
-      {
-        name: 'ACBBANK',
-        icon: 'campaign',
-      },
-    ];
     return (
       <View style={styles.container}>
         <FlatList
           keyExtractor={this.keyExtractor}
-          data={list}
+          data={this.state.data}
           renderItem={this.renderItem}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{marginTop: 10}}

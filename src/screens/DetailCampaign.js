@@ -1,15 +1,20 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+import {getDetailProject} from '../api/ApiHelpers';
 
 class DetailCampaign extends React.Component {
   constructor(props) {
     super(props);
+
+    const {navigation} = this.props;
+
     this.state = {
       loading: false,
       data: [],
       error: null,
       refreshing: false,
+      projectID: navigation.getParam('nhomNganhID', ''),
     };
   }
 
@@ -42,10 +47,15 @@ class DetailCampaign extends React.Component {
     />
   );
   componentDidMount() {
-    this.getDetailCampaign();
+    // this.getDetailCampaign();
   }
 
-  getDetailCampaign = () => {};
+  getDetailCampaign = async () => {
+    let response = await getDetailProject(this.state.projectID);
+    let responseData = await response.json();
+    if (responseData) {
+    }
+  };
 
   render() {
     let list = [

@@ -60,7 +60,7 @@ const AppStack = createStackNavigator(
     DetailCampaign: {
       screen: DetailCampaign,
       navigationOptions: {
-        title: 'Thông Tin Chiến Dịch',
+        title: 'Thông Tin Dự Án',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {

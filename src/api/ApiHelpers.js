@@ -1,8 +1,18 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 const getUserID = async () => {
-  let retrievedItem = await AsyncStorage.getItem('loginDetails');
-  return JSON.parse(retrievedItem);
+  let userID;
+  try {
+    const retrievedItem = await AsyncStorage.getItem('loginDetails');
+    let userData = JSON.parse(retrievedItem);
+    if (userData) {
+      userID = userData.nguoiDungID;
+    }
+  } catch (exception) {
+    console.log('Error');
+  }
+
+  return userID;
 };
 
 export const loginApp = (email, password) => {
@@ -35,12 +45,33 @@ export const getListGroup = () => {
   });
 };
 
-export const getListProject = nhomNganhID => {
-  let userID = getUserID.then(value => value.maNguoiDung);
+export const getListProject = async nhomNganhID => {
+  let userID;
+
+  await getUserID().then(value => {
+    userID = value;
+  });
   let formdata = new FormData();
   formdata.append('function', 'getListCampaign');
   formdata.append('nguoiDungID', userID);
   formdata.append('nhomNganhID', nhomNganhID);
+
+  return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
+    },
+    body: formdata,
+  });
+};
+
+export const getDetailProject = projectID => {
+  let userID = getUserID().then(value => value.maNguoiDung);
+  let formdata = new FormData();
+  formdata.append('function', 'getDetailCampaign');
+  formdata.append('nguoiDungID', userID);
+  formdata.append('projectID', projectID);
 
   return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
     method: 'POST',
