@@ -61,30 +61,32 @@ class Profile extends React.Component {
   };
 
   renderItem = ({item, index}) => {
-    const headerLayout = (
-      <View style={styles.headerView}>
-        <Image
-          source={item.image ? {uri: item.image} : placeHolderImage}
-          style={styles.imageView}
-        />
-        {this.renderCamera({item})}
-        <Text style={styles.username}>{item.name}</Text>
-      </View>
-    );
-
-    const infoLayout = (
-      <View>
-        <Text style={styles.headerLabel}>{item.title}</Text>
-        <Text style={styles.subLabel}>{item.value}</Text>
-        <Divider style={styles.separator} />
-      </View>
-    );
-
     let tmpLayout;
     if (index === 0) {
-      tmpLayout = headerLayout;
+      // Header layout
+      tmpLayout = (
+        <View style={styles.headerView}>
+          <Image
+            source={
+              item.image && item.image.includes('http')
+                ? {uri: item.image}
+                : placeHolderImage
+            }
+            style={styles.imageView}
+          />
+          {this.renderCamera({item})}
+          <Text style={styles.username}>{item.name}</Text>
+        </View>
+      );
     } else {
-      tmpLayout = infoLayout;
+      // Information layout
+      tmpLayout = (
+        <View>
+          <Text style={styles.headerLabel}>{item.title}</Text>
+          <Text style={styles.subLabel}>{item.value}</Text>
+          <Divider style={styles.separator} />
+        </View>
+      );
     }
 
     return <View>{tmpLayout}</View>;

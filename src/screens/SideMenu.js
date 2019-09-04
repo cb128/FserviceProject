@@ -87,7 +87,7 @@ class SideMenu extends React.Component {
           <View style={styles.headerView}>
             <Image
               source={
-                this.state.avatarPath
+                this.state.avatarPath.includes('http')
                   ? {uri: this.state.avatarPath}
                   : placeHolderImage
               }

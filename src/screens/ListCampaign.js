@@ -1,10 +1,12 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   View,
   FlatList,
   Alert,
   TouchableOpacity,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {getListProject} from '../api/ApiHelpers';
@@ -13,7 +15,7 @@ class ListCampaign extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       data: [],
       page: 1,
       seed: 1,
@@ -57,6 +59,11 @@ class ListCampaign extends React.Component {
     if (responseData) {
       this.setState({
         data: responseData,
+        loading: false,
+      });
+    } else {
+      this.setState({
+        loading: false,
       });
     }
   };
@@ -64,6 +71,12 @@ class ListCampaign extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <ActivityIndicator
+          size="large"
+          color="black"
+          animating={this.state.loading}
+          style={styles.activityIndicator}
+        />
         <FlatList
           keyExtractor={this.keyExtractor}
           data={this.state.data}
@@ -102,6 +115,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000000',
     textAlign: 'center',
+  },
+  activityIndicator: {
+    position: 'absolute',
+    marginLeft: Dimensions.get('window').width / 2 - 10,
+    marginTop: Dimensions.get('window').height / 2 - 10,
   },
 });
 

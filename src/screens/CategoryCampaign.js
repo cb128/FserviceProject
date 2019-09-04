@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {getListGroup} from '../api/ApiHelpers';
 
@@ -7,7 +14,7 @@ class CategoryCampaign extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       dataSource: [],
       page: 1,
       seed: 1,
@@ -42,6 +49,11 @@ class CategoryCampaign extends React.Component {
     if (responseData) {
       this.setState({
         dataSource: responseData,
+        loading: false,
+      });
+    } else {
+      this.setState({
+        loading: false,
       });
     }
   };
@@ -77,6 +89,12 @@ class CategoryCampaign extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <ActivityIndicator
+          size="large"
+          color="black"
+          animating={this.state.loading}
+          style={styles.activityIndicator}
+        />
         <FlatList
           keyExtractor={this.keyExtractor}
           data={this.state.dataSource}
@@ -115,6 +133,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#000000',
     textAlign: 'center',
+  },
+  activityIndicator: {
+    position: 'absolute',
+    marginLeft: Dimensions.get('window').width / 2 - 10,
+    marginTop: Dimensions.get('window').height / 2 - 10,
   },
 });
 
