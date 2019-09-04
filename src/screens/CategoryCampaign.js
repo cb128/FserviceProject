@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+import CategoryListItem from '../components/CategoryListItem';
 import {getListGroup} from '../api/ApiHelpers';
 
 class CategoryCampaign extends React.Component {
@@ -60,22 +61,27 @@ class CategoryCampaign extends React.Component {
 
   keyExtractor = (item, index) => index.toString();
 
-  renderItem = ({item}) => (
-    <ListItem
-      title={item.TenNhomNganh}
-      leftIcon={<Icon name={'record-voice-over'} />}
-      rightIcon={<Icon name={'chevron-right'} />}
-      titleStyle={styles.titleStyle}
-      containerStyle={styles.itemStyle}
-      onPress={this._goToListCampaign.bind(this, {item})}
-    />
-  );
-
-  _goToListCampaign = ({item}) => {
+  _goToListCampaign = item => {
     this.props.navigation.navigate('ListCampaign', {
       nhomNganhID: item.NhomNganhID,
     });
   };
+
+  renderItem = ({item}) => (
+    // <ListItem
+    //   title={item.TenNhomNganh}
+    //   leftIcon={<Icon name={'record-voice-over'} />}
+    //   rightIcon={<Icon name={'chevron-right'} />}
+    //   titleStyle={styles.titleStyle}
+    //   containerStyle={styles.itemStyle}
+    //   onPress={this._goToListCampaign({item})}
+    // />
+    <CategoryListItem
+      key={item.NhomNganhID}
+      category={item}
+      onClick={this._goToListCampaign}
+    />
+  );
 
   render() {
     return (

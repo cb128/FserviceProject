@@ -1,14 +1,11 @@
 import React from 'react';
 import {
-  View,
   Text,
   KeyboardAvoidingView,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
 } from 'react-native';
-import {Image, Input} from 'react-native-elements';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import InputView from '../components/InputView';
 
 class ChangePassword extends React.Component {

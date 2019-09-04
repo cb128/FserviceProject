@@ -12,6 +12,7 @@ import ImagePicker from 'react-native-image-picker';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
 import cameraImage from '../assets/images/ico_camera.png';
+import SelectionViewLayout from '../components/SelectionViewLayout';
 
 const arrayOption = [
   {id: '1', title: 'Option 1'},
@@ -149,7 +150,7 @@ class AddingCustomer extends React.Component {
     });
   };
 
-  _goToSelectionScreen = ({item}) => {
+  _goToSelectionScreen = item => {
     this.props.navigation.navigate('SelectionScreen', {
       titleString: item.title,
       dataItem: arrayOption,
@@ -158,93 +159,69 @@ class AddingCustomer extends React.Component {
 
   // Render item for section list
   renderItem = ({item, section}) => {
-    // input style
-    const inputLayout = (
-      <Input
-        containerStyle={styles.input}
-        inputStyle={{fontSize: 16}}
-        placeholder="Chưa có thông tin"
-      />
-    );
-
-    // selection style
-    const selectionLayout = (
-      <View>
-        <TouchableOpacity
-          style={{marginRight: 20}}
-          onPress={this._goToSelectionScreen.bind(this, {item})}>
-          <Text
-            style={{
-              marginLeft: 23,
-              marginTop: 10,
-              color: 'gray',
-              fontSize: 16,
-            }}>
-            Chưa có thông tin
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.separator} />
-      </View>
-    );
-
-    // image style
-    let imagePath = {};
-    if (item.id === '27') {
-      imagePath = this.state.avatarPath;
-    } else if (item.id === '28') {
-      imagePath = this.state.frontIDPath;
-    } else if (item.id === '29') {
-      imagePath = this.state.bottomIDPath;
-    }
-
-    const imageLayout = (
-      <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
-        <Image
-          source={imagePath.uri ? {uri: imagePath.uri} : placeHolderImage}
-          style={styles.imageView}
-        />
-        <TouchableOpacity onPress={this.chooseFile.bind(this, {item})}>
-          <Image
-            source={cameraImage}
-            style={{width: 25, height: 25, marginLeft: 20}}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-
-    // button group type
-    const genderGroupLayout = (
-      <SegmentedControlTab
-        values={['Nam', 'Nữ']}
-        tabsContainerStyle={styles.segment}
-        selectedIndex={this.state.selectedGenderIndex}
-        onTabPress={this.updateGenderIndex}
-      />
-    );
-
-    const categoryGroupLayout = (
-      <SegmentedControlTab
-        values={['TSA', 'DSA']}
-        tabsContainerStyle={styles.segment}
-        selectedIndex={this.state.selectedCategoryIndex}
-        onTabPress={this.updateCatergoryIndex}
-      />
-    );
-
     let subView;
     if (section.index === 0) {
-      subView = selectionLayout;
+      // Selection layout
+      subView = (
+        <SelectionViewLayout value={item} onClick={this._goToSelectionScreen} />
+      );
     } else if (section.index === 1 && item.id === '5') {
-      subView = genderGroupLayout;
+      // Gender segment
+      subView = (
+        <SegmentedControlTab
+          values={['Nam', 'Nữ']}
+          tabsContainerStyle={styles.segment}
+          selectedIndex={this.state.selectedGenderIndex}
+          onTabPress={this.updateGenderIndex}
+        />
+      );
     } else if (
       section.index === 1 &&
       (item.id === '27' || item.id === '28' || item.id === '29')
     ) {
-      subView = imageLayout;
+      // Case Select file or image
+      let imagePath = {};
+      if (item.id === '27') {
+        imagePath = this.state.avatarPath;
+      } else if (item.id === '28') {
+        imagePath = this.state.frontIDPath;
+      } else if (item.id === '29') {
+        imagePath = this.state.bottomIDPath;
+      }
+
+      subView = (
+        <View style={{flexDirection: 'row', alignItems: 'baseline'}}>
+          <Image
+            source={imagePath.uri ? {uri: imagePath.uri} : placeHolderImage}
+            style={styles.imageView}
+          />
+          <TouchableOpacity onPress={this.chooseFile}>
+            <Image
+              source={cameraImage}
+              style={{width: 25, height: 25, marginLeft: 20}}
+            />
+          </TouchableOpacity>
+        </View>
+      );
     } else if (section.index === 2 && item.id === '1') {
-      subView = categoryGroupLayout;
+      // Category segment
+      subView = (
+        <SegmentedControlTab
+          values={['TSA', 'DSA']}
+          tabsContainerStyle={styles.segment}
+          selectedIndex={this.state.selectedCategoryIndex}
+          onTabPress={this.updateCatergoryIndex}
+        />
+      );
     } else {
-      subView = inputLayout;
+      // Input layout
+      subView = (
+        <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+        />
+      );
     }
 
     return (

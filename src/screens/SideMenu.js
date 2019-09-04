@@ -41,7 +41,7 @@ class SideMenu extends React.Component {
     }
   }
 
-  showAlert() {
+  showAlert = () => {
     Alert.alert(
       'Bạn có muốn thoát ứng dụng không?',
       '',
@@ -61,7 +61,7 @@ class SideMenu extends React.Component {
       ],
       {cancelable: false},
     );
-  }
+  };
 
   getUserData = async () => {
     let userData;
@@ -88,8 +88,11 @@ class SideMenu extends React.Component {
     });
   };
 
+  _goToChangePasswordScreen = () => {
+    this.props.navigation.navigate('ChangePassword');
+  };
+
   render() {
-    const {navigation} = this.props;
     return (
       <View style={styles.container}>
         <ScrollView>
@@ -118,7 +121,7 @@ class SideMenu extends React.Component {
           <Divider style={styles.separator} />
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() => navigation.navigate('ChangePassword')}>
+            onPress={this._goToChangePasswordScreen}>
             <Icon
               containerStyle={styles.typeIcon}
               name="md-settings"
@@ -128,9 +131,7 @@ class SideMenu extends React.Component {
             <Text style={styles.menuText}>Đổi Mật Khẩu</Text>
           </TouchableOpacity>
           <Divider style={styles.separator} />
-          <TouchableOpacity
-            style={styles.menuItem}
-            onPress={() => this.showAlert()}>
+          <TouchableOpacity style={styles.menuItem} onPress={this.showAlert}>
             <Icon
               containerStyle={styles.typeIcon}
               name="logout"

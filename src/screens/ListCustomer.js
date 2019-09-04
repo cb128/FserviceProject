@@ -3,6 +3,8 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import CustomerItem from '../components/CustomerItem';
+import ProjectListItem from '../components/ProjectListItem';
 
 class ListCustomer extends React.Component {
   constructor(props) {
@@ -32,6 +34,10 @@ class ListCustomer extends React.Component {
   });
 
   componentDidMount() {
+    this.getListCustomer();
+  }
+
+  getListCustomer = () => {
     return fetch('https://jsonplaceholder.typicode.com/posts')
       .then(response => response.json())
       .then(responseJson => {
@@ -48,7 +54,7 @@ class ListCustomer extends React.Component {
       .catch(error => {
         console.error(error);
       });
-  }
+  };
 
   search = text => {
     console.log(text);
@@ -58,46 +64,27 @@ class ListCustomer extends React.Component {
     this.search.clear();
   };
 
+  _goToUpdateCustomer = item => {
+    this.props.navigation.navigate('AddingCustomer', {
+      title: 'Chỉnh Sửa Thông Tin',
+      data: item,
+    });
+  };
+
+  _goToCustomerProfile = item => {
+    alert('Go To Profile');
+  };
+
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({item}) => (
-    <ListItem
-      title={item.title}
-      titleStyle={{fontWeight: 'bold'}}
-      leftAvatar={{
-        source: {
-          uri:
-            'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-        },
-      }}
-      subtitle={
-        <View style={styles.subtitleView}>
-          <Text style={styles.ratingText}>Ma khach hang</Text>
-          <Text style={styles.ratingText}>So dien thoai</Text>
-          <Text style={styles.ratingText}>DOB day</Text>
-        </View>
-      }
-      rightElement={() => (
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('AddingCustomer', {
-              title: 'Chỉnh Sửa Thông Tin',
-            })
-          }>
-          <Icon name="account-edit" type="material-community" size={30} />
-        </TouchableOpacity>
-      )}
-      // eslint-disable-next-line react-native/no-inline-styles
-      containerStyle={{borderBottomWidth: 1}}
-      onPress={this._goToUpdateCustomer.bind(this)}
+    <CustomerItem
+      key={item.id}
+      customer={item}
+      goToProfile={this._goToCustomerProfile}
+      editCustomer={this._goToUpdateCustomer}
     />
   );
-
-  _goToUpdateCustomer = () => {
-    this.props.navigation.navigate('AddingCustomer', {
-      title: 'Chỉnh Sửa Thông Tin',
-    });
-  };
 
   searchFilterFunction(text) {
     //passing the inserted text in text input
@@ -114,19 +101,6 @@ class ListCustomer extends React.Component {
       search: text,
     });
   }
-  ListViewItemSeparator = () => {
-    //Item separator view
-    return (
-      <View
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{
-          height: 0.3,
-          width: '90%',
-          backgroundColor: '#080808',
-        }}
-      />
-    );
-  };
 
   render() {
     return (

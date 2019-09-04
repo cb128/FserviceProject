@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
-import {ListItem, Icon} from 'react-native-elements';
+import {ListItem} from 'react-native-elements';
 import {getDetailProject} from '../api/ApiHelpers';
 
 class DetailCampaign extends React.Component {
@@ -43,9 +43,14 @@ class DetailCampaign extends React.Component {
         shadowOpacity: 0.5,
         elevation: 3,
       }}
-      onPress={() => this.props.navigation.navigate('ListCustomer')}
+      onPress={this._goToListCustomer}
     />
   );
+
+  _goToListCustomer = () => {
+    this.props.navigation.navigate('ListCustomer');
+  };
+
   componentDidMount() {
     // this.getDetailCampaign();
   }

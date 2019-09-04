@@ -3,13 +3,12 @@ import {
   ActivityIndicator,
   View,
   FlatList,
-  Alert,
-  TouchableOpacity,
   StyleSheet,
   Dimensions,
 } from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {getListProject} from '../api/ApiHelpers';
+import ProjectListItem from '../components/ProjectListItem';
 
 class ListCampaign extends React.Component {
   constructor(props) {
@@ -31,18 +30,17 @@ class ListCampaign extends React.Component {
   keyExtractor = (item, index) => index.toString();
 
   renderItem = ({item}) => (
-    <ListItem
-      title={item.TenNhomKhachHang}
-      leftIcon={<Icon name="project" type="octicon" />}
-      rightIcon={<Icon name="chevron-right" />}
-      titleStyle={styles.titleStyle}
-      containerStyle={styles.itemStyle}
-      onPress={this._goToDetaiProject.bind(this)}
+    <ProjectListItem
+      key={item.MaNhomKhachHang}
+      project={item}
+      onClick={this._goToDetaiProject}
     />
   );
 
-  _goToDetaiProject = () => {
-    this.props.navigation.navigate('DetailCampaign');
+  _goToDetaiProject = item => {
+    this.props.navigation.navigate('DetailCampaign', {
+      MaNhomKhachHang: item.MaNhomKhachHang,
+    });
   };
 
   getListCampaign = async () => {
