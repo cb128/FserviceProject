@@ -105,9 +105,7 @@ class SideMenu extends React.Component {
               }
               style={styles.imageView}
             />
-            <Text style={{marginLeft: 10, fontSize: 20, fontWeight: 'bold'}}>
-              {this.state.name}
-            </Text>
+            <Text style={styles.username}>{this.state.name}</Text>
           </View>
           <TouchableOpacity style={styles.menuItem} onPress={this._goToProfile}>
             <Icon
@@ -180,6 +178,11 @@ const styles = StyleSheet.create({
   },
   separator: {
     marginVertical: 2,
+  },
+  username: {
+    marginLeft: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 
