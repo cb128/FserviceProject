@@ -1,0 +1,7 @@
+export default {
+  ALL_CUSTOMER: 0,
+  APPOINTMENT: 1,
+  INPROGRESS: 6,
+  DISBURSEMENT: 34,
+  APPROVAL: 54,
+};

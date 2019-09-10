@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
+import { getObjectFromArrayById } from '../ulti';
+import contractStatus from '../constants/contractStatus';
 
 export default class CustomerItem extends React.Component {
   goToProfile = () => {
@@ -13,9 +15,10 @@ export default class CustomerItem extends React.Component {
   };
 
   render() {
+    const currentStatus = getObjectFromArrayById(contractStatus, TrangThaiID, this.props.customer.status);
     return (
       <ListItem
-        title={this.props.customer.title}
+        title={this.props.customer.name}
         titleStyle={{fontWeight: 'bold'}}
         leftAvatar={{
           source: {
@@ -25,10 +28,9 @@ export default class CustomerItem extends React.Component {
         }}
         subtitle={
           <View style={styles.subtitleView}>
-            <Text style={styles.ratingText}>Mã Khách Hàng</Text>
-            <Text style={styles.ratingText}>Số Điện Thoại</Text>
-            <Text style={styles.ratingText}>Ngày Tạo HS</Text>
-            <Text style={styles.ratingText}>Ngày Cập Nhập HS</Text>
+            <Text style={styles.ratingText}>Số Điện Thoại</Text> {this.props.customer.Phone}
+            <Text style={styles.ratingText}>Trạng Thái</Text>  {currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'}
+            <Text style={styles.ratingText}>Ngày Cập Nhập HS</Text> {this.props.customer.lastmodifieddate}
           </View>
         }
         rightElement={() => (

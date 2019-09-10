@@ -5,15 +5,23 @@ import {SearchBar} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomerItem from '../components/CustomerItem';
 import ProjectListItem from '../components/ProjectListItem';
+import { getListCustomerData } from '../api/ApiHelpers';
 
 class ListCustomer extends React.Component {
   constructor(props) {
     super(props);
+
+    const {navigation} = this.props;
+
     this.state = {
+      data: [],
       isLoading: false,
       search: '',
       error: null,
       refreshing: false,
+      projectCode: navigation.getParam('projectCode', ''),
+      projectName: navigation.getParam('projectName', ''),
+      allCustomer: navigation.getParam('allCustomer', ''),
     };
     this.arrayUser = [];
   }
@@ -34,26 +42,36 @@ class ListCustomer extends React.Component {
   });
 
   componentDidMount() {
-    this.getListCustomer();
+    console.log("================= componentDidMount ==============");
+    this._fetchCustomer();
   }
 
-  getListCustomer = () => {
-    return fetch('https://jsonplaceholder.typicode.com/posts')
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState(
-          {
-            isLoading: false,
-            dataSource: responseJson,
-          },
-          function() {
-            this.arrayUser = responseJson;
-          },
-        );
-      })
-      .catch(error => {
-        console.error(error);
+  _fetchCustomer = async () => {
+    console.log("================= _fetchCustomer ==============");
+    let response = await getListCustomerData(this.state.projectCode, 0, 10);
+    console.log("================= getListCustomer ==============");
+    console.log(response);
+    
+    if (response) {
+      const data = [];
+      response.forEach(e => {
+        const cus = {
+          id: e.SupplierID,
+          name: e.SupplierName,
+          status: e.TrangThaiID,
+          phone: e.Phone,
+          lastmodifieddate: e.NgayGio
+        }
+        data.push(cus);
       });
+
+      this.setState({
+        data: data,
+        isLoading: false,
+      });
+      console.log("================= state ==============");
+      console.log(this.state.data);
+    }
   };
 
   search = text => {
@@ -97,17 +115,18 @@ class ListCustomer extends React.Component {
     this.setState({
       //setting the filtered newData on datasource
       //After setting the data it will automatically re-render the view
-      dataSource: newData,
+      data: newData,
       search: text,
     });
   }
 
   render() {
+    console.log("====================render===============");
     return (
       <View>
         <View style={styles.headerView}>
           <View style={{justifyContent: 'center', marginRight: 15, flex: 1}}>
-            <Text style={{textAlign: 'right'}}>Chiến dịch</Text>
+            <Text style={{textAlign: 'right'}}>Dự án</Text>
             <Text
               // eslint-disable-next-line react-native/no-inline-styles
               style={{
@@ -115,13 +134,13 @@ class ListCustomer extends React.Component {
                 fontWeight: 'bold',
                 textAlign: 'right',
               }}>
-              FU-OFFLINE
+              {this.state.projectName}
             </Text>
           </View>
           <View style={{justifyContent: 'center', marginLeft: 15, flex: 1}}>
             <Text style={{textAlign: 'left'}}>Số Khách hàng</Text>
             <Text style={{fontSize: 20, fontWeight: 'bold', textAlign: 'left'}}>
-              100
+              {this.state.allCustomer}
             </Text>
           </View>
         </View>
@@ -139,7 +158,7 @@ class ListCustomer extends React.Component {
         />
         <FlatList
           keyExtractor={this.keyExtractor}
-          data={this.state.dataSource}
+          data={this.state.data}
           renderItem={this.renderItem}
         />
       </View>

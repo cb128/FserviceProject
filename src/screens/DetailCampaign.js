@@ -1,9 +1,13 @@
 import React from 'react';
 import {View, FlatList} from 'react-native';
 import {ListItem} from 'react-native-elements';
-import {getDetailProject} from '../api/ApiHelpers';
+import {getStatusProject} from '../api/ApiHelpers';
+import {getObjectFromArrayById} from '../ulti/index';
+import detailCampaign from '../constants/detailCampaign';
 
 class DetailCampaign extends React.Component {
+  key = 'TrangThaiID';
+
   constructor(props) {
     super(props);
 
@@ -14,7 +18,9 @@ class DetailCampaign extends React.Component {
       data: [],
       error: null,
       refreshing: false,
-      projectID: navigation.getParam('nhomNganhID', ''),
+      projectCode: navigation.getParam('projectCode', ''),
+      projectName: navigation.getParam('projectName', ''),
+      allCustomer: 0,
     };
   }
 
@@ -25,7 +31,7 @@ class DetailCampaign extends React.Component {
       title={item.name}
       leftIcon={{name: item.icon}}
       badge={{
-        value: 100,
+        value: item.badgeValue,
         textStyle: {color: 'black'},
         status: 'warning',
         containerStyle: {alignItems: 'center'},
@@ -48,53 +54,91 @@ class DetailCampaign extends React.Component {
   );
 
   _goToListCustomer = () => {
-    this.props.navigation.navigate('ListCustomer');
+    this.props.navigation.navigate('ListCustomer', {
+      projectCode: this.state.projectCode,
+      projectName: this.state.projectName,
+      allCustomer: this.state.allCustomer,
+    });
   };
 
   componentDidMount() {
-    // this.getDetailCampaign();
+    this.getDetailCampaign();
   }
 
   getDetailCampaign = async () => {
-    let response = await getDetailProject(this.state.projectID);
+    let response = await getStatusProject(this.state.projectCode);
     let responseData = await response.json();
+    
     if (responseData) {
+      const data = [];
+      // All Customer 
+      const allCustomer = getObjectFromArrayById(responseData, this.key, detailCampaign.ALL_CUSTOMER);
+      if (allCustomer) {
+        data.push({
+          name: 'Danh Sách Khách Hàng',
+          icon: 'people',
+          badgeValue: allCustomer['Tong'],
+          key: 1,
+        });
+      }
+      
+      // Appointment
+      const appointment = getObjectFromArrayById(responseData, this.key, detailCampaign.APPOINTMENT);
+      if (appointment) {
+        data.push({
+          name: 'Cuộc Hẹn',
+          icon: 'event-note',
+          badgeValue: appointment['Tong'],
+          key: 1,
+        });
+      }
+      
+      // Inprogress
+      const inprogress = getObjectFromArrayById(responseData, this.key, detailCampaign.INPROGRESS);
+      if (inprogress) {
+        data.push({
+          name: 'Đang Xử Lý',
+          icon: 'loop',
+          badgeValue: inprogress['Tong'],
+          key: 1,
+        });
+      }
+      
+      // Approval
+      const approval = getObjectFromArrayById(responseData, this.key, detailCampaign.APPROVAL);
+      if (approval) {
+        data.push({
+          name: 'Đã Phê Duyệt',
+          icon: 'assignment',
+          badgeValue: approval['Tong'],
+          key: 1,
+        });
+      }
+
+      // Disbursement
+      const disbursement = getObjectFromArrayById(responseData, this.key, detailCampaign.DISBURSEMENT);
+      if (disbursement) {
+        data.push({
+          name: 'Giải Ngân',
+          icon: 'monetization-on',
+          badgeValue: disbursement['Tong'],
+          key: 1,
+        });
+      }
+      this.setState({
+        data: data,
+        loading: false,
+        allCustomer: allCustomer['Tong'],
+      });
+    }
+    else{
+      this.setState({
+        loading: false,
+      });
     }
   };
 
   render() {
-    let list = [
-      {
-        name: 'Danh Sách Khách Hàng',
-        icon: 'people',
-        badgeValue: 100,
-        key: 1,
-      },
-      {
-        name: 'Cuộc Hẹn',
-        icon: 'event-note',
-        badgeValue: 100,
-        key: 2,
-      },
-      {
-        name: 'Đang Xử Lý',
-        icon: 'loop',
-        badgeValue: 100,
-        key: 3,
-      },
-      {
-        name: 'Đã Phê Duyệt',
-        icon: 'assignment',
-        badgeValue: 100,
-        key: 4,
-      },
-      {
-        name: 'Giải Ngân',
-        icon: 'monetization-on',
-        badgeValue: 100,
-        key: 5,
-      },
-    ];
     return (
       // eslint-disable-next-line react-native/no-inline-styles
       <View style={{flex: 1, backgroundColor: '#e6e8ee'}}>
@@ -102,7 +146,7 @@ class DetailCampaign extends React.Component {
           // eslint-disable-next-line react-native/no-inline-styles
           style={{marginTop: 10}}
           keyExtractor={this.keyExtractor}
-          data={list}
+          data={this.state.data}
           renderItem={this.renderItem}
         />
       </View>
