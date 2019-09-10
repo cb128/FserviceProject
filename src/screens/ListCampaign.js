@@ -39,7 +39,8 @@ class ListCampaign extends React.Component {
 
   _goToDetaiProject = item => {
     this.props.navigation.navigate('DetailCampaign', {
-      MaNhomKhachHang: item.MaNhomKhachHang,
+      projectCode: item.MaNhomKhachHang,
+      projectName: item.TenNhomKhachHang
     });
   };
 

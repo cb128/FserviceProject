@@ -83,6 +83,60 @@ export const getDetailProject = projectID => {
   });
 };
 
+export const getStatusProject = async projectCode => {
+  let userID;
+
+  await getUserID().then(value => {
+    userID = value;
+  });
+  let formdata = new FormData();
+  formdata.append('function', 'getStatisticTrangThaiHopDong');
+  formdata.append('nguoiDungID', userID);
+  formdata.append('nhomKhachHang', projectCode);
+
+  return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
+    },
+    body: formdata,
+  });
+};
+
+export const getListCustomerData = async (projectCode, begin, end) => {
+  let userID;
+  await getUserID().then(value => {
+    userID = value;
+  });
+  let condition = {
+    begin: begin,
+    end: end,
+    NhanVienChamSocID: userID,
+    ListNhomKhachHang: "N'" + projectCode + "'"
+  }
+  console.log(condition);
+
+  let formdata = new FormData();
+  formdata.append('function', 'getListCustomer');
+  formdata.append('condition', condition);
+
+  return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
+    },
+    body: formdata,
+  }).then((response) => response.json())
+  .then((responseJson) => {
+    console.log(responseJson)
+  })
+  .catch((error) => {
+    console.error(error);
+  });;
+};
+
 export const initCustomerData = () => {
   let userID = getUserID.then(value => value.maNguoiDung);
   let formdata = new FormData();
