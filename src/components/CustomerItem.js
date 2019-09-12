@@ -15,7 +15,7 @@ export default class CustomerItem extends React.Component {
   };
 
   render() {
-    const currentStatus = getObjectFromArrayById(contractStatus, TrangThaiID, this.props.customer.status);
+    const currentStatus = getObjectFromArrayById(contractStatus, 'TrangThaiID', this.props.customer.status);
     return (
       <ListItem
         title={this.props.customer.name}
@@ -28,9 +28,9 @@ export default class CustomerItem extends React.Component {
         }}
         subtitle={
           <View style={styles.subtitleView}>
-            <Text style={styles.ratingText}>Số Điện Thoại</Text> {this.props.customer.Phone}
-            <Text style={styles.ratingText}>Trạng Thái</Text>  {currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'}
-            <Text style={styles.ratingText}>Ngày Cập Nhập HS</Text> {this.props.customer.lastmodifieddate}
+            <Text style={styles.ratingText}>{this.props.customer.Phone ? this.props.customer.Phone : 'Không có'} </Text> 
+            <Text style={styles.ratingText}>{currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'} </Text>  
+            <Text style={styles.ratingText}>{this.props.customer.lastmodifieddate} </Text>
           </View>
         }
         rightElement={() => (

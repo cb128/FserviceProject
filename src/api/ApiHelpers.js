@@ -109,18 +109,15 @@ export const getListCustomerData = async (projectCode, begin, end) => {
   await getUserID().then(value => {
     userID = value;
   });
-  let condition = {
-    begin: begin,
-    end: end,
-    NhanVienChamSocID: userID,
-    ListNhomKhachHang: "N'" + projectCode + "'"
-  }
-  console.log(condition);
 
   let formdata = new FormData();
   formdata.append('function', 'getListCustomer');
-  formdata.append('condition', condition);
+  formdata.append('Begin', begin);
+  formdata.append('End', end);
+  formdata.append('NhanVienChamSocID', userID);
+  formdata.append('ListNhomKhachHang', "N'"+projectCode+"'");
 
+  console.log(formdata);
   return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
     method: 'POST',
     headers: {
@@ -128,13 +125,7 @@ export const getListCustomerData = async (projectCode, begin, end) => {
         'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
     },
     body: formdata,
-  }).then((response) => response.json())
-  .then((responseJson) => {
-    console.log(responseJson)
-  })
-  .catch((error) => {
-    console.error(error);
-  });;
+  });
 };
 
 export const initCustomerData = () => {

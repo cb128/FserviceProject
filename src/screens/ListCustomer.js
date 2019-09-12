@@ -48,13 +48,15 @@ class ListCustomer extends React.Component {
 
   _fetchCustomer = async () => {
     console.log("================= _fetchCustomer ==============");
-    let response = await getListCustomerData(this.state.projectCode, 0, 10);
+    let response = await getListCustomerData(this.state.projectCode, 0, 50);
     console.log("================= getListCustomer ==============");
     console.log(response);
+    let responseData = await response.json();
+    console.log(responseData);
     
-    if (response) {
+    if (responseData && responseData.Data && responseData.Data.List) {
       const data = [];
-      response.forEach(e => {
+      responseData.Data.List.forEach(e => {
         const cus = {
           id: e.SupplierID,
           name: e.SupplierName,
@@ -72,6 +74,28 @@ class ListCustomer extends React.Component {
       console.log("================= state ==============");
       console.log(this.state.data);
     }
+    else{
+      this.setState({
+        isLoading: false,
+      });
+    }
+
+    // const data = [];
+    //   fakeCustomer.forEach(e => {
+    //     const cus = {
+    //       id: e.SupplierID,
+    //       name: e.SupplierName,
+    //       status: e.TrangThaiID,
+    //       phone: e.Phone,
+    //       lastmodifieddate: e.NgayGio
+    //     }
+    //     data.push(cus);
+    //   });
+
+    //   this.setState({
+    //     data: data,
+    //     isLoading: false,
+    //   });
   };
 
   search = text => {
