@@ -23,6 +23,10 @@ class DetailCampaign extends React.Component {
       allCustomer: 0,
     };
   }
+  
+  static navigationOptions = () => ({
+    title: this.state.projectName
+  });
 
   keyExtractor = (item, index) => index.toString();
 

@@ -69,9 +69,8 @@ class AddingCustomer extends React.Component {
       {id: '24', title: 'Nghề nghiệp', value: ''},
       {id: '25', title: 'Công ty', value: ''},
       {id: '26', title: 'Số hợp đồng', value: ''},
-      {id: '27', title: 'Ảnh chân dung', value: ''},
-      {id: '28', title: 'Ảnh trước CMND', value: ''},
-      {id: '29', title: 'Ảnh sau CMND', value: ''},
+      {id: '27', title: 'Ảnh', value: ''},
+      {id: '28', title: 'File khác', value: ''},
     ];
 
     this.categoryInfos = [{id: '1', title: 'Phân loại', value: ''}];

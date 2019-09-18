@@ -30,11 +30,10 @@ class SideMenu extends React.Component {
           avatarPath: data.hinh,
           arrUserData: [
             {name: data.hoTen, image: data.hinh},
-            {title: 'Phòng Ban', value: data.tenPhongBan},
-            {title: 'Chức Vụ', value: data.tenChucVu},
-            {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
-            {title: 'Line', value: data.line},
-            {title: 'Đơn Vị', value: data.tenDonVi},
+            {title: 'Mã Nhân viên', value: data.MaNguoiDung},
+            {title: 'Số ĐTDĐ', value: data.DienThoai},
+            {title: 'Địa chỉ', value: data.DiaChiLienHe},
+            {title: 'Email', value: data.Email},
           ],
         });
       });
