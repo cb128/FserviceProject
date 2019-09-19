@@ -25,7 +25,7 @@ class DetailCampaign extends React.Component {
   }
   
   static navigationOptions = () => ({
-    title: this.state.projectName
+    title: 'TPBANK'
   });
 
   keyExtractor = (item, index) => index.toString();
