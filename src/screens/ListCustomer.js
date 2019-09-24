@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Spinner} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -16,12 +16,16 @@ class ListCustomer extends React.Component {
     this.state = {
       data: [],
       isLoading: false,
+      showLoadMore: true,
+      loadingMore: false,
       search: '',
       error: null,
       refreshing: false,
+      begin: 0,
       projectCode: navigation.getParam('projectCode', ''),
       projectName: navigation.getParam('projectName', ''),
       allCustomer: navigation.getParam('allCustomer', ''),
+
     };
     this.arrayUser = [];
   }
@@ -46,11 +50,17 @@ class ListCustomer extends React.Component {
     this._fetchCustomer();
   }
 
+  _loadMore = () => {
+    console.log(this.state);
+    if (this.state.isLoading || this.state.loadingMore) return false;
+    let begin = this.state.begin + 21;
+    this.setState({begin: begin, loadingMore: true}, () => {
+        this._fetchCustomer();
+    });
+  }
+
   _fetchCustomer = async () => {
-    console.log("================= _fetchCustomer ==============");
-    let response = await getListCustomerData(this.state.projectCode, 0, 50);
-    console.log("================= getListCustomer ==============");
-    console.log(response);
+    let response = await getListCustomerData(this.state.projectCode, this.state.begin, this.state.begin + 20);
     let responseData = await response.json();
     console.log(responseData);
     
@@ -62,21 +72,21 @@ class ListCustomer extends React.Component {
           name: e.SupplierName,
           status: e.TrangThaiID,
           phone: e.Phone,
-          lastmodifieddate: e.NgayGio
+          lastmodifieddate: e.NgayGioGoi
         }
         data.push(cus);
       });
 
-      this.setState({
-        data: data,
+      this.setState(state => ({
+        data: !state.loadingMore ? data : [...state.data, ...data],
         isLoading: false,
-      });
-      console.log("================= state ==============");
-      console.log(this.state.data);
+        loadingMore: false
+      }));
     }
     else{
       this.setState({
         isLoading: false,
+        loadingMore: false
       });
     }
 
@@ -144,10 +154,10 @@ class ListCustomer extends React.Component {
     });
   }
 
+
   render() {
-    console.log("====================render===============");
     return (
-      <View>
+      <View style={{flex: 1}}>
         <View style={styles.headerView}>
           <View style={{justifyContent: 'center', marginRight: 15, flex: 1}}>
             <Text style={{textAlign: 'right'}}>Dự án</Text>
@@ -184,7 +194,15 @@ class ListCustomer extends React.Component {
           keyExtractor={this.keyExtractor}
           data={this.state.data}
           renderItem={this.renderItem}
+          style={styles.content}
         />
+        <View>
+            {this.state.showLoadMore ? (this.state.loadingMore ? <Spinner color="#f79646"/> :
+                <Text children="Xem thêm" style={styles.loadMore} onPress={this._loadMore}/>)
+                :
+                <Text note style={{textAlign: "center"}}>--- Đã tải hết danh sách ---</Text>
+            }
+        </View>
       </View>
     );
   }
@@ -206,6 +224,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingTop: 5,
   },
+  content: {
+  },
+  loadMore: {
+    color: "#fff",
+    backgroundColor: "#ffb900",
+    textAlign: "center",
+    paddingTop: 7,
+    paddingBottom: 7
+},
 });
 
 export default ListCustomer;

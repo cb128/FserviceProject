@@ -6,22 +6,15 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  Picker
 } from 'react-native';
 import {Input, Image} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import placeHolderImage from '../assets/images/img_placeholder_user.png';
 import cameraImage from '../assets/images/ico_camera.png';
-import SelectionViewLayout from '../components/SelectionViewLayout';
+import {initCustomerData, getListGroup, getListProject} from '../api/ApiHelpers';
 
-const arrayOption = [
-  {id: '1', title: 'Option 1'},
-  {id: '2', title: 'Option 2'},
-  {id: '3', title: 'Option 3'},
-  {id: '4', title: 'Option 4'},
-  {id: '5', title: 'Option 5'},
-  {id: '6', title: 'Option 6'},
-];
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -33,14 +26,20 @@ class AddingCustomer extends React.Component {
       avatarPath: {},
       frontIDPath: {},
       bottomIDPath: {},
+      listOriginProject: [],
+
+      // list init data
+      listCategory: [],
+      listProject: [],
+      listCallStatus: [],
+      listContractStatus: [],
+
+      // project
+      category: '',
+      project: '',
+
+      callStatus: '',
     };
-    this.phoneInfos = [
-      {id: '1', title: 'TT cuộc gọi', value: ''},
-      {id: '2', title: 'TT cuộc gọi con', value: ''},
-      {id: '3', title: 'TT hợp đồng', value: ''},
-      {id: '4', title: 'TT hợp đồng con', value: ''},
-      {id: '5', title: 'Người lấy HS', value: ''},
-    ];
 
     this.personalInfos = [
       {id: '1', title: 'Mã Khách hàng(*)', value: ''},
@@ -75,6 +74,83 @@ class AddingCustomer extends React.Component {
 
     this.categoryInfos = [{id: '1', title: 'Phân loại', value: ''}];
   }
+
+  componentDidMount() {
+    this.getInitData();
+    this.getInitCategory();
+    this.getInitProject();
+  }
+
+  getInitData = async () => {
+    let response = await initCustomerData();
+    let responseData = await response.json();
+    console.log('============================= add cus >> get init data >> response ==============');
+    console.log(responseData);
+    
+    if (responseData) {
+
+      this.setState({
+        listCallStatus: responseData.listTrangThaiCuocGoi,
+        listContractStatus: responseData.listTrangThaiHopDong,
+        loading: false,
+      });
+    }
+    else{
+      this.setState({
+        loading: false,
+      });
+    }
+  };
+
+  getInitCategory = async () => {
+    let response = await getListGroup();
+    let responseData = await response.json();
+    if (responseData) {
+      this.setState({
+        listCategory: responseData,
+      });
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+  };
+  getInitProject = async () => {
+    let response = await getListProject(1);
+    let responseData = await response.json();
+    if (responseData) {
+      this.setState({
+        listOriginProject: [...this.state.listOriginProject, ...responseData],
+        listProject: responseData,
+      });
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+    let response3 = await getListProject(3);
+    let responseData3 = await response3.json();
+    if (responseData3) {
+      this.setState({
+        listOriginProject: [...this.state.listOriginProject, ...responseData3],
+      });
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+    let response4 = await getListProject(4);
+    let responseData4 = await response4.json();
+    if (responseData4) {
+      this.setState({
+        listOriginProject: [...this.state.listOriginProject, ...responseData4],
+      });
+    } else {
+      this.setState({
+        loading: false,
+      });
+    }
+  };
 
   // Set up navigation bar
   static navigationOptions = ({navigation}) => ({
@@ -149,20 +225,72 @@ class AddingCustomer extends React.Component {
     });
   };
 
-  _goToSelectionScreen = item => {
-    this.props.navigation.navigate('SelectionScreen', {
-      titleString: item.title,
-      dataItem: arrayOption,
+  // render project
+  renderProject = () =>{
+    
+    let categoryItems = this.state.listCategory.map( (i) => {
+      return <Picker.Item key={i.NhomNganhID} value={i.NhomNganhID} label={i.TenNhomNganh} />
     });
-  };
+
+    let projectItems = this.state.listOriginProject.map( (i) => {
+      return <Picker.Item key={i.MaNhomKhachHang} value={i.MaNhomKhachHang} label={i.TenNhomKhachHang} />
+    });
+
+    return (
+      <View>
+        <View
+            style={styles.sectionTitle}>
+            <Text style={styles.SectionHeaderStyle}>Thông tin dự án</Text>
+        </View>
+
+        <View style={{marginTop: 5, marginBottom: 10}}>
+          <Text style={styles.title}>Loại dự án</Text>
+          <Picker
+                selectedValue={this.state.category}
+                onValueChange={ (value) => {
+                  this.setState({ 
+                    category: value,
+                  });
+                  } } >
+                {categoryItems}
+            </Picker>
+        </View>
+
+        <View style={{marginTop: 5, marginBottom: 10}}>
+          <Text style={styles.title}>Dự án</Text>
+          <Picker
+                selectedValue={this.state.project}
+                onValueChange={ (value) => { this.setState({ project: value}) } } >
+                {projectItems}
+            </Picker>
+        </View>
+      </View>
+    );
+  }
 
   // Render item for section list
   renderItem = ({item, section}) => {
     let subView;
+    let selectItems;
     if (section.index === 0) {
       // Selection layout
+      if(item.id === '1' || item.id === '2'){
+        console.log(this.state.listCallStatus);
+        selectItems = this.state.listCallStatus.map( (i) => {
+          return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
+        });
+      }
+      if(item.id === '3' || item.id === '4'){
+        item.data = this.state.listContractStatus;
+      }
       subView = (
-        <SelectionViewLayout value={item} onClick={this._goToSelectionScreen} />
+        <Picker
+            selectedValue={item.value}
+            onValueChange={ (value) => this.setState({phoneInfos: value}) } >
+
+            {selectItems}
+
+        </Picker>
       );
     } else if (section.index === 1 && item.id === '5') {
       // Gender segment
@@ -174,8 +302,7 @@ class AddingCustomer extends React.Component {
           onTabPress={this.updateGenderIndex}
         />
       );
-    } else if (
-      section.index === 1 &&
+    } else if ( section.index === 1 &&
       (item.id === '27' || item.id === '28' || item.id === '29')
     ) {
       // Case Select file or image
@@ -232,31 +359,47 @@ class AddingCustomer extends React.Component {
   };
 
   render() {
+    
+    let selectItems;
+
+    selectItems = this.state.listCallStatus.map( (i) => {
+      return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
+    });
+
     return (
-      <SectionList
-        renderItem={this.renderItem}
-        renderSectionHeader={({section: {title}}) => (
-          <View
-            style={{
-              height: 50,
-              backgroundColor: '#e5e8ed',
-              justifyContent: 'center',
-            }}>
-            <Text style={styles.SectionHeaderStyle}>{title}</Text>
-          </View>
-        )}
-        sections={[
-          {title: 'Thông tin cuộc gọi', data: this.phoneInfos, index: 0},
-          {title: 'Thông tin cá nhân', data: this.personalInfos, index: 1},
-          {title: 'Thông tin khác', data: this.categoryInfos, index: 2},
-        ]}
-        keyExtractor={(item, index) => item + index}
-      />
+    <View>
+      {this.renderProject()}
+
+      <View
+          style={{
+            height: 50,
+            backgroundColor: '#e5e8ed',
+            justifyContent: 'center',
+          }}>
+          <Text style={styles.SectionHeaderStyle}>Thông tin cuộc gọi</Text>
+      </View>
+
+      <View style={{marginTop: 5, marginBottom: 10}}>
+        <Text style={styles.title}>TT cuộc gọi</Text>
+        <Picker
+              selectedValue={this.state.callStatus}
+              onValueChange={ (value) => { this.setState({ callStatus: value}) } } >
+
+              {selectItems}
+
+          </Picker>
+      </View>
+    </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  sectionTitle: {
+    height: 50,
+    backgroundColor: '#e5e8ed',
+    justifyContent: 'center',
+  },
   container: {flex: 1},
   title: {marginLeft: 20, marginTop: 20, fontWeight: 'bold', fontSize: 16},
   input: {marginLeft: 10},

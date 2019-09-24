@@ -12,7 +12,7 @@ class SelectionScreen extends React.Component {
   renderItem = ({item}) => {
     return (
       <View>
-        <TouchableOpacity onPress={this._goBack}>
+        <TouchableOpacity onPress={this._goBack(item.id)}>
           <Text style={styles.title}>{item.title}</Text>
         </TouchableOpacity>
         <Divider />

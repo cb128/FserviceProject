@@ -128,8 +128,12 @@ export const getListCustomerData = async (projectCode, begin, end) => {
   });
 };
 
-export const initCustomerData = () => {
-  let userID = getUserID.then(value => value.maNguoiDung);
+export const initCustomerData = async () => {
+  let userID;
+
+  await getUserID().then(value => {
+    userID = value;
+  });
   let formdata = new FormData();
   formdata.append('function', 'getInitDataCustomer');
   formdata.append('nguoiDungID', userID);

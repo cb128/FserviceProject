@@ -3,7 +3,12 @@ import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class SelectionViewLayout extends React.Component {
+
+  
+
   onClickItem = () => {
+    console.log('============= SelectionViewLayout >> onClickItem >> this.props.value =================');
+    console.log(this.props.value);
     this.props.onClick(this.props.value);
   };
 
