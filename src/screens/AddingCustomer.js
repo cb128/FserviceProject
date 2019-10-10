@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  Picker
+  Picker,
+  ScrollView
 } from 'react-native';
 import {Input, Image} from 'react-native-elements';
 import ImagePicker from 'react-native-image-picker';
@@ -33,12 +34,50 @@ class AddingCustomer extends React.Component {
       listProject: [],
       listCallStatus: [],
       listContractStatus: [],
+      listEmployees: [],
 
       // project
       category: '',
       project: '',
+      projectItems: null,
 
+      // Call Status
       callStatus: '',
+      callChildStatus: '',
+      contractStatus: '',
+      contractChildStatus: '',
+      employeeGetContract: '',
+
+      // Customer Info
+      customer: {
+        iD: '',
+        name: '',
+        DOB: '',
+        preName: '',
+        gender: '',
+        maritalStatus: '',
+        phone: '',
+        email: '',
+        nationalId: '',
+        nationalDate: '',
+        nationalPlace: '',
+        product: '',
+        address: '',
+        province: '',
+        district: '',
+        addressContact: '',
+        call: '',
+        meetTime: '',
+        meetPlace: '',
+        cashLimit: '',
+        salary: '',
+        source: '',
+        partner: '',
+        job: '',
+        company: '',
+        contractNumber: '',
+      }
+
     };
 
     this.personalInfos = [
@@ -92,6 +131,7 @@ class AddingCustomer extends React.Component {
       this.setState({
         listCallStatus: responseData.listTrangThaiCuocGoi,
         listContractStatus: responseData.listTrangThaiHopDong,
+        listEmployees: responseData.listNguoiDung,
         loading: false,
       });
     }
@@ -236,6 +276,10 @@ class AddingCustomer extends React.Component {
       return <Picker.Item key={i.MaNhomKhachHang} value={i.MaNhomKhachHang} label={i.TenNhomKhachHang} />
     });
 
+    this.setState({
+      projectItems = projectItems
+    })
+
     return (
       <View>
         <View
@@ -243,7 +287,7 @@ class AddingCustomer extends React.Component {
             <Text style={styles.SectionHeaderStyle}>Thông tin dự án</Text>
         </View>
 
-        <View style={{marginTop: 5, marginBottom: 10}}>
+        <View style={styles.wrapTitle}>
           <Text style={styles.title}>Loại dự án</Text>
           <Picker
                 selectedValue={this.state.category}
@@ -256,17 +300,401 @@ class AddingCustomer extends React.Component {
             </Picker>
         </View>
 
-        <View style={{marginTop: 5, marginBottom: 10}}>
+        <View style={styles.wrapTitle}>
           <Text style={styles.title}>Dự án</Text>
           <Picker
                 selectedValue={this.state.project}
                 onValueChange={ (value) => { this.setState({ project: value}) } } >
-                {projectItems}
+                {this.state.projectItems}
             </Picker>
         </View>
       </View>
     );
   }
+  // render call status
+  renderCallInfo = () =>{
+    let callItems;
+    let contractItems;
+    let employeeItems;
+
+    callItems = this.state.listCallStatus.map( (i) => {
+      return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
+    });
+
+    contractItems = this.state.listContractStatus.map( (i) => {
+      return <Picker.Item key={i.TrangThaiID} value={i.TrangThaiID} label={i.TenTrangThai} />
+    });
+
+    employeeItems = this.state.listEmployees.map( (i) => {
+      return <Picker.Item key={i.NguoiDungID} value={i.NguoiDungID} label={i.HoTen} />
+    });
+
+    return (
+      <View>
+      <View
+          style={styles.sectionTitle}>
+          <Text style={styles.SectionHeaderStyle}>Thông tin cuộc gọi</Text>
+      </View>
+      
+      <View style={styles.wrapTitle}>
+        <Text style={styles.title}>TT cuộc gọi</Text>
+        <Picker
+              selectedValue={this.state.callStatus}
+              onValueChange={ (value) => { this.setState({ callStatus: value}) } } >
+              <Picker.Item label='Chưa có thông tin' value='' />
+              {callItems}
+
+          </Picker>
+      </View>
+
+      <View style={styles.wrapTitle}>
+        <Text style={styles.title}>TT cuộc gọi con</Text>
+        <Picker
+              selectedValue={this.state.callChildStatus}
+              onValueChange={ (value) => { this.setState({ callChildStatus: value}) } } >
+              <Picker.Item label='Chưa có thông tin' value='' />
+              {callItems}
+
+          </Picker>
+      </View>
+
+      <View style={styles.wrapTitle}>
+        <Text style={styles.title}>TT hợp đồng</Text>
+        <Picker
+              selectedValue={this.state.contractStatus}
+              onValueChange={ (value) => { this.setState({ contractStatus: value}) } } >
+              <Picker.Item label='Chưa có thông tin' value='' />
+              {contractItems}
+
+          </Picker>
+      </View>
+
+      <View style={styles.wrapTitle}>
+        <Text style={styles.title}>TT hợp đồng con</Text>
+        <Picker
+              selectedValue={this.state.contractChildStatus}
+              onValueChange={ (value) => { this.setState({ contractChildStatus: value}) } } >
+              <Picker.Item label='Chưa có thông tin' value='' />
+              {contractItems}
+
+          </Picker>
+      </View>
+
+      <View style={styles.wrapTitle}>
+        <Text style={styles.title}>Người lấy HS</Text>
+        <Picker
+              selectedValue={this.state.employeeGetContract}
+              onValueChange={ (value) => { this.setState({ employeeGetContract: value}) } } >
+              <Picker.Item label='Chưa có thông tin' value='' />
+              {employeeItems}
+
+          </Picker>
+      </View>
+
+      </View>
+    );
+  }
+// render customer status
+renderCustomerInfo = () =>{
+  // let callItems;
+  // let contractItems;
+  // let employeeItems;
+
+  // callItems = this.state.listCallStatus.map( (i) => {
+  //   return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
+  // });
+
+  // contractItems = this.state.listContractStatus.map( (i) => {
+  //   return <Picker.Item key={i.TrangThaiID} value={i.TrangThaiID} label={i.TenTrangThai} />
+  // });
+
+  // employeeItems = this.state.listEmployees.map( (i) => {
+  //   return <Picker.Item key={i.NguoiDungID} value={i.NguoiDungID} label={i.HoTen} />
+  // });
+
+  return (
+    <View>
+    <View
+        style={styles.sectionTitle}>
+        <Text style={styles.SectionHeaderStyle}>Thông tin cá nhân</Text>
+    </View>
+    
+    {/* <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Mã khách hàng</Text><Text style={styles.isRequired}> (*)</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customerID}
+        />
+    </View> */}
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Xưng hô</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.preName}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Họ và tên <Text style={styles.isRequired}> (*)</Text></Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.name}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Ngày sinh</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.DOB}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Giới tính</Text>
+      <SegmentedControlTab
+          values={['Nam', 'Nữ']}
+          tabsContainerStyle={styles.segment}
+          selectedIndex={this.state.selectedGenderIndex}
+          onTabPress={this.updateGenderIndex}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Điện thoại <Text style={styles.isRequired}> (*)</Text></Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.phone}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Email</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.email}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>CMND</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.nationalId}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Ngày cấp</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.nationalDate}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Nơi cấp</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.nationalPlace}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Nơi cấp</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.nationalPlace}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Sản phẩm</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.product}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Địa chỉ</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.address}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Tỉnh thành</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.province}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Quận/Huyện</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.district}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Đ/c liên hệ</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.addressContact}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Gọi lại</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.call}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Thời gian hẹn</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.meetTime}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Địa chỉ hẹn</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.meetPlace}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Hạn mức</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.cashLimit}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Thu nhập</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.salary}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Nguồn</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.source}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Đối tác</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.partner}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Nghề nghiệp</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.job}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Công ty</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.company}
+        />
+    </View>
+
+    <View style={styles.wrapTitle}>
+      <Text style={styles.title}>Số hợp đồng</Text>
+      <Input
+          containerStyle={styles.input}
+          inputStyle={{fontSize: 16}}
+          placeholder="Chưa có thông tin"
+          value={this.state.customer.contractNumber}
+        />
+    </View>
+    
+    
+    <SegmentedControlTab
+          values={['TSA', 'DSA']}
+          tabsContainerStyle={styles.segment}
+          selectedIndex={this.state.selectedCategoryIndex}
+          onTabPress={this.updateCatergoryIndex}
+        />
+
+
+
+
+
+    </View>
+  );
+}
+
 
   // Render item for section list
   renderItem = ({item, section}) => {
@@ -346,6 +774,7 @@ class AddingCustomer extends React.Component {
           containerStyle={styles.input}
           inputStyle={{fontSize: 16}}
           placeholder="Chưa có thông tin"
+          
         />
       );
     }
@@ -360,36 +789,14 @@ class AddingCustomer extends React.Component {
 
   render() {
     
-    let selectItems;
-
-    selectItems = this.state.listCallStatus.map( (i) => {
-      return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
-    });
-
     return (
-    <View>
+    <ScrollView>
       {this.renderProject()}
+      {this.renderCallInfo()}
+      {this.renderCustomerInfo()}
 
-      <View
-          style={{
-            height: 50,
-            backgroundColor: '#e5e8ed',
-            justifyContent: 'center',
-          }}>
-          <Text style={styles.SectionHeaderStyle}>Thông tin cuộc gọi</Text>
-      </View>
 
-      <View style={{marginTop: 5, marginBottom: 10}}>
-        <Text style={styles.title}>TT cuộc gọi</Text>
-        <Picker
-              selectedValue={this.state.callStatus}
-              onValueChange={ (value) => { this.setState({ callStatus: value}) } } >
-
-              {selectItems}
-
-          </Picker>
-      </View>
-    </View>
+    </ScrollView>
     );
   }
 }
@@ -401,6 +808,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   container: {flex: 1},
+  wrapTitle: {marginTop: 5, marginBottom: 10},
   title: {marginLeft: 20, marginTop: 20, fontWeight: 'bold', fontSize: 16},
   input: {marginLeft: 10},
   segment: {marginLeft: 15, marginRight: 15, marginTop: 15},
@@ -422,6 +830,9 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: 'gray',
   },
+  isRequired: {
+    color: 'red'
+  }
 });
 
 export default AddingCustomer;
