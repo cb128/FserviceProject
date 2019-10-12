@@ -147,3 +147,20 @@ export const initCustomerData = async () => {
     body: formdata,
   });
 };
+
+export const postCustomer = (funcName, item) => {
+  let formdata = new FormData();
+  formdata.append('function', funcName);
+  formdata.append('item', item);
+  console.log(formdata);
+
+  return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
+    },
+    body: formdata,
+  });
+};
+

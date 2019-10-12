@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList, Spinner} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Spinner, Linking} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -72,7 +72,8 @@ class ListCustomer extends React.Component {
           name: e.SupplierName,
           status: e.TrangThaiID,
           phone: e.Phone,
-          lastmodifieddate: e.NgayGioGoi
+          lastmodifieddate: e.NgayGioGoi,
+          data: e
         }
         data.push(cus);
       });
@@ -119,9 +120,13 @@ class ListCustomer extends React.Component {
   _goToUpdateCustomer = item => {
     this.props.navigation.navigate('AddingCustomer', {
       title: 'Chỉnh Sửa Thông Tin',
-      data: item,
+      data: item.data,
     });
   };
+
+  _callCustomer = (phoneNumber) => {
+    Linking.openURL(`tel:${phoneNumber}`)
+  }
 
   _goToCustomerProfile = item => {
     alert('Go To Profile');
@@ -135,6 +140,7 @@ class ListCustomer extends React.Component {
       customer={item}
       goToProfile={this._goToCustomerProfile}
       editCustomer={this._goToUpdateCustomer}
+      callCustomer={this._callCustomer}
     />
   );
 

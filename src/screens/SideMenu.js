@@ -104,7 +104,9 @@ class SideMenu extends React.Component {
               }
               style={styles.imageView}
             />
-            <Text style={{marginLeft: 10, fontSize: 20, fontWeight: 'bold'}}>
+          </View>
+          <View>
+          <Text style={{marginLeft: 10, fontSize: 20, fontWeight: 'bold'}}>
               {this.state.name}
             </Text>
           </View>
@@ -151,8 +153,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageView: {
-    width: 100,
-    height: 100,
+    width: 50,
+    height: 50,
     marginLeft: 20,
     marginVertical: 20,
     borderRadius: 50,

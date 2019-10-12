@@ -75,60 +75,20 @@ class DetailCampaign extends React.Component {
     
     if (responseData) {
       const data = [];
+
+      responseData.forEach(e => {
+        if(e.Tong !== 0){
+          data.push({
+            name: e.TenTrangThai,
+            icon: 'people',
+            badgeValue: e.Tong,
+            key: 1,
+          })
+        }
+      });
       // All Customer 
       const allCustomer = getObjectFromArrayById(responseData, this.key, detailCampaign.ALL_CUSTOMER);
-      if (allCustomer) {
-        data.push({
-          name: 'Danh Sách Khách Hàng',
-          icon: 'people',
-          badgeValue: allCustomer['Tong'],
-          key: 1,
-        });
-      }
       
-      // Appointment
-      const appointment = getObjectFromArrayById(responseData, this.key, detailCampaign.APPOINTMENT);
-      if (appointment) {
-        data.push({
-          name: 'Cuộc Hẹn',
-          icon: 'event-note',
-          badgeValue: appointment['Tong'],
-          key: 1,
-        });
-      }
-      
-      // Inprogress
-      const inprogress = getObjectFromArrayById(responseData, this.key, detailCampaign.INPROGRESS);
-      if (inprogress) {
-        data.push({
-          name: 'Đang Xử Lý',
-          icon: 'loop',
-          badgeValue: inprogress['Tong'],
-          key: 1,
-        });
-      }
-      
-      // Approval
-      const approval = getObjectFromArrayById(responseData, this.key, detailCampaign.APPROVAL);
-      if (approval) {
-        data.push({
-          name: 'Đã Phê Duyệt',
-          icon: 'assignment',
-          badgeValue: approval['Tong'],
-          key: 1,
-        });
-      }
-
-      // Disbursement
-      const disbursement = getObjectFromArrayById(responseData, this.key, detailCampaign.DISBURSEMENT);
-      if (disbursement) {
-        data.push({
-          name: 'Giải Ngân',
-          icon: 'monetization-on',
-          badgeValue: disbursement['Tong'],
-          key: 1,
-        });
-      }
       this.setState({
         data: data,
         loading: false,

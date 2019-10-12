@@ -15,8 +15,14 @@ export default class CustomerItem extends React.Component {
     this.props.editCustomer(this.props.customer);
   };
 
+  callCustomer = () => {
+    this.props.callCustomer(this.props.customer.phone);
+  }
+
   render() {
+    console.log(this.props.customer);
     const currentStatus = getObjectFromArrayById(contractStatus, 'TrangThaiID', this.props.customer.status);
+    console.log(currentStatus);
     return (
       <ListItem
         title={this.props.customer.name}
@@ -35,8 +41,8 @@ export default class CustomerItem extends React.Component {
           </View>
         }
         rightElement={() => (
-          <TouchableOpacity onPress={this.editCustomer}>
-            <Icon name="account-edit" type="material-community" size={30} />
+          <TouchableOpacity onPress={this.callCustomer}>
+            <Icon name="phone" type="material-community" size={30} />
           </TouchableOpacity>
         )}
         // eslint-disable-next-line react-native/no-inline-styles
