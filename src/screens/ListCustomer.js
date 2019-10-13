@@ -1,11 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, FlatList, Spinner, Linking} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Spinner,
+  Linking,
+  ActivityIndicator,
+} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CustomerItem from '../components/CustomerItem';
 import ProjectListItem from '../components/ProjectListItem';
-import { getListCustomerData } from '../api/ApiHelpers';
+import {getListCustomerData} from '../api/ApiHelpers';
 
 class ListCustomer extends React.Component {
   constructor(props) {
@@ -25,7 +33,6 @@ class ListCustomer extends React.Component {
       projectCode: navigation.getParam('projectCode', ''),
       projectName: navigation.getParam('projectName', ''),
       allCustomer: navigation.getParam('allCustomer', ''),
-
     };
     this.arrayUser = [];
   }
@@ -46,24 +53,31 @@ class ListCustomer extends React.Component {
   });
 
   componentDidMount() {
-    console.log("================= componentDidMount ==============");
+    console.log('================= componentDidMount ==============');
     this._fetchCustomer();
   }
 
   _loadMore = () => {
     console.log(this.state);
+    if (this.state.search) {
+      return;
+    }
     if (this.state.isLoading || this.state.loadingMore) return false;
     let begin = this.state.begin + 21;
     this.setState({begin: begin, loadingMore: true}, () => {
-        this._fetchCustomer();
+      this._fetchCustomer();
     });
-  }
+  };
 
   _fetchCustomer = async () => {
-    let response = await getListCustomerData(this.state.projectCode, this.state.begin, this.state.begin + 20);
+    let response = await getListCustomerData(
+      this.state.projectCode,
+      this.state.begin,
+      this.state.begin + 20,
+    );
     let responseData = await response.json();
     console.log(responseData);
-    
+
     if (responseData && responseData.Data && responseData.Data.List) {
       const data = [];
       responseData.Data.List.forEach(e => {
@@ -73,21 +87,20 @@ class ListCustomer extends React.Component {
           status: e.TrangThaiID,
           phone: e.Phone,
           lastmodifieddate: e.NgayGioGoi,
-          data: e
-        }
+          data: e,
+        };
         data.push(cus);
       });
 
       this.setState(state => ({
         data: !state.loadingMore ? data : [...state.data, ...data],
         isLoading: false,
-        loadingMore: false
+        loadingMore: false,
       }));
-    }
-    else{
+    } else {
       this.setState({
         isLoading: false,
-        loadingMore: false
+        loadingMore: false,
       });
     }
 
@@ -124,9 +137,9 @@ class ListCustomer extends React.Component {
     });
   };
 
-  _callCustomer = (phoneNumber) => {
-    Linking.openURL(`tel:${phoneNumber}`)
-  }
+  _callCustomer = phoneNumber => {
+    Linking.openURL(`tel:${phoneNumber}`);
+  };
 
   _goToCustomerProfile = item => {
     alert('Go To Profile');
@@ -146,9 +159,9 @@ class ListCustomer extends React.Component {
 
   searchFilterFunction(text) {
     //passing the inserted text in text input
-    const newData = this.arrayUser.filter(function(item) {
+    const newData = this.state.data.filter(function(item) {
       //applying filter for the inserted text in search bar
-      const itemData = item.title ? item.title.toUpperCase() : ''.toUpperCase();
+      const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
       const textData = text.toUpperCase();
       return itemData.indexOf(textData) > -1;
     });
@@ -159,7 +172,11 @@ class ListCustomer extends React.Component {
       search: text,
     });
   }
-
+  renderFooter = () => {
+    //it will show indicator at the bottom of the list when data is loading otherwise it returns null
+    if (!this.state.loadingMore) return null;
+    return <ActivityIndicator style={{color: '#000', height: 20}} />;
+  };
 
   render() {
     return (
@@ -188,7 +205,13 @@ class ListCustomer extends React.Component {
           round
           searchIcon={{size: 24}}
           onChangeText={text => this.searchFilterFunction(text)}
-          onClear={text => this.searchFilterFunction('')}
+          onClear={text => {
+            this.searchFilterFunction('');
+            this.setState({
+              begin: 0,
+            });
+            this._fetchCustomer();
+          }}
           placeholder="Type Here..."
           value={this.state.search}
           containerStyle={{backgroundColor: '#ffffff'}}
@@ -201,14 +224,10 @@ class ListCustomer extends React.Component {
           data={this.state.data}
           renderItem={this.renderItem}
           style={styles.content}
+          ListFooterComponent={this.renderFooter}
+          onEndReachedThreshold={0.4}
+          onEndReached={this._loadMore}
         />
-        <View>
-            {this.state.showLoadMore ? (this.state.loadingMore ? <Spinner color="#f79646"/> :
-                <Text children="Xem thêm" style={styles.loadMore} onPress={this._loadMore}/>)
-                :
-                <Text note style={{textAlign: "center"}}>--- Đã tải hết danh sách ---</Text>
-            }
-        </View>
       </View>
     );
   }
@@ -230,15 +249,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingTop: 5,
   },
-  content: {
-  },
+  content: {},
   loadMore: {
-    color: "#fff",
-    backgroundColor: "#ffb900",
-    textAlign: "center",
+    color: '#fff',
+    backgroundColor: '#ffb900',
+    textAlign: 'center',
     paddingTop: 7,
-    paddingBottom: 7
-},
+    paddingBottom: 7,
+  },
 });
 
 export default ListCustomer;
