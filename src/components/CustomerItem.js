@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import { getObjectFromArrayById } from '../ulti';
 import contractStatus from '../constants/contractStatus';
+import moment from "moment";
 
 export default class CustomerItem extends React.Component {
   goToProfile = () => {
@@ -14,8 +15,14 @@ export default class CustomerItem extends React.Component {
     this.props.editCustomer(this.props.customer);
   };
 
+  callCustomer = () => {
+    this.props.callCustomer(this.props.customer.phone);
+  }
+
   render() {
-    const currentStatus = getObjectFromArrayById(contractStatus, TrangThaiID, this.props.customer.status);
+    console.log(this.props.customer);
+    const currentStatus = getObjectFromArrayById(contractStatus, 'TrangThaiID', this.props.customer.status);
+    console.log(currentStatus);
     return (
       <ListItem
         title={this.props.customer.name}
@@ -28,14 +35,14 @@ export default class CustomerItem extends React.Component {
         }}
         subtitle={
           <View style={styles.subtitleView}>
-            <Text style={styles.ratingText}>Số Điện Thoại</Text> {this.props.customer.Phone}
-            <Text style={styles.ratingText}>Trạng Thái</Text>  {currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'}
-            <Text style={styles.ratingText}>Ngày Cập Nhập HS</Text> {this.props.customer.lastmodifieddate}
+            <Text style={styles.phone}>{this.props.customer.phone ? this.props.customer.phone : 'Không có'} </Text> 
+            <Text style={styles.ratingText}>{currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'} </Text>  
+            <Text style={styles.ratingText}>{'Ngày cập nhập: ' + moment(this.props.customer.lastmodifieddate).format('hh:mm DD/MM/YYYY')} </Text>
           </View>
         }
         rightElement={() => (
-          <TouchableOpacity onPress={this.editCustomer}>
-            <Icon name="account-edit" type="material-community" size={30} />
+          <TouchableOpacity onPress={this.callCustomer}>
+            <Icon name="phone" type="material-community" size={30} />
           </TouchableOpacity>
         )}
         // eslint-disable-next-line react-native/no-inline-styles
@@ -59,4 +66,7 @@ const styles = StyleSheet.create({
   },
   subtitleView: {},
   ratingText: {},
+  phone: {
+    color: '#005ba6'
+  }
 });

@@ -49,6 +49,8 @@ class Form extends React.Component {
             line: responseData.Line,
             tenDonVi: DonVi.TenDonVi,
             ngayVaoLam: responseData.NgayVaoLam,
+            phone: responseData.DienThoai,
+            address: responseData.DiaChiThuongChu
           };
           await AsyncStorage.setItem(
             'loginDetails',

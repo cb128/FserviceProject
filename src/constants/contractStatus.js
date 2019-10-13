@@ -1,5 +1,12 @@
 export default [
         {
+          "TrangThaiID": 0,
+          "TenTrangThai": "Mới tạo",
+          "Mau": "ff00ff",
+          "DoiTuongID": 1,
+          "ParentID": null
+        },
+        {
           "TrangThaiID": 1,
           "TenTrangThai": "Cuộc hẹn",
           "Mau": "ff00ff",

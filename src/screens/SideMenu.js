@@ -31,11 +31,10 @@ class SideMenu extends React.Component {
           avatarPath: data.hinh,
           arrUserData: [
             {name: data.hoTen, image: data.hinh},
-            {title: 'Phòng Ban', value: data.tenPhongBan},
-            {title: 'Chức Vụ', value: data.tenChucVu},
-            {title: 'Ngày Vào Làm', value: data.ngayVaoLam},
-            {title: 'Line', value: data.line},
-            {title: 'Đơn Vị', value: data.tenDonVi},
+            {title: 'Mã Nhân viên', value: data.maNguoiDung},
+            {title: 'Số ĐTDĐ', value: data.phone},
+            {title: 'Địa chỉ', value: data.address},
+            {title: 'Email', value: data.email},
           ],
         });
       });
@@ -167,8 +166,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageView: {
-    width: 100,
-    height: 100,
+    width: 50,
+    height: 50,
     marginLeft: 20,
     marginVertical: 20,
     borderRadius: 50,

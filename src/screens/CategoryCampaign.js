@@ -37,6 +37,18 @@ class CategoryCampaign extends React.Component {
           />
         </TouchableOpacity>
       ),
+      headerRight: (
+        <Icon
+          name="person-add"
+          color="black"
+          underlayColor="#ffb900"
+          // eslint-disable-next-line react-native/no-inline-styles
+          iconStyle={{marginRight: 15}}
+          onPress={() => {
+            navigation.navigate('AddingCustomer', {title: 'Thêm Khách Hàng'});
+          }}
+        />
+      ),
     };
   };
 
