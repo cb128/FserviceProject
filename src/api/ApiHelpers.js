@@ -164,3 +164,25 @@ export const postCustomer = (funcName, item) => {
   });
 };
 
+export const changePassword = async newPassword => {
+  let userID;
+
+  await getUserID().then(value => {
+    userID = value;
+  });
+
+  let formdata = new FormData();
+  formdata.append('function', 'changePassword');
+  formdata.append('nguoiDungID', userID);
+  formdata.append('passwordNew', newPassword);
+  console.log(formdata);
+
+  return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Basic RG9pVGFjOmZkc2FvZmlkNDM1Zjg4ZGlvZ21ucjY1OTA5OGZzMDMyYWE4OGFnZmc4ODhmODhmZ2Zkcw==',
+    },
+    body: formdata,
+  });
+};
