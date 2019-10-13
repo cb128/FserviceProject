@@ -6,6 +6,7 @@ import {
   Alert,
   ScrollView,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import {Icon, Image, Divider} from 'react-native-elements';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -91,24 +92,36 @@ class SideMenu extends React.Component {
     this.props.navigation.navigate('ChangePassword');
   };
 
+  _closeMenu = () => {
+    this.props.navigation.closeDrawer();
+  };
+
   render() {
     return (
       <View style={styles.container}>
         <ScrollView>
           <View style={styles.headerView}>
-            <Image
-              source={
-                this.state.avatarPath.includes('http')
-                  ? {uri: this.state.avatarPath}
-                  : placeHolderImage
-              }
-              style={styles.imageView}
-            />
-          </View>
-          <View>
-          <Text style={{marginLeft: 10, fontSize: 20, fontWeight: 'bold'}}>
-              {this.state.name}
-            </Text>
+            <TouchableOpacity
+              onPress={this._closeMenu}
+              style={styles.toggleView}>
+              <Icon
+                name="menu"
+                type="material"
+                color="black"
+                containerStyle={styles.toggleButton}
+              />
+            </TouchableOpacity>
+            <View style={styles.contentView}>
+              <Image
+                source={
+                  this.state.avatarPath.includes('http')
+                    ? {uri: this.state.avatarPath}
+                    : placeHolderImage
+                }
+                style={styles.imageView}
+              />
+              <Text style={styles.username}>{this.state.name}</Text>
+            </View>
           </View>
           <TouchableOpacity style={styles.menuItem} onPress={this._goToProfile}>
             <Icon
@@ -162,6 +175,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   headerView: {
+    backgroundColor: '#ffb900',
+  },
+  toggleView: {
+    height: 30,
+  },
+  toggleButton: {
+    marginTop: 10,
+    marginRight: 10,
+    alignItems: 'flex-end',
+  },
+  contentView: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#ffb900',
@@ -181,6 +205,11 @@ const styles = StyleSheet.create({
   },
   separator: {
     marginVertical: 2,
+  },
+  username: {
+    marginLeft: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
 

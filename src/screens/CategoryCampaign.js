@@ -80,14 +80,6 @@ class CategoryCampaign extends React.Component {
   };
 
   renderItem = ({item}) => (
-    // <ListItem
-    //   title={item.TenNhomNganh}
-    //   leftIcon={<Icon name={'record-voice-over'} />}
-    //   rightIcon={<Icon name={'chevron-right'} />}
-    //   titleStyle={styles.titleStyle}
-    //   containerStyle={styles.itemStyle}
-    //   onPress={this._goToListCampaign({item})}
-    // />
     <CategoryListItem
       key={item.NhomNganhID}
       category={item}

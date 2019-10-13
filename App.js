@@ -8,12 +8,9 @@
 
 import React from 'react';
 import {Platform, Dimensions} from 'react-native';
-import {
-  createAppContainer,
-  createStackNavigator,
-  createSwitchNavigator,
-  createDrawerNavigator,
-} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createDrawerNavigator} from 'react-navigation-drawer';
 import SplashScreen from 'react-native-splash-screen';
 
 import AuthLoadingScreen from './src/screens/AuthLoadingScreen';

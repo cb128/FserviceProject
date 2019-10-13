@@ -2,6 +2,7 @@ import React from 'react';
 import {withNavigation} from 'react-navigation';
 import {loginApp} from '../api/ApiHelpers';
 import {
+  ActivityIndicator,
   View,
   Text,
   TouchableOpacity,
@@ -17,10 +18,12 @@ class Form extends React.Component {
     this.state = {
       email: '',
       password: '',
+      loading: false,
     };
   }
 
   handleLogin = async () => {
+    this.setState({loading: true});
     const {email, password} = this.state;
     let emailParam = email.toLowerCase().trim();
     let passwordParam = password.toLowerCase().trim();
@@ -54,14 +57,17 @@ class Form extends React.Component {
             JSON.stringify(loginDetails),
           );
           // Navigate App stack
+          this.setState({loading: false});
           this.props.navigation.navigate('App');
         } else {
+          this.setState({loading: false});
           // eslint-disable-next-line no-alert
           alert('Tài khoản không hợp lệ!');
         }
       } catch (error) {
         // eslint-disable-next-line no-alert
         alert(error);
+        this.setState({loading: false});
       }
     }
   };
@@ -85,6 +91,12 @@ class Form extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <ActivityIndicator
+          size="large"
+          color="black"
+          animating={this.state.loading}
+          style={styles.activityIndicator}
+        />
         <InputView
           ref={passwordView => {
             this.passwordView = passwordView;
@@ -141,6 +153,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000',
     textAlign: 'center',
+  },
+  activityIndicator: {
+    position: 'absolute',
+    marginLeft: Dimensions.get('window').width / 2 - 10,
+    marginTop: Dimensions.get('window').height / 2 - 10,
   },
 });
 
