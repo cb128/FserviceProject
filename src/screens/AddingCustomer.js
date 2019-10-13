@@ -305,7 +305,7 @@ class AddingCustomer extends React.Component {
   };
 
   // Get image from gallery
-  chooseFile = ({item}) => {
+  chooseFile = () => {
     var options = {
       title: 'Select Image',
       customButtons: [
@@ -492,7 +492,7 @@ class AddingCustomer extends React.Component {
         />
     </View>
 
-    <View style={styles.wrapTitle}>
+    {/* <View style={styles.wrapTitle}>
       <Text style={styles.title}>Xưng hô</Text>
       <Input
           containerStyle={styles.input}
@@ -501,7 +501,7 @@ class AddingCustomer extends React.Component {
           value={this.state.customerpreName}
           onChangeText= { text  => this.setState({ customerpreName: text}) } 
         />
-    </View>
+    </View> */}
 
     <View style={styles.wrapTitle}>
       <Text style={styles.title}>Họ và tên <Text style={styles.isRequired}> (*)</Text></Text>
@@ -782,7 +782,8 @@ class AddingCustomer extends React.Component {
     
     return (
     <ScrollView>
-      {this.renderProject()}
+      
+      {!this.state.data && this.renderProject()}
       {this.renderCallInfo()}
       {this.renderCustomerInfo()}
       
