@@ -18,6 +18,8 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
+import Autocomplete from 'react-native-autocomplete-input';
+import {getObjectFromArrayById} from '../ulti/index';
 import {
   initCustomerData,
   getListGroup,
@@ -43,6 +45,7 @@ class AddingCustomer extends React.Component {
       listCallStatus: [],
       listContractStatus: [],
       listEmployees: [],
+      autocompleteEmployee: [],
 
       // project
       category: '',
@@ -54,8 +57,10 @@ class AddingCustomer extends React.Component {
       contractStatus: '',
       contractChildStatus: '',
       employeeGetContract: '',
+      employeeGetContractName: '',
 
-      name: '',
+      query: '',
+      hideAutocomplete: true,
 
       // Customer Info
       customerID: '',
@@ -203,6 +208,7 @@ class AddingCustomer extends React.Component {
         customercompany: data.CongTyCongViec ? data.CongTyCongViec : '',
         customercontractNumber: data.SoHD ? data.SoHD : '',
         customernote: data.GhiChu ? data.GhiChu : '',
+        employeeGetContract: data.Line ? data.Line : '',
       });
     }
   };
@@ -430,6 +436,16 @@ class AddingCustomer extends React.Component {
     }
   };
 
+  _filterData = query => {
+    const newData = this.state.listEmployees.filter(function(item) {
+      //applying filter for the inserted text in search bar
+      const itemData = item.HoTen ? item.HoTen.toUpperCase() : ''.toUpperCase();
+      const textData = query.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    return newData;
+  };
+
   // render project
   renderProject = () => {
     // let categoryItems = this.state.listCategory.map( (i) => {
@@ -483,7 +499,14 @@ class AddingCustomer extends React.Component {
     // let callItems;
     let contractItems;
     let employeeItems;
-
+    const {query} = this.state;
+    const data = this._filterData(query);
+    const name = getObjectFromArrayById(
+      this.state.listEmployees,
+      'NguoiDungID',
+      this.state.employeeGetContract,
+    );
+    console.log('name', name);
     // callItems = this.state.listCallStatus.map( (i) => {
     //   return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
     // });
@@ -562,14 +585,39 @@ class AddingCustomer extends React.Component {
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>Người lấy HS</Text>
-          <Picker
+          <Autocomplete
+            data={data}
+            containerStyle={styles.input}
+            hideResults={this.state.hideAutocomplete}
+            defaultValue={name ? name.HoTen : ''}
+            onChangeText={text =>
+              this.setState({
+                query: text,
+                hideAutocomplete: false,
+              })
+            }
+            renderItem={({item, i}) => (
+              <TouchableOpacity
+                onPress={() =>
+                  this.setState({
+                    employeeGetContract: item.NguoiDungID,
+                    employeeGetContractName: item.HoTen,
+                    query: item.HoTen,
+                    hideAutocomplete: true,
+                  })
+                }>
+                <Text>{item.HoTen}</Text>
+              </TouchableOpacity>
+            )}
+          />
+          {/* <Picker
             selectedValue={this.state.employeeGetContract}
             onValueChange={value => {
               this.setState({employeeGetContract: value});
             }}>
             <Picker.Item label="Chưa có thông tin" value="" />
             {employeeItems}
-          </Picker>
+          </Picker> */}
         </View>
       </View>
     );
