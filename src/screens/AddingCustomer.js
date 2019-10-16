@@ -19,7 +19,7 @@ import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
 import Autocomplete from 'react-native-autocomplete-input';
-import {getObjectFromArrayById} from '../ulti/index';
+import {getObjectFromArrayById2} from '../ulti/index';
 import {
   initCustomerData,
   getListGroup,
@@ -91,6 +91,8 @@ class AddingCustomer extends React.Component {
       customercompany: '',
       customercontractNumber: '',
       customernote: '',
+      customerContractStatus: '',
+      customerContractChildStatus: '',
     };
   }
 
@@ -209,6 +211,8 @@ class AddingCustomer extends React.Component {
         customercontractNumber: data.SoHD ? data.SoHD : '',
         customernote: data.GhiChu ? data.GhiChu : '',
         employeeGetContract: data.Line ? data.Line : '',
+        customerContractStatus: data.TrangThaiID ? data.TrangThaiID : '',
+        customerContractChildStatus: data.TrangThaiChildID ? data.TrangThaiChildID : '',
       });
     }
   };
@@ -310,6 +314,7 @@ class AddingCustomer extends React.Component {
       ThuNhapHienTai: this.state.customersalary,
       Loai: 3,
       SoHD: this.state.customercontractNumber,
+      NhanVienTaoID: 90,
     };
 
     console.log('============item================', JSON.stringify(item));
@@ -497,11 +502,11 @@ class AddingCustomer extends React.Component {
   // render call status
   renderCallInfo = () => {
     // let callItems;
-    let contractItems;
-    let employeeItems;
+    // let contractItems;
+    // let employeeItems;
     const {query} = this.state;
     const data = this._filterData(query);
-    const name = getObjectFromArrayById(
+    const name = getObjectFromArrayById2(
       this.state.listEmployees,
       'NguoiDungID',
       this.state.employeeGetContract,
@@ -511,25 +516,25 @@ class AddingCustomer extends React.Component {
     //   return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
     // });
 
-    contractItems = this.state.listContractStatus.map(i => {
-      return (
-        <Picker.Item
-          key={i.TrangThaiID}
-          value={i.TrangThaiID}
-          label={i.TenTrangThai}
-        />
-      );
-    });
+    // contractItems = this.state.listContractStatus.map(i => {
+    //   return (
+    //     <Picker.Item
+    //       key={i.TrangThaiID}
+    //       value={i.TrangThaiID}
+    //       label={i.TenTrangThai}
+    //     />
+    //   );
+    // });
 
-    employeeItems = this.state.listEmployees.map(i => {
-      return (
-        <Picker.Item
-          key={i.NguoiDungID}
-          value={i.NguoiDungID}
-          label={i.HoTen}
-        />
-      );
-    });
+    // employeeItems = this.state.listEmployees.map(i => {
+    //   return (
+    //     <Picker.Item
+    //       key={i.NguoiDungID}
+    //       value={i.NguoiDungID}
+    //       label={i.HoTen}
+    //     />
+    //   );
+    // });
 
     return (
       <View>
@@ -561,26 +566,38 @@ class AddingCustomer extends React.Component {
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>TT hợp đồng</Text>
-          <Picker
+          {/* <Picker
             selectedValue={this.state.contractStatus}
             onValueChange={value => {
               this.setState({contractStatus: value});
             }}>
             <Picker.Item label="Chưa có thông tin" value="" />
             {contractItems}
-          </Picker>
+          </Picker> */}
+          <Input
+            containerStyle={styles.input}
+            inputStyle={{fontSize: 16}}
+            value={this.state.customerContractStatus}
+            editable={false}
+          />
         </View>
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>TT hợp đồng con</Text>
-          <Picker
+          {/* <Picker
             selectedValue={this.state.contractChildStatus}
             onValueChange={value => {
               this.setState({contractChildStatus: value});
             }}>
             <Picker.Item label="Chưa có thông tin" value="" />
             {contractItems}
-          </Picker>
+          </Picker> */}
+          <Input
+            containerStyle={styles.input}
+            inputStyle={{fontSize: 16}}
+            value={this.state.customerContractChildStatus}
+            editable={false}
+          />
         </View>
 
         <View style={styles.wrapTitle}>
@@ -930,7 +947,7 @@ class AddingCustomer extends React.Component {
     return (
       <ScrollView>
         {!this.state.data && this.renderProject()}
-        {this.renderCallInfo()}
+        {this.state.data && this.renderCallInfo()}
         {this.renderCustomerInfo()}
 
         <View style={{height: 20}} />

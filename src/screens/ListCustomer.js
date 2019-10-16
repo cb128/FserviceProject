@@ -38,6 +38,7 @@ class ListCustomer extends React.Component {
   }
 
   static navigationOptions = ({navigation, screenProps}) => ({
+    title: `${navigation.state.params.projectName.toUpperCase()}`,
     headerRight: (
       <Icon
         name="person-add"
@@ -86,7 +87,7 @@ class ListCustomer extends React.Component {
           name: e.SupplierName,
           status: e.TrangThaiID,
           phone: e.Phone,
-          lastmodifieddate: e.NgayGioGoi,
+          lastmodifieddate: e.NgayGio,
           data: e,
         };
         data.push(cus);
@@ -132,7 +133,7 @@ class ListCustomer extends React.Component {
 
   _goToUpdateCustomer = item => {
     this.props.navigation.navigate('AddingCustomer', {
-      title: 'Chỉnh Sửa Thông Tin',
+      title: item.name,
       data: item.data,
     });
   };
@@ -181,7 +182,7 @@ class ListCustomer extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <View style={styles.headerView}>
+        {/* <View style={styles.headerView}>
           <View style={{justifyContent: 'center', marginRight: 15, flex: 1}}>
             <Text style={{textAlign: 'right'}}>Dự án</Text>
             <Text
@@ -200,7 +201,7 @@ class ListCustomer extends React.Component {
               {this.state.allCustomer}
             </Text>
           </View>
-        </View>
+        </View> */}
         <SearchBar
           round
           searchIcon={{size: 24}}

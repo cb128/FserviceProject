@@ -36,7 +36,7 @@ export default class CustomerItem extends React.Component {
         subtitle={
           <View style={styles.subtitleView}>
             <Text style={styles.phone}>{this.props.customer.phone ? this.props.customer.phone : 'Không có'} </Text> 
-            <Text style={styles.ratingText}>{currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'} </Text>  
+            <Text style={styles.ratingText}>{currentStatus ? currentStatus.TenTrangThai : 'Mới tạo'} </Text>  
             <Text style={styles.ratingText}>{'Ngày cập nhập: ' + moment(this.props.customer.lastmodifieddate).format('hh:mm DD/MM/YYYY')} </Text>
           </View>
         }

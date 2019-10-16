@@ -1,5 +1,11 @@
 import React from 'react';
-import {View, FlatList} from 'react-native';
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import {getStatusProject} from '../api/ApiHelpers';
 import {getObjectFromArrayById} from '../ulti/index';
@@ -14,7 +20,7 @@ class DetailCampaign extends React.Component {
     const {navigation} = this.props;
 
     this.state = {
-      loading: false,
+      loading: true,
       data: [],
       error: null,
       refreshing: false,
@@ -23,9 +29,10 @@ class DetailCampaign extends React.Component {
       allCustomer: 0,
     };
   }
-  
-  static navigationOptions = () => ({
-    title: 'TPBANK'
+
+  // Set up navigation bar
+  static navigationOptions = ({navigation}) => ({
+    title: `${navigation.state.params.projectName.toUpperCase()}`,
   });
 
   keyExtractor = (item, index) => index.toString();
@@ -72,30 +79,33 @@ class DetailCampaign extends React.Component {
   getDetailCampaign = async () => {
     let response = await getStatusProject(this.state.projectCode);
     let responseData = await response.json();
-    
+
     if (responseData) {
       const data = [];
 
       responseData.forEach(e => {
-        if(e.Tong !== 0){
+        if (e.Tong !== 0) {
           data.push({
             name: e.TenTrangThai,
             icon: 'people',
             badgeValue: e.Tong,
             key: 1,
-          })
+          });
         }
       });
-      // All Customer 
-      const allCustomer = getObjectFromArrayById(responseData, this.key, detailCampaign.ALL_CUSTOMER);
-      
+      // All Customer
+      const allCustomer = getObjectFromArrayById(
+        responseData,
+        this.key,
+        detailCampaign.ALL_CUSTOMER,
+      );
+
       this.setState({
         data: data,
         loading: false,
         allCustomer: allCustomer['Tong'],
       });
-    }
-    else{
+    } else {
       this.setState({
         loading: false,
       });
@@ -106,6 +116,12 @@ class DetailCampaign extends React.Component {
     return (
       // eslint-disable-next-line react-native/no-inline-styles
       <View style={{flex: 1, backgroundColor: '#e6e8ee'}}>
+        <ActivityIndicator
+          size="large"
+          color="black"
+          animating={this.state.loading}
+          style={styles.activityIndicator}
+        />
         <FlatList
           // eslint-disable-next-line react-native/no-inline-styles
           style={{marginTop: 10}}
@@ -117,5 +133,13 @@ class DetailCampaign extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  activityIndicator: {
+    position: 'absolute',
+    marginLeft: Dimensions.get('window').width / 2 - 10,
+    marginTop: Dimensions.get('window').height / 2 - 10,
+  },
+});
 
 export default DetailCampaign;
