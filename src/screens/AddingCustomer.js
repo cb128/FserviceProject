@@ -33,6 +33,7 @@ class AddingCustomer extends React.Component {
     const {navigation} = this.props;
     this.state = {
       data: navigation.getParam('data', ''),
+      projectCode: navigation.getParam('projectCode', ''),
       selectedGenderIndex: 0,
       selectedCategoryIndex: 0,
       imgPath: {},
@@ -182,6 +183,8 @@ class AddingCustomer extends React.Component {
     const data = this.state.data;
     if (data) {
       this.setState({
+        project: this.state.projectCode,
+
         customerID: data.SupplierID ? data.SupplierID : '',
         customername: data.SupplierName ? data.SupplierName : '',
         customerDOB: data.Ngaysinh ? data.Ngaysinh : '',
@@ -300,9 +303,9 @@ class AddingCustomer extends React.Component {
       DanhXung: this.state.customerpreName,
       Email: this.state.customeremail,
       NgayGio: '2019-09-13T18:05:56.7881953+07:00',
-      CICID: 0,
+      CICID: null,
       TenCIC: '',
-      CICChildID: 0,
+      CICChildID: null,
       TenCICChild: '',
       NgayCapCMND: '2018-01-18T06:42:04',
       NoiCap: this.state.customernationalPlace,
@@ -511,7 +514,6 @@ class AddingCustomer extends React.Component {
       'NguoiDungID',
       this.state.employeeGetContract,
     );
-    console.log('name', name);
     // callItems = this.state.listCallStatus.map( (i) => {
     //   return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
     // });
@@ -539,7 +541,7 @@ class AddingCustomer extends React.Component {
     return (
       <View>
         <View style={styles.sectionTitle}>
-          <Text style={styles.SectionHeaderStyle}>Thông tin cuộc gọi</Text>
+          <Text style={styles.SectionHeaderStyle}>Thông tin hồ sơ</Text>
         </View>
         {/*        
       <View style={styles.wrapTitle}>
@@ -566,14 +568,6 @@ class AddingCustomer extends React.Component {
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>TT hợp đồng</Text>
-          {/* <Picker
-            selectedValue={this.state.contractStatus}
-            onValueChange={value => {
-              this.setState({contractStatus: value});
-            }}>
-            <Picker.Item label="Chưa có thông tin" value="" />
-            {contractItems}
-          </Picker> */}
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -584,14 +578,6 @@ class AddingCustomer extends React.Component {
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>TT hợp đồng con</Text>
-          {/* <Picker
-            selectedValue={this.state.contractChildStatus}
-            onValueChange={value => {
-              this.setState({contractChildStatus: value});
-            }}>
-            <Picker.Item label="Chưa có thông tin" value="" />
-            {contractItems}
-          </Picker> */}
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -627,14 +613,6 @@ class AddingCustomer extends React.Component {
               </TouchableOpacity>
             )}
           />
-          {/* <Picker
-            selectedValue={this.state.employeeGetContract}
-            onValueChange={value => {
-              this.setState({employeeGetContract: value});
-            }}>
-            <Picker.Item label="Chưa có thông tin" value="" />
-            {employeeItems}
-          </Picker> */}
         </View>
       </View>
     );
@@ -947,7 +925,7 @@ class AddingCustomer extends React.Component {
     return (
       <ScrollView>
         {!this.state.data && this.renderProject()}
-        {this.state.data && this.renderCallInfo()}
+        {this.state.customerID !== '' && this.renderCallInfo()}
         {this.renderCustomerInfo()}
 
         <View style={{height: 20}} />

@@ -20,9 +20,7 @@ export default class CustomerItem extends React.Component {
   }
 
   render() {
-    console.log(this.props.customer);
     const currentStatus = getObjectFromArrayById(contractStatus, 'TrangThaiID', this.props.customer.status);
-    console.log(currentStatus);
     return (
       <ListItem
         title={this.props.customer.name}

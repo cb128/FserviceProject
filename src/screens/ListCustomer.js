@@ -7,6 +7,7 @@ import {
   Spinner,
   Linking,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
@@ -23,7 +24,7 @@ class ListCustomer extends React.Component {
 
     this.state = {
       data: [],
-      isLoading: false,
+      isLoading: true,
       showLoadMore: true,
       loadingMore: false,
       search: '',
@@ -135,6 +136,7 @@ class ListCustomer extends React.Component {
     this.props.navigation.navigate('AddingCustomer', {
       title: item.name,
       data: item.data,
+      projectCode: this.state.projectCode,
     });
   };
 
@@ -220,6 +222,12 @@ class ListCustomer extends React.Component {
           inputContainerStyle={{backgroundColor: '#e6e6e6'}}
           lightTheme
         />
+        <ActivityIndicator
+          size="large"
+          color="black"
+          animating={this.state.isLoading}
+          style={styles.activityIndicator}
+        />
         <FlatList
           keyExtractor={this.keyExtractor}
           data={this.state.data}
@@ -249,6 +257,11 @@ const styles = StyleSheet.create({
   subtitleView: {
     flexDirection: 'column',
     paddingTop: 5,
+  },
+  activityIndicator: {
+    position: 'absolute',
+    marginLeft: Dimensions.get('window').width / 2 - 10,
+    marginTop: Dimensions.get('window').height / 2 - 10,
   },
   content: {},
   loadMore: {
