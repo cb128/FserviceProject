@@ -25,8 +25,8 @@ class Form extends React.Component {
   handleLogin = async () => {
     this.setState({loading: true});
     const {email, password} = this.state;
-    let emailParam = email.toLowerCase().trim();
-    let passwordParam = password.toLowerCase().trim();
+    let emailParam = email.trim();
+    let passwordParam = password.trim();
 
     if (emailParam === '' && password === '') {
       alert('Vui lòng nhập đầy đủ thông tin');

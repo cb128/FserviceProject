@@ -86,9 +86,12 @@ class ListCustomer extends React.Component {
         const cus = {
           id: e.SupplierID,
           name: e.SupplierName,
+          gender: e.GioiTinh,
           status: e.TrangThaiID,
+          childStatus: e.TrangThaiChildID,
           phone: e.Phone,
           lastmodifieddate: e.NgayGioGoi,
+          note: e.GhiChu,
           data: e,
         };
         data.push(cus);
@@ -215,7 +218,7 @@ class ListCustomer extends React.Component {
             });
             this._fetchCustomer();
           }}
-          placeholder="Type Here..."
+          placeholder="Tìm kiếm..."
           value={this.state.search}
           containerStyle={{backgroundColor: '#ffffff'}}
           // eslint-disable-next-line react-native/no-inline-styles

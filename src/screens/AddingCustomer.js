@@ -27,6 +27,7 @@ import {
   postCustomer,
 } from '../api/ApiHelpers';
 import contractStatus from '../constants/contractStatus';
+import contractChildStatus from '../constants/contractChildStatus';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -509,6 +510,7 @@ class AddingCustomer extends React.Component {
     // let employeeItems;
     // const {query} = this.state;
     // const data = this._filterData(query);
+    let childContractStatus = null;
     const name = getObjectFromArrayById2(
       this.state.listEmployees,
       'NguoiDungID',
@@ -519,7 +521,18 @@ class AddingCustomer extends React.Component {
       'TrangThaiID',
       this.state.customerContractStatus,
     );
-    
+    const childStatus = getObjectFromArrayById(
+      contractChildStatus,
+      'parent',
+      this.state.customerContractStatus,
+    );
+    if (childStatus.value.length > 0) {
+      childContractStatus = getObjectFromArrayById(
+        childStatus.value,
+        'TrangThaiID',
+        this.state.customerContractChildStatus,
+      );
+    }
 
     // callItems = this.state.listCallStatus.map( (i) => {
     //   return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
@@ -574,7 +587,7 @@ class AddingCustomer extends React.Component {
       </View>  */}
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>TT hợp đồng</Text>
+          <Text style={styles.title}>Trạng thái hồ sơ</Text>
           <Text style={styles.inputReadonly}>
             {contract ? contract.TenTrangThai : ''}
           </Text>
@@ -587,9 +600,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>TT hợp đồng con</Text>
+          <Text style={styles.title}>Trạng thái hồ sơ con</Text>
           <Text style={styles.inputReadonly}>
-            {this.state.customerContractChildStatus}
+            {childContractStatus ? childContractStatus.TenTrangThai : ''}
           </Text>
           {/* <Input
             containerStyle={styles.input}
@@ -600,7 +613,7 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Người lấy HS</Text>
+          <Text style={styles.title}>Người lấy hồ sơ</Text>
           <Text style={styles.inputReadonly}>{name ? name.HoTen : ''}</Text>
           {/* <Autocomplete
             data={data}
@@ -637,7 +650,7 @@ class AddingCustomer extends React.Component {
     return (
       <View>
         <View style={styles.sectionTitle}>
-          <Text style={styles.SectionHeaderStyle}>Thông tin hồ sơ</Text>
+          <Text style={styles.SectionHeaderStyle}>Thông tin khách hàng</Text>
         </View>
 
         <View>

@@ -121,6 +121,8 @@ class SideMenu extends React.Component {
                 }
                 style={styles.imageView}
               />
+            </View>
+            <View style={styles.contentView}>
               <Text style={styles.username}>{this.state.name}</Text>
             </View>
           </View>
@@ -167,8 +169,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageView: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     marginLeft: 20,
     marginVertical: 20,
     borderRadius: 50,

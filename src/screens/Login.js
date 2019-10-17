@@ -14,7 +14,7 @@ import {
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Form from '../components/Form';
 import logo from '../assets/images/logo_services.png';
-import slogan from '../assets/images/img_slogan.png';
+import slogan from '../assets/images/landing_page.jpg';
 
 const headerStyle = {
   marginTop: Platform.OS === 'android' ? 0 : 0,
