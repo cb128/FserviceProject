@@ -88,7 +88,7 @@ class ListCustomer extends React.Component {
           name: e.SupplierName,
           status: e.TrangThaiID,
           phone: e.Phone,
-          lastmodifieddate: e.NgayGio,
+          lastmodifieddate: e.NgayGioGoi,
           data: e,
         };
         data.push(cus);

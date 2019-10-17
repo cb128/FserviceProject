@@ -19,13 +19,14 @@ import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
 import Autocomplete from 'react-native-autocomplete-input';
-import {getObjectFromArrayById2} from '../ulti/index';
+import {getObjectFromArrayById2, getObjectFromArrayById} from '../ulti/index';
 import {
   initCustomerData,
   getListGroup,
   getListProject,
   postCustomer,
 } from '../api/ApiHelpers';
+import contractStatus from '../constants/contractStatus';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -118,7 +119,6 @@ class AddingCustomer extends React.Component {
     if (responseData) {
       this.setState({
         listCallStatus: responseData.listTrangThaiCuocGoi,
-        listContractStatus: responseData.listTrangThaiHopDong,
         listEmployees: responseData.listNguoiDung,
         loading: false,
       });
@@ -129,7 +129,7 @@ class AddingCustomer extends React.Component {
     }
   };
 
-  // getInitCategory = async () => {
+  // getInitContractStatus = async () => {
   //   let response = await getListGroup();
   //   let responseData = await response.json();
   //   if (responseData) {
@@ -189,7 +189,7 @@ class AddingCustomer extends React.Component {
         customername: data.SupplierName ? data.SupplierName : '',
         customerDOB: data.Ngaysinh ? data.Ngaysinh : '',
         customerpreName: data.DanhXung ? data.DanhXung : '',
-        customergender: data.GioiTinh ? data.GioiTinh : 0,
+        customergender: data.GioiTinh ? 1 : 0,
         // customermaritalStatus: data.SupplierName ? data.SupplierName : '',
         customerphone: data.Phone ? data.Phone : '',
         customeremail: data.Email ? data.Email : '',
@@ -213,7 +213,7 @@ class AddingCustomer extends React.Component {
         customercompany: data.CongTyCongViec ? data.CongTyCongViec : '',
         customercontractNumber: data.SoHD ? data.SoHD : '',
         customernote: data.GhiChu ? data.GhiChu : '',
-        employeeGetContract: data.Line ? data.Line : '',
+        employeeGetContract: data.NhanVienChamSocID ? data.NhanVienChamSocID : '',
         customerContractStatus: data.TrangThaiID ? data.TrangThaiID : '',
         customerContractChildStatus: data.TrangThaiChildID ? data.TrangThaiChildID : '',
       });
@@ -276,43 +276,43 @@ class AddingCustomer extends React.Component {
       Quan: this.state.customerdistrict,
       Tinh: this.state.customerprovince,
       NhomKhachHang: this.state.project,
-      Address: '',
+      // Address: '',
       NgaySinh: this.state.customerDOB,
       NgayGioGoi: this.state.customercall,
-      GioiTinh: true,
+      GioiTinh: this.state.customergender === 1 ? true : false,
       CMND: this.state.customernationalId,
       CongTyCongViec: this.state.customercompany,
       NgheNghiep: this.state.customerjob,
-      DoiTuongID: 1,
+      // DoiTuongID: 1,
       GhiChu: this.state.customernote,
-      TongGhiChu: 0,
-      DanhGia: 0,
-      NguonID: 3,
-      TrangThaiID: 2,
-      TrangThaiChildID: 18,
-      AnhCaNhan: '',
-      AnhCMND: '',
+      // TongGhiChu: 0,
+      // DanhGia: 0,
+      // NguonID: 3,
+      // TrangThaiID: 2,
+      // TrangThaiChildID: 18,
+      // AnhCaNhan: '',
+      // AnhCMND: '',
       ThoiGianVay: this.state.customerloanTime,
       KhoanVay: this.state.customerloan,
-      DiaChiLienHe: '',
-      NhanVienLine: '',
-      ListTenSanPham: 'THE, Hóa Đơn Điện',
-      ListMaSanPham: 'THE, HDD',
-      NhanVienChamSocID: 90,
-      AnhMatTruocThe: '',
+      // DiaChiLienHe: '',
+      // NhanVienLine: '',
+      // ListTenSanPham: 'THE, Hóa Đơn Điện',
+      // ListMaSanPham: 'THE, HDD',
+      NhanVienChamSocID: this.state.employeeGetContract,
+      // AnhMatTruocThe: '',
       DanhXung: this.state.customerpreName,
       Email: this.state.customeremail,
-      NgayGio: '2019-09-13T18:05:56.7881953+07:00',
-      CICID: null,
-      TenCIC: '',
-      CICChildID: null,
-      TenCICChild: '',
-      NgayCapCMND: '2018-01-18T06:42:04',
+      // NgayGio: null,
+      // CICID: null,
+      // TenCIC: '',
+      // CICChildID: null,
+      // TenCICChild: '',
+      NgayCapCMND: this.state.customernationalDate ? this.state.customernationalDate : null,
       NoiCap: this.state.customernationalPlace,
-      DiaChiHen: 'Tp HCM',
-      ThoiGianHen: '2019-08-09T09:09:04',
-      ThoiGianNhac: '2019-09-19T20:08:04',
-      TinhTrangHonNhan: 0,
+      // DiaChiHen: '',
+      // ThoiGianHen: '2019-08-09T09:09:04',
+      // ThoiGianNhac: '2019-09-19T20:08:04',
+      // TinhTrangHonNhan: 0,
       HanMucVay: this.state.customercashLimit,
       ThuNhapHienTai: this.state.customersalary,
       Loai: 3,
@@ -507,13 +507,20 @@ class AddingCustomer extends React.Component {
     // let callItems;
     // let contractItems;
     // let employeeItems;
-    const {query} = this.state;
-    const data = this._filterData(query);
+    // const {query} = this.state;
+    // const data = this._filterData(query);
     const name = getObjectFromArrayById2(
       this.state.listEmployees,
       'NguoiDungID',
       this.state.employeeGetContract,
     );
+    const contract = getObjectFromArrayById(
+      contractStatus,
+      'TrangThaiID',
+      this.state.customerContractStatus,
+    );
+    
+
     // callItems = this.state.listCallStatus.map( (i) => {
     //   return <Picker.Item key={i.CICID} value={i.CICID} label={i.TenCIC} />
     // });
@@ -568,27 +575,34 @@ class AddingCustomer extends React.Component {
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>TT hợp đồng</Text>
-          <Input
+          <Text style={styles.inputReadonly}>
+            {contract ? contract.TenTrangThai : ''}
+          </Text>
+          {/* <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
             value={this.state.customerContractStatus}
             editable={false}
-          />
+          /> */}
         </View>
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>TT hợp đồng con</Text>
-          <Input
+          <Text style={styles.inputReadonly}>
+            {this.state.customerContractChildStatus}
+          </Text>
+          {/* <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
             value={this.state.customerContractChildStatus}
             editable={false}
-          />
+          /> */}
         </View>
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>Người lấy HS</Text>
-          <Autocomplete
+          <Text style={styles.inputReadonly}>{name ? name.HoTen : ''}</Text>
+          {/* <Autocomplete
             data={data}
             containerStyle={styles.input}
             hideResults={this.state.hideAutocomplete}
@@ -612,7 +626,7 @@ class AddingCustomer extends React.Component {
                 <Text>{item.HoTen}</Text>
               </TouchableOpacity>
             )}
-          />
+          /> */}
         </View>
       </View>
     );
@@ -943,6 +957,7 @@ const styles = StyleSheet.create({
   container: {flex: 1},
   wrapTitle: {marginTop: 5, marginBottom: 10},
   title: {marginLeft: 20, marginTop: 20, fontWeight: 'bold', fontSize: 16},
+  inputReadonly: {marginLeft: 20, marginTop: 20, fontSize: 16},
   input: {marginLeft: 10},
   segment: {marginLeft: 15, marginRight: 15, marginTop: 15},
   SectionHeaderStyle: {
