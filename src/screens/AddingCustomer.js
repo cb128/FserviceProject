@@ -526,7 +526,7 @@ class AddingCustomer extends React.Component {
       'parent',
       this.state.customerContractStatus,
     );
-    if (childStatus.value.length > 0) {
+    if (childStatus && childStatus.value.length > 0) {
       childContractStatus = getObjectFromArrayById(
         childStatus.value,
         'TrangThaiID',

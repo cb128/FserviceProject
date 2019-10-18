@@ -38,13 +38,14 @@ export default class CustomerItem extends React.Component {
       'parent',
       this.props.customer.status,
     );
-    if (childStatus.value.length > 0) {
+    if (childStatus && childStatus.value.length > 0) {
       currentChildStatus = getObjectFromArrayById(
         childStatus.value,
         'TrangThaiID',
         this.props.customer.childStatus,
       );
     }
+    console.log(currentChildStatus);
     return (
       <ListItem
         title={this.props.customer.name}
@@ -59,18 +60,20 @@ export default class CustomerItem extends React.Component {
             <Text style={styles.phone}>
               {this.props.customer.phone
                 ? this.props.customer.phone
-                : 'Không có'}{' '}
+                : 'Không có'}
             </Text>
             <Text style={styles.ratingText}>
-              {currentStatus ? currentStatus.TenTrangThai : ''}{' '}
+              {'Trạng thái hồ sơ: ' + currentStatus ? currentStatus.TenTrangThai : ''}
             </Text>
-            {currentChildStatus && (
+            {currentChildStatus !== null && (
               <Text style={styles.ratingText}>
-                {currentChildStatus.TenTrangThai}
+                {'Trạng thái hồ sơ con: ' + currentChildStatus.TenTrangThai}
               </Text>
             )}
             {this.props.customer.note && (
-              <Text style={styles.ratingText}>{this.props.customer.note}</Text>
+              <Text style={styles.ratingText}>
+                {'Ghi chú: ' + this.props.customer.note}
+              </Text>
             )}
             <Text style={styles.ratingText}>
               {'Ngày cập nhập: '}
