@@ -45,6 +45,9 @@ export default class CustomerItem extends React.Component {
         this.props.customer.childStatus,
       );
     }
+    if(currentChildStatus === ''){
+      currentChildStatus = null;
+    }
     return (
       <ListItem
         title={this.props.customer.name}
