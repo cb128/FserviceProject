@@ -190,7 +190,7 @@ class AddingCustomer extends React.Component {
         customername: data.SupplierName ? data.SupplierName : '',
         customerDOB: data.Ngaysinh ? data.Ngaysinh : '',
         customerpreName: data.DanhXung ? data.DanhXung : '',
-        customergender: data.GioiTinh ? 1 : 0,
+        customergender: data.GioiTinh ? 0 : 1,
         // customermaritalStatus: data.SupplierName ? data.SupplierName : '',
         customerphone: data.Phone ? data.Phone : '',
         customeremail: data.Email ? data.Email : '',
@@ -280,7 +280,7 @@ class AddingCustomer extends React.Component {
       // Address: '',
       NgaySinh: this.state.customerDOB,
       NgayGioGoi: this.state.customercall,
-      GioiTinh: this.state.customergender === 1 ? true : false,
+      GioiTinh: this.state.customergender === 0 ? true : false,
       CMND: this.state.customernationalId,
       CongTyCongViec: this.state.customercompany,
       NgheNghiep: this.state.customerjob,
@@ -320,6 +320,13 @@ class AddingCustomer extends React.Component {
       SoHD: this.state.customercontractNumber,
       NhanVienTaoID: 90,
     };
+
+    if(this.state.imgPath.uri){
+      item.AnhCMND = this.state.customername + '.png';
+    }
+    if(this.state.urlFile){
+      item.AnhCaNhan = this.state.customername + '.pdf';
+    }
 
     console.log('============item================', JSON.stringify(item));
 
@@ -762,6 +769,8 @@ class AddingCustomer extends React.Component {
             placeholder="Chưa có thông tin"
             value={this.state.customeraddress}
             onChangeText={text => this.setState({customeraddress: text})}
+            multiline={true}
+            numberOfLines = {4}
           />
         </View>
 
@@ -905,6 +914,8 @@ class AddingCustomer extends React.Component {
             placeholder="Chưa có thông tin"
             value={this.state.customernote}
             onChangeText={text => this.setState({customernote: text})}
+            multiline={true}
+            numberOfLines = {4}
           />
         </View>
 

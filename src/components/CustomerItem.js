@@ -45,7 +45,9 @@ export default class CustomerItem extends React.Component {
         this.props.customer.childStatus,
       );
     }
-    console.log(currentChildStatus);
+    if (currentChildStatus === '') {
+      currentChildStatus = null;
+    }
     return (
       <ListItem
         title={this.props.customer.name}
@@ -63,7 +65,9 @@ export default class CustomerItem extends React.Component {
                 : 'Không có'}
             </Text>
             <Text style={styles.ratingText}>
-              {'Trạng thái hồ sơ: ' + currentStatus ? currentStatus.TenTrangThai : ''}
+              {'Trạng thái hồ sơ: ' + currentStatus
+                ? currentStatus.TenTrangThai
+                : ''}
             </Text>
             {currentChildStatus !== null && (
               <Text style={styles.ratingText}>
