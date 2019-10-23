@@ -24,6 +24,7 @@ class ListCustomer extends React.Component {
 
     this.state = {
       data: [],
+      searchData: [],
       isLoading: true,
       showLoadMore: true,
       loadingMore: false,
@@ -99,6 +100,7 @@ class ListCustomer extends React.Component {
 
       this.setState(state => ({
         data: !state.loadingMore ? data : [...state.data, ...data],
+        searchData: !state.loadingMore ? data : [...state.data, ...data],
         isLoading: false,
         loadingMore: false,
       }));
@@ -164,13 +166,18 @@ class ListCustomer extends React.Component {
   );
 
   searchFilterFunction(text) {
-    //passing the inserted text in text input
-    const newData = this.state.data.filter(function(item) {
-      //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
+    let newData = [];
+    if (text === '') {
+      newData = this.state.searchData;
+    } else {
+      //passing the inserted text in text input
+      newData = this.state.searchData.filter(function(item) {
+        //applying filter for the inserted text in search bar
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+    }
     this.setState({
       //setting the filtered newData on datasource
       //After setting the data it will automatically re-render the view
@@ -213,10 +220,10 @@ class ListCustomer extends React.Component {
           onChangeText={text => this.searchFilterFunction(text)}
           onClear={text => {
             this.searchFilterFunction('');
-            this.setState({
-              begin: 0,
-            });
-            this._fetchCustomer();
+            // this.setState({
+            //   begin: 0,
+            // });
+            // this._fetchCustomer();
           }}
           placeholder="Tìm kiếm..."
           value={this.state.search}

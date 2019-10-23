@@ -28,6 +28,7 @@ import {
 } from '../api/ApiHelpers';
 import contractStatus from '../constants/contractStatus';
 import contractChildStatus from '../constants/contractChildStatus';
+import {uploadFile} from '../api/uploadHelper';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -182,6 +183,7 @@ class AddingCustomer extends React.Component {
 
   loadCustomer = () => {
     const data = this.state.data;
+    const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, '/n') : '';
     if (data) {
       this.setState({
         project: this.state.projectCode,
@@ -213,10 +215,14 @@ class AddingCustomer extends React.Component {
         customerjob: data.NgheNghiep ? data.NgheNghiep : '',
         customercompany: data.CongTyCongViec ? data.CongTyCongViec : '',
         customercontractNumber: data.SoHD ? data.SoHD : '',
-        customernote: data.GhiChu ? data.GhiChu : '',
-        employeeGetContract: data.NhanVienChamSocID ? data.NhanVienChamSocID : '',
+        customernote: note,
+        employeeGetContract: data.NhanVienChamSocID
+          ? data.NhanVienChamSocID
+          : '',
         customerContractStatus: data.TrangThaiID ? data.TrangThaiID : '',
-        customerContractChildStatus: data.TrangThaiChildID ? data.TrangThaiChildID : '',
+        customerContractChildStatus: data.TrangThaiChildID
+          ? data.TrangThaiChildID
+          : '',
       });
     }
   };
@@ -308,7 +314,9 @@ class AddingCustomer extends React.Component {
       // TenCIC: '',
       // CICChildID: null,
       // TenCICChild: '',
-      NgayCapCMND: this.state.customernationalDate ? this.state.customernationalDate : null,
+      NgayCapCMND: this.state.customernationalDate
+        ? this.state.customernationalDate
+        : null,
       NoiCap: this.state.customernationalPlace,
       // DiaChiHen: '',
       // ThoiGianHen: '2019-08-09T09:09:04',
@@ -321,11 +329,14 @@ class AddingCustomer extends React.Component {
       NhanVienTaoID: 90,
     };
 
-    if(this.state.imgPath.uri){
-      item.AnhCMND = this.state.customername + '.png';
+    if (this.state.imgPath.uri) {
+      console.log(this.state.imgPath);
+      item.AnhCMND = this.state.imgPath.fileName;
+      await uploadFile(this.state.imgPath.path, '');
     }
-    if(this.state.urlFile){
-      item.AnhCaNhan = this.state.customername + '.pdf';
+    if (this.state.urlFile) {
+      // item.AnhCaNhan = this.state.customername + '.pdf';
+      // await uploadFile(this.state.urlFile, '');
     }
 
     console.log('============item================', JSON.stringify(item));
@@ -420,7 +431,11 @@ class AddingCustomer extends React.Component {
       } else {
         // let source = response;
         // You can also display the image using data:
-        let source = {uri: 'data:image/jpeg;base64,' + response.data};
+        let source = {
+          uri: 'data:image/jpeg;base64,' + response.data,
+          path: response.path,
+          fileName: response.fileName,
+        };
         this.setState({
           imgPath: source,
         });
@@ -437,12 +452,7 @@ class AddingCustomer extends React.Component {
       this.setState({
         urlFile: res.uri,
       });
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.name,
-        res.size,
-      );
+      console.log(res);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
@@ -770,7 +780,7 @@ class AddingCustomer extends React.Component {
             value={this.state.customeraddress}
             onChangeText={text => this.setState({customeraddress: text})}
             multiline={true}
-            numberOfLines = {4}
+            numberOfLines={4}
           />
         </View>
 
@@ -915,7 +925,7 @@ class AddingCustomer extends React.Component {
             value={this.state.customernote}
             onChangeText={text => this.setState({customernote: text})}
             multiline={true}
-            numberOfLines = {4}
+            numberOfLines={4}
           />
         </View>
 
