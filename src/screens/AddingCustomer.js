@@ -25,6 +25,7 @@ import {
   getListGroup,
   getListProject,
   postCustomer,
+  getUserID,
 } from '../api/ApiHelpers';
 import contractStatus from '../constants/contractStatus';
 import contractChildStatus from '../constants/contractChildStatus';
@@ -40,14 +41,16 @@ class AddingCustomer extends React.Component {
       selectedGenderIndex: 0,
       selectedCategoryIndex: 0,
       imgPath: {},
+      urlName: '',
       urlFile: '',
       listOriginProject: [],
+      userID: '',
 
       // list init data
       listCategory: [],
       listProject: [],
-      listCallStatus: [],
-      listContractStatus: [],
+      // listCallStatus: [],
+      // listContractStatus: [],
       listEmployees: [],
       autocompleteEmployee: [],
 
@@ -85,11 +88,11 @@ class AddingCustomer extends React.Component {
       customercall: '',
       customermeetTime: '',
       customermeetPlace: '',
-      customercashLimit: '',
+      // customercashLimit: '',
       customerloan: '',
       customerloanTime: '',
       customersalary: '',
-      customersupplier: '',
+      // customersupplier: '',
       customerpartner: '',
       customerjob: '',
       customercompany: '',
@@ -101,35 +104,39 @@ class AddingCustomer extends React.Component {
   }
 
   componentDidMount() {
-    this.getInitData();
+    const userID = getUserID().then(value => value.maNguoiDung);
+    // this.getInitData();
     // this.getInitCategory();
     this.getInitProject();
     this.loadCustomer();
     this.props.navigation.setParams({
       saveCustomer: this.saveCustomer,
     });
+    this.setState({
+      userID: userID,
+    });
   }
 
-  getInitData = async () => {
-    let response = await initCustomerData();
-    let responseData = await response.json();
-    console.log(
-      '============================= add cus >> get init data >> response ==============',
-    );
-    console.log(responseData);
+  // getInitData = async () => {
+  //   let response = await initCustomerData();
+  //   let responseData = await response.json();
+  //   console.log(
+  //     '============================= add cus >> get init data >> response ==============',
+  //   );
+  //   console.log(responseData);
 
-    if (responseData) {
-      this.setState({
-        listCallStatus: responseData.listTrangThaiCuocGoi,
-        listEmployees: responseData.listNguoiDung,
-        loading: false,
-      });
-    } else {
-      this.setState({
-        loading: false,
-      });
-    }
-  };
+  //   if (responseData) {
+  //     this.setState({
+  //       listCallStatus: responseData.listTrangThaiCuocGoi,
+  //       listEmployees: responseData.listNguoiDung,
+  //       loading: false,
+  //     });
+  //   } else {
+  //     this.setState({
+  //       loading: false,
+  //     });
+  //   }
+  // };
 
   // getInitContractStatus = async () => {
   //   let response = await getListGroup();
@@ -206,11 +213,11 @@ class AddingCustomer extends React.Component {
         // customercall: data.SupplierName ? data.SupplierName : '',
         // customermeetTime: data.SupplierName ? data.SupplierName : '',
         // customermeetPlace: data.SupplierName ? data.SupplierName : '',
-        customercashLimit: data.HanMucVay ? data.HanMucVay : '',
+        // customercashLimit: data.HanMucVay ? data.HanMucVay : '',
         customerloan: data.KhoanVay ? data.KhoanVay : '',
         customerloanTime: data.ThoiGianVay ? data.ThoiGianVay : '',
         customersalary: data.ThuNhapHienTai ? data.ThuNhapHienTai : '',
-        customersupplier: data.PTTT ? data.PTTT : '',
+        // customersupplier: data.PTTT ? data.PTTT : '',
         // customerpartner: data.SupplierName ? data.SupplierName : '',
         customerjob: data.NgheNghiep ? data.NgheNghiep : '',
         customercompany: data.CongTyCongViec ? data.CongTyCongViec : '',
@@ -322,11 +329,11 @@ class AddingCustomer extends React.Component {
       // ThoiGianHen: '2019-08-09T09:09:04',
       // ThoiGianNhac: '2019-09-19T20:08:04',
       // TinhTrangHonNhan: 0,
-      HanMucVay: this.state.customercashLimit,
+      // HanMucVay: this.state.customercashLimit,
       ThuNhapHienTai: this.state.customersalary,
       Loai: 3,
       SoHD: this.state.customercontractNumber,
-      NhanVienTaoID: 90,
+      NhanVienTaoID: this.state.userID,
     };
 
     if (this.state.imgPath.uri) {
@@ -335,8 +342,8 @@ class AddingCustomer extends React.Component {
       await uploadFile(this.state.imgPath.path, '');
     }
     if (this.state.urlFile) {
-      // item.AnhCaNhan = this.state.customername + '.pdf';
-      // await uploadFile(this.state.urlFile, '');
+      item.AnhCaNhan = this.state.urlName;
+      await uploadFile(this.state.urlFile, '');
     }
 
     console.log('============item================', JSON.stringify(item));
@@ -447,12 +454,12 @@ class AddingCustomer extends React.Component {
   chooseFile = async () => {
     try {
       const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.images],
+        type: [DocumentPicker.types.pdf],
       });
       this.setState({
+        urlName: res.name,
         urlFile: res.uri,
       });
-      console.log(res);
     } catch (err) {
       if (DocumentPicker.isCancel(err)) {
         // User cancelled the picker, exit any dialogs or menus and move on
@@ -629,10 +636,10 @@ class AddingCustomer extends React.Component {
           /> */}
         </View>
 
-        <View style={styles.wrapTitle}>
+        {/* <View style={styles.wrapTitle}>
           <Text style={styles.title}>Người lấy hồ sơ</Text>
           <Text style={styles.inputReadonly}>{name ? name.HoTen : ''}</Text>
-          {/* <Autocomplete
+          <Autocomplete
             data={data}
             containerStyle={styles.input}
             hideResults={this.state.hideAutocomplete}
@@ -656,8 +663,8 @@ class AddingCustomer extends React.Component {
                 <Text>{item.HoTen}</Text>
               </TouchableOpacity>
             )}
-          /> */}
-        </View>
+          />
+        </View> */}
       </View>
     );
   };
@@ -828,7 +835,7 @@ class AddingCustomer extends React.Component {
         />
     </View> */}
 
-        <View style={styles.wrapTitle}>
+        {/* <View style={styles.wrapTitle}>
           <Text style={styles.title}>Hạn mức</Text>
           <Input
             containerStyle={styles.input}
@@ -837,7 +844,7 @@ class AddingCustomer extends React.Component {
             value={this.state.customercashLimit}
             onChangeText={text => this.setState({customercashLimit: text})}
           />
-        </View>
+        </View> */}
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>Khoản vay</Text>
@@ -894,7 +901,7 @@ class AddingCustomer extends React.Component {
           />
         </View>
 
-        <View style={styles.wrapTitle}>
+        {/* <View style={styles.wrapTitle}>
           <Text style={styles.title}>Nhà cung cấp</Text>
           <Input
             containerStyle={styles.input}
@@ -903,7 +910,7 @@ class AddingCustomer extends React.Component {
             value={this.state.customersupplier}
             onChangeText={text => this.setState({customersupplier: text})}
           />
-        </View>
+        </View> */}
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>Số hợp đồng</Text>
@@ -952,7 +959,7 @@ class AddingCustomer extends React.Component {
               style={{width: 50, height: 50, marginLeft: 20}}
             />
           </TouchableOpacity>
-          <Text>{this.state.urlFile}</Text>
+          <Text>{this.state.urlName}</Text>
         </View>
 
         {/* <View style={styles.wrapTitle}>

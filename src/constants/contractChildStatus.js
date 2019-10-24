@@ -536,4 +536,60 @@ export default [
     parent: 80,
     value: [],
   },
+  {
+    parent: 85,
+    value: [{"TrangThaiID":86,"TenTrangThai":"Hồ sơ hủy","Mau":"000000","ParentID":85,"DoiTuongID":3,"Tong":0}],
+  },
+  {
+    parent: 87,
+    value: [],
+  },
+  {
+    parent: 88,
+    value: [],
+  },
+  {
+    parent: 89,
+    value: [],
+  },
+  {
+    parent: 91,
+    value: [{"TrangThaiID":100,"TenTrangThai":"Hủy app","Mau":"3692cf","ParentID":91,"DoiTuongID":8,"Tong":0}],
+  },
+  {
+    parent: 92,
+    value: [],
+  },
+  {
+    parent: 93,
+    value: [],
+  },
+  {
+    parent: 94,
+    value: [],
+  },
+  {
+    parent: 95,
+    value: [],
+  },
+  {
+    parent: 96,
+    value: [],
+  },
+  {
+    parent: 97,
+    value: [],
+  },
+  {
+    parent: 98,
+    value: [],
+  },
+  {
+    parent: 99,
+    value: [],
+  },
+  {
+    parent: 119,
+    value: [],
+  },
 ];

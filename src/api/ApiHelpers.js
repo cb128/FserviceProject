@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-const getUserID = async () => {
+export const getUserID = async () => {
   let userID;
   try {
     const retrievedItem = await AsyncStorage.getItem('loginDetails');
