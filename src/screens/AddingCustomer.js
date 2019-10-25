@@ -18,6 +18,8 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
+import RNFetchBlob from 'react-native-fetch-blob';
+import FilePickerManager from 'react-native-file-picker';
 import Autocomplete from 'react-native-autocomplete-input';
 import {getObjectFromArrayById2, getObjectFromArrayById} from '../ulti/index';
 import {
@@ -104,16 +106,12 @@ class AddingCustomer extends React.Component {
   }
 
   componentDidMount() {
-    const userID = getUserID().then(value => value.maNguoiDung);
     // this.getInitData();
     // this.getInitCategory();
     this.getInitProject();
     this.loadCustomer();
     this.props.navigation.setParams({
       saveCustomer: this.saveCustomer,
-    });
-    this.setState({
-      userID: userID,
     });
   }
 
@@ -152,6 +150,13 @@ class AddingCustomer extends React.Component {
   //   }
   // };
   getInitProject = async () => {
+
+    await getUserID().then(value => {
+      this.setState({
+        userID: value,
+      });
+    });
+
     let response = await getListProject(1);
     let responseData = await response.json();
     if (responseData) {
@@ -190,7 +195,7 @@ class AddingCustomer extends React.Component {
 
   loadCustomer = () => {
     const data = this.state.data;
-    const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, '/n') : '';
+    const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, ' ') : '';
     if (data) {
       this.setState({
         project: this.state.projectCode,
@@ -232,6 +237,7 @@ class AddingCustomer extends React.Component {
           : '',
       });
     }
+    console.log(this.state);
   };
 
   // Set up navigation bar
@@ -453,19 +459,39 @@ class AddingCustomer extends React.Component {
   // chosse file
   chooseFile = async () => {
     try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf],
-      });
-      this.setState({
-        urlName: res.name,
-        urlFile: res.uri,
+      // const res = await DocumentPicker.pick({
+      //   type: [DocumentPicker.types.pdf],
+      // });
+      // RNFetchBlob.fs
+      //   .readFile(res.uri, 'base64')
+      //   // files will an array contains filenames
+      //   .then(files => {
+      //     this.setState({
+      //       urlName: res.name,
+      //       urlFile: files,
+      //     });
+      //     console.log(files)
+      //   });
+      // console.log(this.state);
+
+      FilePickerManager.showFilePicker(null, (response) => {
+        console.log('Response = ', response);
+       
+        if (response.didCancel) {
+          console.log('User cancelled file picker');
+        }
+        else if (response.error) {
+          console.log('FilePickerManager Error: ', response.error);
+        }
+        else {
+          this.setState({
+            urlFile: response.path,
+            urlName: response.fileName
+          });
+        }
       });
     } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        // User cancelled the picker, exit any dialogs or menus and move on
-      } else {
         throw err;
-      }
     }
   };
 
