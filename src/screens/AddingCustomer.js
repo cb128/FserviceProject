@@ -18,7 +18,6 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
-import RNFetchBlob from 'react-native-fetch-blob';
 import FilePickerManager from 'react-native-file-picker';
 import Autocomplete from 'react-native-autocomplete-input';
 import {getObjectFromArrayById2, getObjectFromArrayById} from '../ulti/index';
