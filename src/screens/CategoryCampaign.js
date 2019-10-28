@@ -60,8 +60,11 @@ class CategoryCampaign extends React.Component {
     let response = await getListGroup();
     let responseData = await response.json();
     if (responseData) {
+      const data = responseData.filter(
+        x => x.NhomNganhID !== 3 && x.NhomNganhID !== 5,
+      );
       this.setState({
-        dataSource: responseData,
+        dataSource: data,
         loading: false,
       });
     } else {
@@ -76,6 +79,7 @@ class CategoryCampaign extends React.Component {
   _goToListCampaign = item => {
     this.props.navigation.navigate('ListCampaign', {
       nhomNganhID: item.NhomNganhID,
+      title: item.TenNhomNganh,
     });
   };
 

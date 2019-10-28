@@ -2,9 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
-import { getObjectFromArrayById } from '../ulti';
+import {getObjectFromArrayById} from '../ulti';
 import contractStatus from '../constants/contractStatus';
-import moment from "moment";
+import contractChildStatus from '../constants/contractChildStatus';
+import moment from 'moment';
+import manImg from '../assets/images/khachnam.png';
+import womanImg from '../assets/images/khachnu.png';
 
 export default class CustomerItem extends React.Component {
   goToProfile = () => {
@@ -17,27 +20,69 @@ export default class CustomerItem extends React.Component {
 
   callCustomer = () => {
     this.props.callCustomer(this.props.customer.phone);
-  }
+  };
 
   render() {
-    console.log(this.props.customer);
-    const currentStatus = getObjectFromArrayById(contractStatus, 'TrangThaiID', this.props.customer.status);
-    console.log(currentStatus);
+    let currentChildStatus = null;
+    const datetime = this.props.customer.lastmodifieddate
+      ? moment(this.props.customer.lastmodifieddate).format('hh:mm DD/MM/YYYY')
+      : 'null';
+
+    const currentStatus = getObjectFromArrayById(
+      contractStatus,
+      'TrangThaiID',
+      this.props.customer.status,
+    );
+    const childStatus = getObjectFromArrayById(
+      contractChildStatus,
+      'parent',
+      this.props.customer.status,
+    );
+    if (childStatus && childStatus.value.length > 0) {
+      currentChildStatus = getObjectFromArrayById(
+        childStatus.value,
+        'TrangThaiID',
+        this.props.customer.childStatus,
+      );
+    }
+    if (currentChildStatus === '') {
+      currentChildStatus = null;
+    }
     return (
       <ListItem
         title={this.props.customer.name}
         titleStyle={{fontWeight: 'bold'}}
         leftAvatar={{
           source: {
-            uri:
-              'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+            manImg,
           },
         }}
         subtitle={
           <View style={styles.subtitleView}>
-            <Text style={styles.phone}>{this.props.customer.phone ? this.props.customer.phone : 'Không có'} </Text> 
-            <Text style={styles.ratingText}>{currentStatus ? currentStatus.TenTrangThai : 'Khách hàng tiềm năng'} </Text>  
-            <Text style={styles.ratingText}>{'Ngày cập nhập: ' + moment(this.props.customer.lastmodifieddate).format('hh:mm DD/MM/YYYY')} </Text>
+            <Text style={styles.phone}>
+              {this.props.customer.phone
+                ? this.props.customer.phone
+                : 'Không có'}
+            </Text>
+            <Text style={styles.ratingText}>
+              {'Trạng thái hồ sơ: ' + currentStatus
+                ? currentStatus.TenTrangThai
+                : ''}
+            </Text>
+            {currentChildStatus !== null && (
+              <Text style={styles.ratingText}>
+                {'Trạng thái hồ sơ con: ' + currentChildStatus.TenTrangThai}
+              </Text>
+            )}
+            {this.props.customer.note && (
+              <Text style={styles.ratingText}>
+                {'Ghi chú: ' + this.props.customer.note}
+              </Text>
+            )}
+            <Text style={styles.ratingText}>
+              {'Ngày cập nhập: '}
+              {datetime}
+            </Text>
           </View>
         }
         rightElement={() => (
@@ -67,6 +112,6 @@ const styles = StyleSheet.create({
   subtitleView: {},
   ratingText: {},
   phone: {
-    color: '#005ba6'
-  }
+    color: '#005ba6',
+  },
 });

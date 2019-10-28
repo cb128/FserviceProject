@@ -33,8 +33,8 @@ class SideMenu extends React.Component {
             {name: data.hoTen, image: data.hinh},
             {title: 'Mã Nhân viên', value: data.maNguoiDung},
             {title: 'Số ĐTDĐ', value: data.phone},
-            {title: 'Địa chỉ', value: data.address},
-            {title: 'Email', value: data.email},
+            {title: 'Chức vụ', value: data.tenChucVu},
+            {title: 'Email', value: data.emailResponse},
           ],
         });
       });
@@ -85,6 +85,7 @@ class SideMenu extends React.Component {
     this.props.navigation.navigate('Profile', {
       isCumtomer: false,
       arrayData: this.state.arrUserData,
+      title: this.state.name,
     });
   };
 
@@ -120,6 +121,8 @@ class SideMenu extends React.Component {
                 }
                 style={styles.imageView}
               />
+            </View>
+            <View style={styles.contentView}>
               <Text style={styles.username}>{this.state.name}</Text>
             </View>
           </View>
@@ -166,8 +169,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageView: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     marginLeft: 20,
     marginVertical: 20,
     borderRadius: 50,

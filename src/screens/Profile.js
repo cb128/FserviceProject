@@ -42,6 +42,11 @@ class Profile extends React.Component {
     };
   }
 
+  // Set up navigation bar
+  static navigationOptions = ({navigation}) => ({
+    title: `${navigation.state.params.title}`,
+  });
+
   keyExtractor = (item, index) => index.toString();
 
   renderCamera = ({item}) => {
@@ -75,7 +80,7 @@ class Profile extends React.Component {
             style={styles.imageView}
           />
           {this.renderCamera({item})}
-          <Text style={styles.username}>{item.name}</Text>
+          {/* <Text style={styles.username}>{item.name}</Text> */}
         </View>
       );
     } else {

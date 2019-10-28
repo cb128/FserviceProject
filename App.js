@@ -35,7 +35,7 @@ const AppStack = createStackNavigator(
     CategoryCampaign: {
       screen: CategoryCampaign,
       navigationOptions: {
-        title: 'Loại Dự Án',
+        title: 'DỰ ÁN',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {
@@ -46,7 +46,6 @@ const AppStack = createStackNavigator(
     ListCampaign: {
       screen: ListCampaign,
       navigationOptions: {
-        title: 'Danh Sách Dự Án',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {
@@ -57,7 +56,6 @@ const AppStack = createStackNavigator(
     DetailCampaign: {
       screen: DetailCampaign,
       navigationOptions: {
-        title: 'Thông Tin Dự Án',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {
@@ -68,7 +66,6 @@ const AppStack = createStackNavigator(
     ListCustomer: {
       screen: ListCustomer,
       navigationOptions: {
-        title: 'Danh Sách Khách Hàng',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',
@@ -115,7 +112,6 @@ const AppStack = createStackNavigator(
     Profile: {
       screen: Profile,
       navigationOptions: {
-        title: 'Trang Cá Nhân',
         headerStyle: {
           marginTop: Platform.OS === 'android' ? 0 : 0,
           backgroundColor: '#ffb900',

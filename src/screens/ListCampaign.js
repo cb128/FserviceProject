@@ -26,6 +26,10 @@ class ListCampaign extends React.Component {
   componentDidMount() {
     this.getListCampaign();
   }
+  // Set up navigation bar
+  static navigationOptions = ({navigation}) => ({
+    title: `${navigation.state.params.title.toUpperCase()}`,
+  });
 
   keyExtractor = (item, index) => index.toString();
 
@@ -40,7 +44,7 @@ class ListCampaign extends React.Component {
   _goToDetaiProject = item => {
     this.props.navigation.navigate('DetailCampaign', {
       projectCode: item.MaNhomKhachHang,
-      projectName: item.TenNhomKhachHang
+      projectName: item.TenNhomKhachHang,
     });
   };
 

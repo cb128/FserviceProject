@@ -11,7 +11,7 @@ export default class CategoryListItem extends React.Component {
   render() {
     return (
       <ListItem
-        title={this.props.category.TenNhomNganh}
+        title={this.props.category.TenNhomNganh.toUpperCase()}
         leftIcon={<Icon name={'record-voice-over'} />}
         rightIcon={<Icon name={'chevron-right'} />}
         titleStyle={styles.titleStyle}

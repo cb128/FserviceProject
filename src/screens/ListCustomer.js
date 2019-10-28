@@ -7,6 +7,7 @@ import {
   Spinner,
   Linking,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
 import {ListItem, Icon} from 'react-native-elements';
 import {SearchBar} from 'react-native-elements';
@@ -23,7 +24,8 @@ class ListCustomer extends React.Component {
 
     this.state = {
       data: [],
-      isLoading: false,
+      searchData: [],
+      isLoading: true,
       showLoadMore: true,
       loadingMore: false,
       search: '',
@@ -38,6 +40,7 @@ class ListCustomer extends React.Component {
   }
 
   static navigationOptions = ({navigation, screenProps}) => ({
+    title: `${navigation.state.params.projectName.toUpperCase()}`,
     headerRight: (
       <Icon
         name="person-add"
@@ -84,9 +87,12 @@ class ListCustomer extends React.Component {
         const cus = {
           id: e.SupplierID,
           name: e.SupplierName,
+          gender: e.GioiTinh,
           status: e.TrangThaiID,
+          childStatus: e.TrangThaiChildID,
           phone: e.Phone,
           lastmodifieddate: e.NgayGioGoi,
+          note: e.GhiChu,
           data: e,
         };
         data.push(cus);
@@ -94,6 +100,7 @@ class ListCustomer extends React.Component {
 
       this.setState(state => ({
         data: !state.loadingMore ? data : [...state.data, ...data],
+        searchData: !state.loadingMore ? data : [...state.data, ...data],
         isLoading: false,
         loadingMore: false,
       }));
@@ -132,8 +139,9 @@ class ListCustomer extends React.Component {
 
   _goToUpdateCustomer = item => {
     this.props.navigation.navigate('AddingCustomer', {
-      title: 'Chỉnh Sửa Thông Tin',
+      title: item.name,
       data: item.data,
+      projectCode: this.state.projectCode,
     });
   };
 
@@ -158,13 +166,18 @@ class ListCustomer extends React.Component {
   );
 
   searchFilterFunction(text) {
-    //passing the inserted text in text input
-    const newData = this.state.data.filter(function(item) {
-      //applying filter for the inserted text in search bar
-      const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
-      const textData = text.toUpperCase();
-      return itemData.indexOf(textData) > -1;
-    });
+    let newData = [];
+    if (text === '') {
+      newData = this.state.searchData;
+    } else {
+      //passing the inserted text in text input
+      newData = this.state.searchData.filter(function(item) {
+        //applying filter for the inserted text in search bar
+        const itemData = item.name ? item.name.toUpperCase() : ''.toUpperCase();
+        const textData = text.toUpperCase();
+        return itemData.indexOf(textData) > -1;
+      });
+    }
     this.setState({
       //setting the filtered newData on datasource
       //After setting the data it will automatically re-render the view
@@ -181,7 +194,7 @@ class ListCustomer extends React.Component {
   render() {
     return (
       <View style={{flex: 1}}>
-        <View style={styles.headerView}>
+        {/* <View style={styles.headerView}>
           <View style={{justifyContent: 'center', marginRight: 15, flex: 1}}>
             <Text style={{textAlign: 'right'}}>Dự án</Text>
             <Text
@@ -200,24 +213,30 @@ class ListCustomer extends React.Component {
               {this.state.allCustomer}
             </Text>
           </View>
-        </View>
+        </View> */}
         <SearchBar
           round
           searchIcon={{size: 24}}
           onChangeText={text => this.searchFilterFunction(text)}
           onClear={text => {
             this.searchFilterFunction('');
-            this.setState({
-              begin: 0,
-            });
-            this._fetchCustomer();
+            // this.setState({
+            //   begin: 0,
+            // });
+            // this._fetchCustomer();
           }}
-          placeholder="Type Here..."
+          placeholder="Tìm kiếm..."
           value={this.state.search}
           containerStyle={{backgroundColor: '#ffffff'}}
           // eslint-disable-next-line react-native/no-inline-styles
           inputContainerStyle={{backgroundColor: '#e6e6e6'}}
           lightTheme
+        />
+        <ActivityIndicator
+          size="large"
+          color="black"
+          animating={this.state.isLoading}
+          style={styles.activityIndicator}
         />
         <FlatList
           keyExtractor={this.keyExtractor}
@@ -248,6 +267,11 @@ const styles = StyleSheet.create({
   subtitleView: {
     flexDirection: 'column',
     paddingTop: 5,
+  },
+  activityIndicator: {
+    position: 'absolute',
+    marginLeft: Dimensions.get('window').width / 2 - 10,
+    marginTop: Dimensions.get('window').height / 2 - 10,
   },
   content: {},
   loadMore: {

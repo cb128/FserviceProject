@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
-const getUserID = async () => {
+export const getUserID = async () => {
   let userID;
   try {
     const retrievedItem = await AsyncStorage.getItem('loginDetails');
@@ -114,7 +114,7 @@ export const getListCustomerData = async (projectCode, begin, end) => {
   formdata.append('function', 'getListCustomer');
   formdata.append('Begin', begin);
   formdata.append('End', end);
-  formdata.append('NhanVienChamSocID', userID);
+  formdata.append('NhanVienTaoID', userID);
   formdata.append('ListNhomKhachHang', "N'" + projectCode + "'");
 
   console.log(formdata);
