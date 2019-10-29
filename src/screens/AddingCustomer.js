@@ -31,6 +31,7 @@ import {
 import contractStatus from '../constants/contractStatus';
 import contractChildStatus from '../constants/contractChildStatus';
 import {uploadFile} from '../api/uploadHelper';
+import moment from 'moment';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -149,7 +150,6 @@ class AddingCustomer extends React.Component {
   //   }
   // };
   getInitProject = async () => {
-
     await getUserID().then(value => {
       this.setState({
         userID: value,
@@ -194,14 +194,19 @@ class AddingCustomer extends React.Component {
 
   loadCustomer = () => {
     const data = this.state.data;
-    const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, ' ') : '';
     if (data) {
+      const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, ' ') : '';
+      const dob =
+        data.Ngaysinh !== null
+          ? moment(data.Ngaysinh).format('YYYY-MM-DD')
+          : '';
+      console.log(dob);
       this.setState({
         project: this.state.projectCode,
 
         customerID: data.SupplierID ? data.SupplierID : '',
         customername: data.SupplierName ? data.SupplierName : '',
-        customerDOB: data.Ngaysinh ? data.Ngaysinh : '',
+        customerDOB: dob.toString(),
         customerpreName: data.DanhXung ? data.DanhXung : '',
         customergender: data.GioiTinh ? 0 : 1,
         // customermaritalStatus: data.SupplierName ? data.SupplierName : '',
@@ -218,9 +223,9 @@ class AddingCustomer extends React.Component {
         // customermeetTime: data.SupplierName ? data.SupplierName : '',
         // customermeetPlace: data.SupplierName ? data.SupplierName : '',
         // customercashLimit: data.HanMucVay ? data.HanMucVay : '',
-        customerloan: data.KhoanVay ? data.KhoanVay : '',
+        customerloan: data.SoTienDeNghi ? data.SoTienDeNghi : '',
         customerloanTime: data.ThoiGianVay ? data.ThoiGianVay : '',
-        customersalary: data.ThuNhapHienTai ? data.ThuNhapHienTai : '',
+        customersalary: data.ThuNhapHienTai ? data.ThuNhapHienTai + '' : '',
         // customersupplier: data.PTTT ? data.PTTT : '',
         // customerpartner: data.SupplierName ? data.SupplierName : '',
         customerjob: data.NgheNghiep ? data.NgheNghiep : '',
@@ -286,7 +291,7 @@ class AddingCustomer extends React.Component {
       );
       return;
     }
-    console.log('========statte =============', this.state);
+    const dob = new Date(this.state.customerDOB);
     const item = {
       SupplierID: this.state.customerID,
       SupplierName: this.state.customername,
@@ -296,7 +301,7 @@ class AddingCustomer extends React.Component {
       Tinh: this.state.customerprovince,
       NhomKhachHang: this.state.project,
       // Address: '',
-      NgaySinh: this.state.customerDOB,
+      NgaySinh: dob,
       NgayGioGoi: this.state.customercall,
       GioiTinh: this.state.customergender === 0 ? true : false,
       CMND: this.state.customernationalId,
@@ -312,7 +317,7 @@ class AddingCustomer extends React.Component {
       // AnhCaNhan: '',
       // AnhCMND: '',
       ThoiGianVay: this.state.customerloanTime,
-      KhoanVay: this.state.customerloan,
+      SoTienDeNghi: this.state.customerloan,
       // DiaChiLienHe: '',
       // NhanVienLine: '',
       // ListTenSanPham: 'THE, Hóa Đơn Điện',
@@ -335,20 +340,28 @@ class AddingCustomer extends React.Component {
       // ThoiGianNhac: '2019-09-19T20:08:04',
       // TinhTrangHonNhan: 0,
       // HanMucVay: this.state.customercashLimit,
-      ThuNhapHienTai: this.state.customersalary,
+      ThuNhapHienTai: +this.state.customersalary,
       Loai: 3,
       SoHD: this.state.customercontractNumber,
       NhanVienTaoID: this.state.userID,
     };
-
-    if (this.state.imgPath.uri) {
-      console.log(this.state.imgPath);
+    if (this.state.imgPath.uri && this.state.urlFile) {
       item.AnhCMND = this.state.imgPath.fileName;
       await uploadFile(this.state.imgPath.path, '');
-    }
-    if (this.state.urlFile) {
-      item.AnhCaNhan = this.state.urlName;
-      await uploadFile(this.state.urlFile, '');
+      setTimeout(async () => {
+        item.AnhCaNhan = this.state.urlName;
+        await uploadFile(this.state.urlFile, '');
+      }, 3000);
+    } else {
+      if (this.state.imgPath.uri) {
+        console.log(this.state.imgPath);
+        item.AnhCMND = this.state.imgPath.fileName;
+        await uploadFile(this.state.imgPath.path, '');
+      }
+      if (this.state.urlFile) {
+        item.AnhCaNhan = this.state.urlName;
+        await uploadFile(this.state.urlFile, '');
+      }
     }
 
     console.log('============item================', JSON.stringify(item));
@@ -473,24 +486,22 @@ class AddingCustomer extends React.Component {
       //   });
       // console.log(this.state);
 
-      FilePickerManager.showFilePicker(null, (response) => {
+      FilePickerManager.showFilePicker(null, response => {
         console.log('Response = ', response);
-       
+
         if (response.didCancel) {
           console.log('User cancelled file picker');
-        }
-        else if (response.error) {
+        } else if (response.error) {
           console.log('FilePickerManager Error: ', response.error);
-        }
-        else {
+        } else {
           this.setState({
             urlFile: response.path,
-            urlName: response.fileName
+            urlName: response.fileName,
           });
         }
       });
     } catch (err) {
-        throw err;
+      throw err;
     }
   };
 
@@ -764,7 +775,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="YYYY-MM-DD"
             value={this.state.customerDOB}
             onChangeText={text => this.setState({customerDOB: text})}
           />
@@ -775,7 +786,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="Vui lòng nhập đúng để tạo mã KH"
             value={this.state.customernationalId}
             onChangeText={text => this.setState({customernationalId: text})}
           />
@@ -786,7 +797,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="YYYY-MM-DD"
             value={this.state.customernationalDate}
             onChangeText={text => this.setState({customernationalDate: text})}
           />
@@ -808,7 +819,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="Địa chỉ liên hệ"
             value={this.state.customeraddress}
             onChangeText={text => this.setState({customeraddress: text})}
             multiline={true}
@@ -843,7 +854,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="Vui lòng nhập email để KH nhận thông tin"
             value={this.state.customeremail}
             onChangeText={text => this.setState({customeremail: text})}
           />
@@ -872,11 +883,11 @@ class AddingCustomer extends React.Component {
         </View> */}
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Khoản vay</Text>
+          <Text style={styles.title}>Số tiền đề nghị</Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="Số tiền cần vay"
             value={this.state.customerloan}
             onChangeText={text => this.setState({customerloan: text})}
           />
@@ -887,7 +898,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="Theo tháng"
             value={this.state.customerloanTime}
             onChangeText={text => this.setState({customerloanTime: text})}
           />
@@ -923,6 +934,7 @@ class AddingCustomer extends React.Component {
             placeholder="Chưa có thông tin"
             value={this.state.customersalary}
             onChangeText={text => this.setState({customersalary: text})}
+            keyboardType={'numeric'}
           />
         </View>
 
@@ -942,7 +954,7 @@ class AddingCustomer extends React.Component {
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
+            placeholder="Vui lòng nhập APPID"
             value={this.state.customercontractNumber}
             onChangeText={text => this.setState({customercontractNumber: text})}
           />
