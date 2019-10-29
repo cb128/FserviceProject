@@ -72,6 +72,12 @@ class ListCustomer extends React.Component {
     });
   };
 
+  _refreshPage = () => {
+    this.setState({begin: 0, data: [], isLoading: true}, () => {
+      this._fetchCustomer();
+    });
+  };
+
   _fetchCustomer = async () => {
     let response = await getListCustomerData(
       this.state.projectCode,
@@ -142,6 +148,7 @@ class ListCustomer extends React.Component {
       title: item.name,
       data: item.data,
       projectCode: this.state.projectCode,
+      refreshPage: () => this._refreshPage(),
     });
   };
 
