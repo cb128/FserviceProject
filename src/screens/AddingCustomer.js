@@ -114,7 +114,9 @@ class AddingCustomer extends React.Component {
       saveCustomer: this.saveCustomer,
     });
   }
-
+  componentWillUnmount() {
+    this.props.navigation.state.params.refreshPage();
+  }
   // getInitData = async () => {
   //   let response = await initCustomerData();
   //   let responseData = await response.json();
@@ -197,10 +199,15 @@ class AddingCustomer extends React.Component {
     if (data) {
       const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, ' ') : '';
       const dob =
-        data.Ngaysinh !== null
-          ? moment(data.Ngaysinh).format('YYYY-MM-DD')
+        data.NgaySinh !== null
+          ? moment(data.NgaySinh).format('YYYY-MM-DD')
           : '';
-      console.log(dob);
+
+      const nationalDate =
+        data.NgayCapCMND !== null
+          ? moment(data.NgayCapCMND).format('YYYY-MM-DD')
+          : '';
+
       this.setState({
         project: this.state.projectCode,
 
@@ -213,7 +220,7 @@ class AddingCustomer extends React.Component {
         customerphone: data.Phone ? data.Phone : '',
         customeremail: data.Email ? data.Email : '',
         customernationalId: data.CMND ? data.CMND : '',
-        customernationalDate: data.NgayCapCMND ? data.NgayCapCMND : '',
+        customernationalDate: nationalDate,
         customernationalPlace: data.NoiCap ? data.NoiCap : '',
         // customerproduct: data.SupplierName ? data.SupplierName : '',
         customeraddress: data.So ? data.So : '',
@@ -764,6 +771,7 @@ class AddingCustomer extends React.Component {
             placeholder="Chưa có thông tin"
             value={this.state.customerphone}
             onChangeText={text => this.setState({customerphone: text})}
+            keyboardType={'numeric'}
           />
         </View>
 
@@ -786,6 +794,7 @@ class AddingCustomer extends React.Component {
             placeholder="Vui lòng nhập đúng để tạo mã KH"
             value={this.state.customernationalId}
             onChangeText={text => this.setState({customernationalId: text})}
+            keyboardType={'numeric'}
           />
         </View>
 
@@ -887,6 +896,7 @@ class AddingCustomer extends React.Component {
             placeholder="Số tiền cần vay"
             value={this.state.customerloan}
             onChangeText={text => this.setState({customerloan: text})}
+            keyboardType={'numeric'}
           />
         </View>
 
@@ -898,6 +908,7 @@ class AddingCustomer extends React.Component {
             placeholder="Theo tháng"
             value={this.state.customerloanTime}
             onChangeText={text => this.setState({customerloanTime: text})}
+            keyboardType={'numeric'}
           />
         </View>
 
@@ -995,17 +1006,6 @@ class AddingCustomer extends React.Component {
           </TouchableOpacity>
           <Text>{this.state.urlName}</Text>
         </View>
-
-        {/* <View style={styles.wrapTitle}>
-      <Text style={styles.title}>Loại</Text>
-      
-      <SegmentedControlTab
-            values={['TSA', 'DSA']}
-            tabsContainerStyle={styles.segment}
-            selectedIndex={this.state.selectedCategoryIndex}
-            onTabPress={this.updateCatergoryIndex}
-      />
-    </View> */}
       </View>
     );
   };

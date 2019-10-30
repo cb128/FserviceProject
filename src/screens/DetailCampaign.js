@@ -86,14 +86,12 @@ class DetailCampaign extends React.Component {
       const filter = responseData.filter(x => x.Tong !== 0);
 
       filter.forEach(e => {
-        if (e.Tong !== 0) {
-          data.push({
-            name: e.TenTrangThai,
-            icon: 'people',
-            badgeValue: e.Tong,
-            key: 1,
-          });
-        }
+        data.push({
+          name: e.TenTrangThai,
+          icon: 'people',
+          badgeValue: e.Tong,
+          key: 1,
+        });
       });
       // All Customer
       const allCustomer = getObjectFromArrayById(
