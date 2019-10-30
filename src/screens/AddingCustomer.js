@@ -347,20 +347,17 @@ class AddingCustomer extends React.Component {
     };
     if (this.state.imgPath.uri && this.state.urlFile) {
       item.AnhCMND = this.state.imgPath.fileName;
-      await uploadFile(this.state.imgPath.path, '');
-      setTimeout(async () => {
-        item.AnhCaNhan = this.state.urlName;
-        await uploadFile(this.state.urlFile, '');
-      }, 3000);
+      item.AnhCaNhan = this.state.urlName;
+      await uploadFile(this.state.imgPath.path, this.state.urlFile, '');
     } else {
       if (this.state.imgPath.uri) {
         console.log(this.state.imgPath);
         item.AnhCMND = this.state.imgPath.fileName;
-        await uploadFile(this.state.imgPath.path, '');
+        await uploadFile(this.state.imgPath.path, '', '');
       }
       if (this.state.urlFile) {
         item.AnhCaNhan = this.state.urlName;
-        await uploadFile(this.state.urlFile, '');
+        await uploadFile('', this.state.urlFile, '');
       }
     }
 
