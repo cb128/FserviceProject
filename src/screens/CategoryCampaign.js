@@ -45,7 +45,10 @@ class CategoryCampaign extends React.Component {
           // eslint-disable-next-line react-native/no-inline-styles
           iconStyle={{marginRight: 15}}
           onPress={() => {
-            navigation.navigate('AddingCustomer', {title: 'Thêm Khách Hàng'});
+            navigation.navigate('AddingCustomer', {
+              title: 'Thêm Khách Hàng',
+              refreshPage: () => {},
+            });
           }}
         />
       ),

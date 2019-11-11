@@ -20,6 +20,8 @@ import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
 import FilePickerManager from 'react-native-file-picker';
 import Autocomplete from 'react-native-autocomplete-input';
+import {zip} from 'react-native-zip-archive';
+import RNFS from 'react-native-fs';
 import {getObjectFromArrayById2, getObjectFromArrayById} from '../ulti/index';
 import {
   initCustomerData,
@@ -32,6 +34,7 @@ import contractStatus from '../constants/contractStatus';
 import contractChildStatus from '../constants/contractChildStatus';
 import {uploadFile} from '../api/uploadHelper';
 import moment from 'moment';
+import product from '../constants/product';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -84,6 +87,7 @@ class AddingCustomer extends React.Component {
       customernationalDate: '',
       customernationalPlace: '',
       customerproduct: '',
+      customerproductInterest: '',
       customeraddress: '',
       customerprovince: '',
       customerdistrict: '',
@@ -268,25 +272,73 @@ class AddingCustomer extends React.Component {
   });
 
   saveCustomer = async () => {
+    let message = 'Vui lòng nhập: ';
+    let valid = true;
+
     if (this.state.customername === '') {
-      Alert.alert(
-        'Đã có lỗi',
-        'Vui lòng nhập Họ và tên',
-        [
-          {
-            text: 'Ok',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: false},
-      );
-      return;
+      message += 'Họ tên, ';
+      valid = false;
+    }
+    if (this.state.customernationalId === '') {
+      message += 'CMND, ';
+      valid = false;
+    }
+    if (this.state.customernationalDate === '') {
+      message += 'Ngày cấp CMND, ';
+      valid = false;
+    }
+    if (this.state.customernationalPlace === '') {
+      message += 'Nơi cấp CMND, ';
+      valid = false;
     }
     if (this.state.customerphone === '') {
+      message += 'Số điện thoại, ';
+      valid = false;
+    }
+    if (this.state.customerDOB === '') {
+      message += 'Ngày sinh, ';
+      valid = false;
+    }
+    if (this.state.customerprovince === '') {
+      message += 'Tỉnh/Thành, ';
+      valid = false;
+    }
+    if (this.state.customerdistrict === '') {
+      message += 'Quận/Huyện, ';
+      valid = false;
+    }
+    if (this.state.customeraddress === '') {
+      message += 'Địa chỉ liên hệ, ';
+      valid = false;
+    }
+    if (this.state.customeremail === '') {
+      message += 'Email, ';
+      valid = false;
+    }
+    if (this.state.customerproduct === '') {
+      message += 'Sản phẩm vay, ';
+      valid = false;
+    }
+    if (this.state.customerloan === '') {
+      message += 'Số tiền đề nghị, ';
+      valid = false;
+    }
+    if (this.state.customerloanTime === '') {
+      message += 'Thời gian vay, ';
+      valid = false;
+    }
+    if (this.state.customercompany === '') {
+      message += 'Công ty, ';
+      valid = false;
+    }
+    if (this.state.customerjob === '') {
+      message += 'Nghề nghiệp, ';
+      valid = false;
+    }
+    if (!valid) {
       Alert.alert(
         'Đã có lỗi',
-        'Vui lòng nhập Điện thoại',
+        message,
         [
           {
             text: 'Ok',
@@ -352,24 +404,24 @@ class AddingCustomer extends React.Component {
       SoHD: this.state.customercontractNumber,
       NhanVienTaoID: this.state.userID,
     };
-    if (this.state.imgPath.uri && this.state.urlFile) {
-      item.AnhCMND = this.state.imgPath.fileName;
-      await uploadFile(this.state.imgPath.path, '');
-      setTimeout(async () => {
-        item.AnhCaNhan = this.state.urlName;
-        await uploadFile(this.state.urlFile, '');
-      }, 3000);
-    } else {
-      if (this.state.imgPath.uri) {
-        console.log(this.state.imgPath);
-        item.AnhCMND = this.state.imgPath.fileName;
-        await uploadFile(this.state.imgPath.path, '');
-      }
-      if (this.state.urlFile) {
-        item.AnhCaNhan = this.state.urlName;
-        await uploadFile(this.state.urlFile, '');
-      }
+    // if (this.state.imgPath.uri && this.state.urlFile) {
+    //   item.AnhCMND = this.state.imgPath.fileName;
+    //   await uploadFile(this.state.imgPath.path, '');
+    //   setTimeout(async () => {
+    //     item.AnhCaNhan = this.state.urlName;
+    //     await uploadFile(this.state.urlFile, '');
+    //   }, 3000);
+    // } else {
+    // if (this.state.imgPath.uri) {
+    //   console.log(this.state.imgPath);
+    //   item.AnhCMND = this.state.imgPath.fileName;
+    //   await uploadFile(this.state.imgPath.path, '');
+    // }
+    if (this.state.urlFile) {
+      item.AnhCaNhan = this.state.urlFile;
+      await uploadFile(this.state.urlFile, '');
     }
+    // }
 
     console.log('============item================', JSON.stringify(item));
 
@@ -478,21 +530,29 @@ class AddingCustomer extends React.Component {
   // chosse file
   chooseFile = async () => {
     try {
-      // const res = await DocumentPicker.pick({
+      const currentTime = moment().format('YYYYMMDDHHmmss');
+      const targetPath = `${RNFS.TemporaryDirectoryPath}/${currentTime}.zip`;
+      console.log(targetPath);
+
+      // const result = await DocumentPicker.pickMultiple({
       //   type: [DocumentPicker.types.pdf],
       // });
-      // RNFetchBlob.fs
-      //   .readFile(res.uri, 'base64')
-      //   // files will an array contains filenames
-      //   .then(files => {
-      //     this.setState({
-      //       urlName: res.name,
-      //       urlFile: files,
-      //     });
-      //     console.log(files)
-      //   });
-      // console.log(this.state);
+      // for (const res of result) {
+      //   console.log(
+      //     res.uri,
+      //     res.type, // mime type
+      //     res.name,
+      //     res.size,
+      //   );
+      // const split = res.uri.split('/');
+      // const name = split.pop();
+      // const inbox = split.pop();
+      // const realPath = `${RNFS.TemporaryDirectoryPath}${inbox}/${name}`;
 
+      // }
+      // this.setState({
+      //   urlFile: targetPath,
+      // });
       FilePickerManager.showFilePicker(null, response => {
         console.log('Response = ', response);
 
@@ -501,9 +561,28 @@ class AddingCustomer extends React.Component {
         } else if (response.error) {
           console.log('FilePickerManager Error: ', response.error);
         } else {
+          zip(response.path, targetPath)
+            .then(path => {
+              console.log(`zip completed at ${path}`);
+              Alert.alert(
+                'Hoàn thành',
+                'Zip thành công file ' + response.fileName,
+                [
+                  {
+                    text: 'Ok',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: false},
+              );
+            })
+            .catch(error => {
+              console.log(error);
+            });
           this.setState({
-            urlFile: response.path,
-            urlName: response.fileName,
+            urlFile: targetPath,
+            urlName: this.state.urlName + response.fileName + '; ',
           });
         }
       });
@@ -543,19 +622,6 @@ class AddingCustomer extends React.Component {
         <View style={styles.sectionTitle}>
           <Text style={styles.SectionHeaderStyle}>Thông tin dự án</Text>
         </View>
-
-        {/* <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Loại dự án</Text>
-          <Picker
-                selectedValue={this.state.category}
-                onValueChange={ (value) => {
-                  this.setState({ 
-                    category: value,
-                  });
-                  } } >
-                {categoryItems}
-            </Picker>
-        </View> */}
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>Dự án</Text>
@@ -714,6 +780,9 @@ class AddingCustomer extends React.Component {
   // render customer status
   renderCustomerInfo = () => {
     let imagePath = this.state.imgPath;
+    let projectItems = product.map(i => {
+      return <Picker.Item key={i.name} value={i} label={i.name} />;
+    });
     return (
       <View>
         <View style={styles.sectionTitle}>
@@ -755,7 +824,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Giới tính</Text>
+          <Text style={styles.title}>
+            Giới tính <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <SegmentedControlTab
             values={['Nam', 'Nữ']}
             tabsContainerStyle={styles.segment}
@@ -779,7 +850,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Ngày sinh</Text>
+          <Text style={styles.title}>
+            Ngày sinh <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -790,7 +863,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>CMND</Text>
+          <Text style={styles.title}>
+            CMND <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -802,7 +877,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Ngày cấp</Text>
+          <Text style={styles.title}>
+            Ngày cấp <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -813,7 +890,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Nơi cấp</Text>
+          <Text style={styles.title}>
+            Nơi cấp <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -824,7 +903,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Địa chỉ</Text>
+          <Text style={styles.title}>
+            Địa chỉ <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -837,7 +918,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Tỉnh thành</Text>
+          <Text style={styles.title}>
+            Tỉnh thành <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -848,7 +931,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Quận/Huyện</Text>
+          <Text style={styles.title}>
+            Quận/Huyện <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -859,7 +944,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Email</Text>
+          <Text style={styles.title}>
+            Email <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -869,16 +956,33 @@ class AddingCustomer extends React.Component {
           />
         </View>
 
-        {/* <View style={styles.wrapTitle}>
-      <Text style={styles.title}>Sản phẩm</Text>
-      <Input
-          containerStyle={styles.input}
-          inputStyle={{fontSize: 16}}
-          placeholder="Chưa có thông tin"
-          value={this.state.customerproduct}
-          onChangeText= { text  => this.setState({ customerproduct: text}) } 
-        />
-    </View> */}
+        <View style={styles.wrapTitle}>
+          <Text style={styles.title}>
+            Sản phẩm vay <Text style={styles.isRequired}> (*)</Text>
+          </Text>
+          <Picker
+            selectedValue={this.state.customerproduct}
+            onValueChange={value => {
+              this.setState({
+                customerproduct: value,
+                customerproductInterest: value.value,
+              });
+            }}>
+            {projectItems}
+          </Picker>
+        </View>
+
+        <View style={styles.wrapTitle}>
+          <Text style={styles.title}>
+            Lãi suất <Text style={styles.isRequired}> (*)</Text>
+          </Text>
+          <Input
+            containerStyle={styles.input}
+            inputStyle={{fontSize: 16}}
+            value={this.state.customerproductInterest}
+            disabled={true}
+          />
+        </View>
 
         {/* <View style={styles.wrapTitle}>
           <Text style={styles.title}>Hạn mức</Text>
@@ -892,7 +996,9 @@ class AddingCustomer extends React.Component {
         </View> */}
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Số tiền đề nghị</Text>
+          <Text style={styles.title}>
+            Số tiền đề nghị <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -904,7 +1010,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Thời gian vay</Text>
+          <Text style={styles.title}>
+            Thời gian vay <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -916,7 +1024,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Nghề nghiệp</Text>
+          <Text style={styles.title}>
+            Nghề nghiệp <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -927,7 +1037,9 @@ class AddingCustomer extends React.Component {
         </View>
 
         <View style={styles.wrapTitle}>
-          <Text style={styles.title}>Công ty</Text>
+          <Text style={styles.title}>
+            Công ty <Text style={styles.isRequired}> (*)</Text>
+          </Text>
           <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
@@ -984,7 +1096,7 @@ class AddingCustomer extends React.Component {
           />
         </View>
 
-        <View style={styles.wrapTitle}>
+        {/* <View style={styles.wrapTitle}>
           <Text style={styles.title}>Chọn ảnh</Text>
           <TouchableOpacity onPress={this.chooseImg}>
             <Image
@@ -996,7 +1108,7 @@ class AddingCustomer extends React.Component {
             source={imagePath.uri ? {uri: imagePath.uri} : null}
             style={styles.imageView}
           />
-        </View>
+        </View> */}
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>Chọn file</Text>
