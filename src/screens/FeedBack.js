@@ -32,7 +32,7 @@ class FeedBack extends React.Component {
   };
 
   submitFeedBack = () => {
-    const to = ['nguyencaothang8993@gmail.com']; // string or array of email addresses
+    const to = ['sales_support@fservices.com.vn']; // string or array of email addresses
     email(to, {
       // Optional additional arguments
       cc: [], // string or array of email addresses
@@ -42,20 +42,8 @@ class FeedBack extends React.Component {
     })
       .then(_res => {
         Alert.alert(
-          'Alert Title',
-          'My Alert Msg',
-          [
-            {
-              text: 'Ask me later',
-              onPress: () => console.log('Ask me later pressed'),
-            },
-            {
-              text: 'Cancel',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
+          'Gửi góp ý thành công',
+          [{text: 'OK', onPress: () => console.log('OK Pressed')}],
           {cancelable: false},
         );
       })
@@ -89,8 +77,9 @@ class FeedBack extends React.Component {
           <View style={styles.feedBackView}>
             <TextInput
               style={styles.inputBox}
-              editable={true}
               height={100}
+              multiline={true}
+              numberOfLines={4}
               value={this.state.feedBackString}
               onChangeText={this.handleChangeFeedBack}
             />
