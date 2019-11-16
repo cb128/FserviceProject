@@ -22,6 +22,7 @@ import AddingCustomer from './src/screens/AddingCustomer';
 import ListCustomer from './src/screens/ListCustomer';
 import SelectionScreen from './src/screens/SelectionScreen';
 import ChangePassword from './src/screens/ChangePassword';
+import FeedBack from './src/screens/FeedBack';
 import Profile from './src/screens/Profile';
 import SideMenu from './src/screens/SideMenu';
 
@@ -102,6 +103,17 @@ const AppStack = createStackNavigator(
       screen: ChangePassword,
       navigationOptions: {
         title: 'Đổi Mật Khẩu',
+        headerStyle,
+        headerTintColor: '#000',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      },
+    },
+    FeedBack: {
+      screen: FeedBack,
+      navigationOptions: {
+        title: 'Góp Ý Sản Phẩm',
         headerStyle,
         headerTintColor: '#000',
         headerTitleStyle: {

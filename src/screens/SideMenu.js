@@ -93,6 +93,10 @@ class SideMenu extends React.Component {
     this.props.navigation.navigate('ChangePassword');
   };
 
+  _goToFeedBackScreen = () => {
+    this.props.navigation.navigate('FeedBack');
+  };
+
   _closeMenu = () => {
     this.props.navigation.closeDrawer();
   };
@@ -146,6 +150,18 @@ class SideMenu extends React.Component {
               size={24}
             />
             <Text style={styles.menuText}>Đổi Mật Khẩu</Text>
+          </TouchableOpacity>
+          <Divider style={styles.separator} />
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={this._goToFeedBackScreen}>
+            <Icon
+              containerStyle={styles.typeIcon}
+              name="md-information-circle-outline"
+              type="ionicon"
+              size={24}
+            />
+            <Text style={styles.menuText}>Gửi Góp Ý</Text>
           </TouchableOpacity>
           <Divider style={styles.separator} />
           <TouchableOpacity style={styles.menuItem} onPress={this.showAlert}>
