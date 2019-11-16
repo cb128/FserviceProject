@@ -4,11 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  Linking,
+  Alert,
   Dimensions,
   StyleSheet,
 } from 'react-native';
-import qs from 'qs';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import email from 'react-native-email';
 
 export const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get(
   'window',
@@ -28,64 +29,90 @@ class FeedBack extends React.Component {
       feedBackString: feedBack,
     };
     this.setState(newState);
-    this.props.callback(feedBack); // used to return the value of the password to the caller class, skip this if you are creating this view in the caller class itself
   };
 
-  submitFeedBack = async () => {
-    if (this.state.feedBackString.trim().length > 0) {
-      let url = 'mailto:nguyencaothang8993@gmail.com';
-
-      // Create email link query
-      const query = qs.stringify({
-        subject: 'Góp ý',
-        body: this.state.feedBackString,
+  submitFeedBack = () => {
+    const to = ['nguyencaothang8993@gmail.com']; // string or array of email addresses
+    email(to, {
+      // Optional additional arguments
+      cc: [], // string or array of email addresses
+      bcc: '', // string or array of email addresses
+      subject: 'Góp Ý Ứng Dụng FServices',
+      body: this.state.feedBackString,
+    })
+      .then(_res => {
+        Alert.alert(
+          'Alert Title',
+          'My Alert Msg',
+          [
+            {
+              text: 'Ask me later',
+              onPress: () => console.log('Ask me later pressed'),
+            },
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          {cancelable: false},
+        );
+      })
+      .catch(_err => {
+        Alert.alert(
+          'Error',
+          console.error,
+          [
+            {
+              text: 'Ok',
+              onPress: () => console.log('OK: Email Error Response'),
+            },
+            {
+              text: 'Cancel',
+              onPress: () => console.log('CANCEL: Email Error Response'),
+            },
+          ],
+          {cancelable: true},
+        );
       });
-
-      if (query.length) {
-        url += '?${query}';
-      }
-
-      // check if we can use this link
-      const canOpen = await Linking.canOpenURL(url);
-
-      if (!canOpen) {
-        throw new Error('Provided URL can not be handled');
-      }
-
-      return Linking.openURL(url);
-    }
   };
 
   render() {
     return (
-      <View>
-        <Text style={styles.titleText}>Chào bạn!</Text>
-        <Text style={styles.subText}>Bạn muốn nói với chúng tôi điều gì?</Text>
-        <View style={styles.feedBackView}>
-          <TextInput
-            style={styles.inputBox}
-            placeholder=""
-            editable={true}
-            height={100}
-            value={this.state.feedBackString}
-            onChangeText={this.handleChangeFeedBack}
-          />
-        </View>
-        <Text style={styles.subText}>
-          Chúng tôi sẽ thông báo khi có thay đổi dựa trên góp ý của bạn
-        </Text>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText} onPress={this.handleLogin}>
-            Gửi Góp Ý
+      <KeyboardAwareScrollView style={styles.container}>
+        <View>
+          <Text style={styles.titleText}>Chào bạn!</Text>
+          <Text style={styles.subText}>
+            Bạn muốn nói với chúng tôi điều gì?
           </Text>
-        </TouchableOpacity>
-        ;
-      </View>
+          <View style={styles.feedBackView}>
+            <TextInput
+              style={styles.inputBox}
+              editable={true}
+              height={100}
+              value={this.state.feedBackString}
+              onChangeText={this.handleChangeFeedBack}
+            />
+          </View>
+          <Text style={styles.subText}>
+            Chúng tôi sẽ thông báo khi có thay đổi dựa trên góp ý của bạn
+          </Text>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText} onPress={this.submitFeedBack}>
+              Gửi Góp Ý
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   titleText: {
     marginLeft: 20,
     marginTop: 40,
@@ -122,6 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffb900',
     width: SCREEN_WIDTH - 60,
     marginTop: 30,
+    marginLeft: 30,
     justifyContent: 'center',
     height: 50,
     borderRadius: 5,
