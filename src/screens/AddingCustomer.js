@@ -18,10 +18,10 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
-import FilePickerManager from 'react-native-file-picker';
-import Autocomplete from 'react-native-autocomplete-input';
-import {zip} from 'react-native-zip-archive';
-import RNFS from 'react-native-fs';
+// import FilePickerManager from 'react-native-file-picker';
+// import Autocomplete from 'react-native-autocomplete-input';
+// import {zip} from 'react-native-zip-archive';
+// import RNFS from 'react-native-fs';
 import {getObjectFromArrayById2, getObjectFromArrayById} from '../ulti/index';
 import {
   initCustomerData,
@@ -32,7 +32,7 @@ import {
 } from '../api/ApiHelpers';
 import contractStatus from '../constants/contractStatus';
 import contractChildStatus from '../constants/contractChildStatus';
-import {uploadFile} from '../api/uploadHelper';
+import {uploadFile, uploadMulti} from '../api/uploadHelper';
 import moment from 'moment';
 import product from '../constants/product';
 
@@ -45,9 +45,11 @@ class AddingCustomer extends React.Component {
       projectCode: navigation.getParam('projectCode', ''),
       selectedGenderIndex: 0,
       selectedCategoryIndex: 0,
+      files: [],
       imgPath: {},
-      urlName: '',
+      listChosenFile: '',
       urlFile: '',
+      fileName: '',
       listOriginProject: [],
       userID: '',
 
@@ -86,7 +88,7 @@ class AddingCustomer extends React.Component {
       customernationalId: '',
       customernationalDate: '',
       customernationalPlace: '',
-      customerproduct: '',
+      customerproduct: {},
       customerproductInterest: '',
       customeraddress: '',
       customerprovince: '',
@@ -157,6 +159,7 @@ class AddingCustomer extends React.Component {
   // };
   getInitProject = async () => {
     await getUserID().then(value => {
+      console.log('user id', value);
       this.setState({
         userID: value,
       });
@@ -201,6 +204,7 @@ class AddingCustomer extends React.Component {
   loadCustomer = () => {
     const data = this.state.data;
     if (data) {
+      let selectedProduct = {};
       const note = data.GhiChu ? data.GhiChu.replace(/<br>/g, ' ') : '';
       const dob =
         data.NgaySinh !== null
@@ -211,6 +215,12 @@ class AddingCustomer extends React.Component {
         data.NgayCapCMND !== null
           ? moment(data.NgayCapCMND).format('YYYY-MM-DD')
           : '';
+      if (data.ListSanPham.length > 0) {
+        const p = product.filter(x => x.name === data.ListSanPham[0]);
+        if (p.length > 0) {
+          selectedProduct = p[0];
+        }
+      }
 
       this.setState({
         project: this.state.projectCode,
@@ -226,7 +236,8 @@ class AddingCustomer extends React.Component {
         customernationalId: data.CMND ? data.CMND : '',
         customernationalDate: nationalDate,
         customernationalPlace: data.NoiCap ? data.NoiCap : '',
-        // customerproduct: data.SupplierName ? data.SupplierName : '',
+        customerproduct: selectedProduct,
+        customerproductInterest: data.LaiSuat ? data.LaiSuat : '',
         customeraddress: data.So ? data.So : '',
         customerprovince: data.Tinh ? data.Tinh : '',
         customerdistrict: data.Quan ? data.Quan : '',
@@ -272,6 +283,32 @@ class AddingCustomer extends React.Component {
   });
 
   saveCustomer = async () => {
+    if (
+      this.state.data &&
+      this.state.data.NhanVienTaoID !== this.state.userID
+    ) {
+      Alert.alert(
+        'Đã có lỗi',
+        'Bạn không có quyền thay đổi thông tin khách hàng này',
+        [
+          {
+            text: 'Ok',
+            onPress: () => {
+              this.props.navigation.goBack();
+            },
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+      return;
+    }
+    // if (this.state.files.length > 0) {
+    //   const fileName = moment().format('YYYYMMDDHHmmss');
+    //   // item.AnhCaNhan = this.state.fileName + '.zip';
+    //   console.log(this.state.fileName);
+    //   await uploadMulti(this.state.files, fileName);
+    // }
     let message = 'Vui lòng nhập: ';
     let valid = true;
 
@@ -381,6 +418,8 @@ class AddingCustomer extends React.Component {
       // NhanVienLine: '',
       // ListTenSanPham: 'THE, Hóa Đơn Điện',
       // ListMaSanPham: 'THE, HDD',
+      ListSanPham: [],
+      LaiSuat: this.state.customerproductInterest.replace('%', ''),
       NhanVienChamSocID: this.state.employeeGetContract,
       // AnhMatTruocThe: '',
       DanhXung: this.state.customerpreName,
@@ -404,6 +443,7 @@ class AddingCustomer extends React.Component {
       SoHD: this.state.customercontractNumber,
       NhanVienTaoID: this.state.userID,
     };
+    item.ListSanPham.push(this.state.customerproduct.name);
     // if (this.state.imgPath.uri && this.state.urlFile) {
     //   item.AnhCMND = this.state.imgPath.fileName;
     //   await uploadFile(this.state.imgPath.path, '');
@@ -417,10 +457,6 @@ class AddingCustomer extends React.Component {
     //   item.AnhCMND = this.state.imgPath.fileName;
     //   await uploadFile(this.state.imgPath.path, '');
     // }
-    if (this.state.urlFile) {
-      item.AnhCaNhan = this.state.urlFile;
-      await uploadFile(this.state.urlFile, '');
-    }
     // }
 
     console.log('============item================', JSON.stringify(item));
@@ -530,62 +566,62 @@ class AddingCustomer extends React.Component {
   // chosse file
   chooseFile = async () => {
     try {
-      const currentTime = moment().format('YYYYMMDDHHmmss');
-      const targetPath = `${RNFS.TemporaryDirectoryPath}/${currentTime}.zip`;
-      console.log(targetPath);
-
-      // const result = await DocumentPicker.pickMultiple({
-      //   type: [DocumentPicker.types.pdf],
-      // });
-      // for (const res of result) {
-      //   console.log(
-      //     res.uri,
-      //     res.type, // mime type
-      //     res.name,
-      //     res.size,
-      //   );
-      // const split = res.uri.split('/');
-      // const name = split.pop();
-      // const inbox = split.pop();
-      // const realPath = `${RNFS.TemporaryDirectoryPath}${inbox}/${name}`;
-
-      // }
-      // this.setState({
-      //   urlFile: targetPath,
-      // });
-      FilePickerManager.showFilePicker(null, response => {
-        console.log('Response = ', response);
-
-        if (response.didCancel) {
-          console.log('User cancelled file picker');
-        } else if (response.error) {
-          console.log('FilePickerManager Error: ', response.error);
-        } else {
-          zip(response.path, targetPath)
-            .then(path => {
-              console.log(`zip completed at ${path}`);
-              Alert.alert(
-                'Hoàn thành',
-                'Zip thành công file ' + response.fileName,
-                [
-                  {
-                    text: 'Ok',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                  },
-                ],
-                {cancelable: false},
-              );
-            })
-            .catch(error => {
-              console.log(error);
-            });
-          this.setState({
-            urlFile: targetPath,
-            urlName: this.state.urlName + response.fileName + '; ',
-          });
-        }
+      const result = await DocumentPicker.pickMultiple({
+        type: [DocumentPicker.types.pdf],
       });
+      for (const res of result) {
+        console.log(
+          res.uri,
+          res.type, // mime type
+          res.name,
+          res.size,
+        );
+        const file = {
+          uri: res.uri,
+          type: res.type,
+          name: res.name,
+        };
+
+        this.setState(state => ({
+          files: [...state.files, ...[file]],
+        }));
+        console.log(this.state.files);
+      }
+      // FilePickerManager.showFilePicker(null, response => {
+      //   console.log('Response = ', response);
+
+      //   if (response.didCancel) {
+      //     console.log('User cancelled file picker');
+      //   } else if (response.error) {
+      //     console.log('FilePickerManager Error: ', response.error);
+      //   } else {
+      //     RNFS.copyFile(response.path, targetPath);
+      //     // zip(response.path, targetPath)
+      //     //   .then(path => {
+      //     //     console.log(`zip completed at ${path}`);
+      //     //     Alert.alert(
+      //     //       'Hoàn thành',
+      //     //       'Zip thành công file ' + response.fileName,
+      //     //       [
+      //     //         {
+      //     //           text: 'Ok',
+      //     //           onPress: () => console.log('Cancel Pressed'),
+      //     //           style: 'cancel',
+      //     //         },
+      //     //       ],
+      //     //       {cancelable: false},
+      //     //     );
+      //     //   })
+      //     //   .catch(error => {
+      //     //     console.log(error);
+      //     //   });
+      //     this.setState({
+      //       urlFile: targetPath,
+      //       listChosenFile:
+      //         this.state.listChosenFile + response.fileName + '; ',
+      //     });
+      //   }
+      // });
     } catch (err) {
       throw err;
     }
@@ -1119,7 +1155,7 @@ class AddingCustomer extends React.Component {
               style={{width: 50, height: 50, marginLeft: 20}}
             />
           </TouchableOpacity>
-          <Text>{this.state.urlName}</Text>
+          <Text>{this.state.listChosenFile}</Text>
         </View>
       </View>
     );

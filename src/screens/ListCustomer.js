@@ -35,6 +35,7 @@ class ListCustomer extends React.Component {
       projectCode: navigation.getParam('projectCode', ''),
       projectName: navigation.getParam('projectName', ''),
       allCustomer: navigation.getParam('allCustomer', ''),
+      contractStatus: navigation.getParam('contractStatus', ''),
     };
     this.arrayUser = [];
   }
@@ -83,6 +84,7 @@ class ListCustomer extends React.Component {
       this.state.projectCode,
       this.state.begin,
       this.state.begin + 20,
+      this.state.contractStatus,
     );
     let responseData = await response.json();
     console.log(responseData);

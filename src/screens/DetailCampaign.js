@@ -60,15 +60,16 @@ class DetailCampaign extends React.Component {
         shadowOpacity: 0.5,
         elevation: 3,
       }}
-      onPress={this._goToListCustomer}
+      onPress={() => this._goToListCustomer(item.key)}
     />
   );
 
-  _goToListCustomer = () => {
+  _goToListCustomer = status => {
     this.props.navigation.navigate('ListCustomer', {
       projectCode: this.state.projectCode,
       projectName: this.state.projectName,
       allCustomer: this.state.allCustomer,
+      contractStatus: status,
     });
   };
 
@@ -90,7 +91,7 @@ class DetailCampaign extends React.Component {
           name: e.TenTrangThai,
           icon: 'people',
           badgeValue: e.Tong,
-          key: 1,
+          key: e.TrangThaiID,
         });
       });
       // All Customer

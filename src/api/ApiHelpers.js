@@ -104,7 +104,7 @@ export const getStatusProject = async projectCode => {
   });
 };
 
-export const getListCustomerData = async (projectCode, begin, end) => {
+export const getListCustomerData = async (projectCode, begin, end, status) => {
   let userID;
   await getUserID().then(value => {
     userID = value;
@@ -115,6 +115,7 @@ export const getListCustomerData = async (projectCode, begin, end) => {
   formdata.append('Begin', begin);
   formdata.append('End', end);
   formdata.append('NhanVienTaoID', userID);
+  formdata.append('ListTrangThai', status);
   formdata.append('ListNhomKhachHang', "N'" + projectCode + "'");
 
   console.log(formdata);
