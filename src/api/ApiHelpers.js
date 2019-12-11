@@ -115,9 +115,10 @@ export const getListCustomerData = async (projectCode, begin, end, status) => {
   formdata.append('Begin', begin);
   formdata.append('End', end);
   formdata.append('NhanVienTaoID', userID);
-  formdata.append('ListTrangThai', status);
   formdata.append('ListNhomKhachHang', "N'" + projectCode + "'");
-
+  if (status !== 0) {
+    formdata.append('ListTrangThai', status);
+  }
   console.log(formdata);
   return fetch('http://crm.fservices.com.vn/APIs/APIMobileHandler.ashx', {
     method: 'POST',

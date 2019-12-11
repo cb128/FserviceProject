@@ -35,6 +35,7 @@ import contractChildStatus from '../constants/contractChildStatus';
 import {uploadFile, uploadMulti} from '../api/uploadHelper';
 import moment from 'moment';
 import product from '../constants/product';
+import province from '../constants/province';
 
 class AddingCustomer extends React.Component {
   constructor(props) {
@@ -52,6 +53,8 @@ class AddingCustomer extends React.Component {
       fileName: '',
       listOriginProject: [],
       userID: '',
+      provinces: [],
+      districts: province[0].Quan,
 
       // list init data
       listCategory: [],
@@ -91,8 +94,8 @@ class AddingCustomer extends React.Component {
       customerproduct: {},
       customerproductInterest: '',
       customeraddress: '',
-      customerprovince: '',
-      customerdistrict: '',
+      customerprovince: 0,
+      customerdistrict: 0,
       customercall: '',
       customermeetTime: '',
       customermeetPlace: '',
@@ -222,8 +225,18 @@ class AddingCustomer extends React.Component {
         }
       }
 
+      if (data.Tinh) {
+        const currentProvince = province.filter(x => x.MSTinh === data.Tinh);
+        if (currentProvince.length > 0) {
+          this.setState({
+            provinces: currentProvince[0],
+          });
+        }
+      }
+
       this.setState({
         project: this.state.projectCode,
+        customerproduct: selectedProduct,
 
         customerID: data.SupplierID ? data.SupplierID : '',
         customername: data.SupplierName ? data.SupplierName : '',
@@ -236,7 +249,6 @@ class AddingCustomer extends React.Component {
         customernationalId: data.CMND ? data.CMND : '',
         customernationalDate: nationalDate,
         customernationalPlace: data.NoiCap ? data.NoiCap : '',
-        customerproduct: selectedProduct,
         customerproductInterest: data.LaiSuat ? data.LaiSuat : '',
         customeraddress: data.So ? data.So : '',
         customerprovince: data.Tinh ? data.Tinh : '',
@@ -283,6 +295,7 @@ class AddingCustomer extends React.Component {
   });
 
   saveCustomer = async () => {
+    console.log(this.state);
     if (
       this.state.data &&
       this.state.data.NhanVienTaoID !== this.state.userID
@@ -336,14 +349,14 @@ class AddingCustomer extends React.Component {
       message += 'Ngày sinh, ';
       valid = false;
     }
-    if (this.state.customerprovince === '') {
-      message += 'Tỉnh/Thành, ';
-      valid = false;
-    }
-    if (this.state.customerdistrict === '') {
-      message += 'Quận/Huyện, ';
-      valid = false;
-    }
+    // if (this.state.customerprovince === '') {
+    //   message += 'Tỉnh/Thành, ';
+    //   valid = false;
+    // }
+    // if (this.state.customerdistrict === '') {
+    //   message += 'Quận/Huyện, ';
+    //   valid = false;
+    // }
     if (this.state.customeraddress === '') {
       message += 'Địa chỉ liên hệ, ';
       valid = false;
@@ -637,6 +650,23 @@ class AddingCustomer extends React.Component {
     return newData;
   };
 
+  renderDistrict = () => {
+    let items = this.state.districts.map(i => {
+      return <Picker.Item key={i.MSQuan} value={i.MSQuan} label={i.TenQuan} />;
+    });
+    return (
+      <Picker
+        selectedValue={this.state.customerdistrict}
+        onValueChange={value => {
+          this.setState({
+            customerdistrict: value,
+          });
+        }}>
+        {items}
+      </Picker>
+    );
+  };
+
   // render project
   renderProject = () => {
     // let categoryItems = this.state.listCategory.map( (i) => {
@@ -819,6 +849,9 @@ class AddingCustomer extends React.Component {
     let projectItems = product.map(i => {
       return <Picker.Item key={i.name} value={i} label={i.name} />;
     });
+    let provinceItems = province.map(i => {
+      return <Picker.Item key={i.MSTinh} value={i} label={i.TenTinh} />;
+    });
     return (
       <View>
         <View style={styles.sectionTitle}>
@@ -957,26 +990,31 @@ class AddingCustomer extends React.Component {
           <Text style={styles.title}>
             Tỉnh thành <Text style={styles.isRequired}> (*)</Text>
           </Text>
-          <Input
+          {/* <Input
             containerStyle={styles.input}
             inputStyle={{fontSize: 16}}
             placeholder="Chưa có thông tin"
             value={this.state.customerprovince}
-            onChangeText={text => this.setState({customerprovince: text})}
-          />
+            onChangeText={text => this.setState({customerprovince: text})} */}
+
+          <Picker
+            selectedValue={this.state.provinces}
+            onValueChange={value => {
+              this.setState({
+                provinces: value,
+                customerprovince: value.MSTinh,
+                districts: value.Quan,
+              });
+            }}>
+            {provinceItems}
+          </Picker>
         </View>
 
         <View style={styles.wrapTitle}>
           <Text style={styles.title}>
             Quận/Huyện <Text style={styles.isRequired}> (*)</Text>
           </Text>
-          <Input
-            containerStyle={styles.input}
-            inputStyle={{fontSize: 16}}
-            placeholder="Chưa có thông tin"
-            value={this.state.customerdistrict}
-            onChangeText={text => this.setState({customerdistrict: text})}
-          />
+          {this.renderDistrict()}
         </View>
 
         <View style={styles.wrapTitle}>
