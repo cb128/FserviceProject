@@ -18,7 +18,7 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
 import DocumentPicker from 'react-native-document-picker';
-// import FilePickerManager from 'react-native-file-picker';
+import FilePickerManager from 'react-native-file-picker';
 // import Autocomplete from 'react-native-autocomplete-input';
 // import {zip} from 'react-native-zip-archive';
 // import RNFS from 'react-native-fs';
@@ -32,7 +32,7 @@ import {
 } from '../api/ApiHelpers';
 import contractStatus from '../constants/contractStatus';
 import contractChildStatus from '../constants/contractChildStatus';
-import {uploadFile, uploadMulti} from '../api/uploadHelper';
+import {uploadFile} from '../api/uploadHelper';
 import moment from 'moment';
 import product from '../constants/product';
 import province from '../constants/province';
@@ -226,10 +226,13 @@ class AddingCustomer extends React.Component {
       }
 
       if (data.Tinh) {
-        const currentProvince = province.filter(x => x.MSTinh === data.Tinh);
+        const currentProvince = province.filter(x => x.TenTinh === data.Tinh);
         if (currentProvince.length > 0) {
           this.setState({
+            customerprovince: data.Tinh,
+            customerdistrict: data.Quan ? data.Quan : '',
             provinces: currentProvince[0],
+            districts: currentProvince[0].Quan,
           });
         }
       }
@@ -251,8 +254,8 @@ class AddingCustomer extends React.Component {
         customernationalPlace: data.NoiCap ? data.NoiCap : '',
         customerproductInterest: data.LaiSuat ? data.LaiSuat : '',
         customeraddress: data.So ? data.So : '',
-        customerprovince: data.Tinh ? data.Tinh : '',
-        customerdistrict: data.Quan ? data.Quan : '',
+        // customerprovince: data.Tinh ? data.Tinh : '',
+        // customerdistrict: data.Quan ? data.Quan : '',
         // customercall: data.SupplierName ? data.SupplierName : '',
         // customermeetTime: data.SupplierName ? data.SupplierName : '',
         // customermeetPlace: data.SupplierName ? data.SupplierName : '',
@@ -341,7 +344,10 @@ class AddingCustomer extends React.Component {
       message += 'Nơi cấp CMND, ';
       valid = false;
     }
-    if (this.state.customerphone === '') {
+    if (
+      this.state.customerphone === '' ||
+      this.state.customerphone.length !== 10
+    ) {
       message += 'Số điện thoại, ';
       valid = false;
     }
@@ -361,7 +367,10 @@ class AddingCustomer extends React.Component {
       message += 'Địa chỉ liên hệ, ';
       valid = false;
     }
-    if (this.state.customeremail === '') {
+    if (
+      this.state.customeremail === '' ||
+      this.state.customeremail.indexOf('@') < 0
+    ) {
       message += 'Email, ';
       valid = false;
     }
@@ -465,11 +474,11 @@ class AddingCustomer extends React.Component {
     //     await uploadFile(this.state.urlFile, '');
     //   }, 3000);
     // } else {
-    // if (this.state.imgPath.uri) {
-    //   console.log(this.state.imgPath);
-    //   item.AnhCMND = this.state.imgPath.fileName;
-    //   await uploadFile(this.state.imgPath.path, '');
-    // }
+    if (this.state.imgPath.uri) {
+      console.log(this.state.imgPath);
+      item.AnhCMND = this.state.imgPath.fileName;
+      await uploadFile(this.state.imgPath.path, '');
+    }
     // }
 
     console.log('============item================', JSON.stringify(item));
@@ -640,6 +649,28 @@ class AddingCustomer extends React.Component {
     }
   };
 
+  // chosse file
+  chooseFile = async () => {
+    try {
+      FilePickerManager.showFilePicker(null, response => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          console.log('User cancelled file picker');
+        } else if (response.error) {
+          console.log('FilePickerManager Error: ', response.error);
+        } else {
+          this.setState({
+            urlFile: response.path,
+            urlName: response.fileName,
+          });
+        }
+      });
+    } catch (err) {
+      throw err;
+    }
+  };
+
   _filterData = query => {
     const newData = this.state.listEmployees.filter(function(item) {
       //applying filter for the inserted text in search bar
@@ -652,7 +683,7 @@ class AddingCustomer extends React.Component {
 
   renderDistrict = () => {
     let items = this.state.districts.map(i => {
-      return <Picker.Item key={i.MSQuan} value={i.MSQuan} label={i.TenQuan} />;
+      return <Picker.Item key={i.MSQuan} value={i.TenQuan} label={i.TenQuan} />;
     });
     return (
       <Picker
@@ -1002,7 +1033,7 @@ class AddingCustomer extends React.Component {
             onValueChange={value => {
               this.setState({
                 provinces: value,
-                customerprovince: value.MSTinh,
+                customerprovince: value.TenTinh,
                 districts: value.Quan,
               });
             }}>
