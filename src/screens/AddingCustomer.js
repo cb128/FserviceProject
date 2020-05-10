@@ -13,7 +13,6 @@ import {
   Alert,
 } from 'react-native';
 import {Input, Image} from 'react-native-elements';
-import ImagePicker from 'react-native-image-picker';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import documentImage from '../assets/images/ico_document.png';
 import cameraImage from '../assets/images/ico_camera.png';
@@ -52,7 +51,7 @@ class AddingCustomer extends React.Component {
       urlFile: '',
       fileName: '',
       listOriginProject: [],
-      userID: '',
+      userID: 0,
       provinces: [],
       districts: province[0].Quan,
 
@@ -218,7 +217,7 @@ class AddingCustomer extends React.Component {
         data.NgayCapCMND !== null
           ? moment(data.NgayCapCMND).format('YYYY-MM-DD')
           : '';
-      if (data.ListSanPham.length > 0) {
+      if (data.ListSanPham && data.ListSanPham.length > 0) {
         const p = product.filter(x => x.name === data.ListSanPham[0]);
         if (p.length > 0) {
           selectedProduct = p[0];
@@ -252,7 +251,7 @@ class AddingCustomer extends React.Component {
         customernationalId: data.CMND ? data.CMND : '',
         customernationalDate: nationalDate,
         customernationalPlace: data.NoiCap ? data.NoiCap : '',
-        customerproductInterest: data.LaiSuat ? data.LaiSuat : '',
+        customerproductInterest: data.LaiSuat ? data.LaiSuat.toString() : '',
         customeraddress: data.So ? data.So : '',
         // customerprovince: data.Tinh ? data.Tinh : '',
         // customerdistrict: data.Quan ? data.Quan : '',
@@ -260,8 +259,8 @@ class AddingCustomer extends React.Component {
         // customermeetTime: data.SupplierName ? data.SupplierName : '',
         // customermeetPlace: data.SupplierName ? data.SupplierName : '',
         // customercashLimit: data.HanMucVay ? data.HanMucVay : '',
-        customerloan: data.SoTienDeNghi ? data.SoTienDeNghi : '',
-        customerloanTime: data.ThoiGianVay ? data.ThoiGianVay : '',
+        customerloan: data.SoTienDeNghi ? data.SoTienDeNghi.toString() : '',
+        customerloanTime: data.ThoiGianVay ? data.ThoiGianVay.toString() : '',
         customersalary: data.ThuNhapHienTai ? data.ThuNhapHienTai + '' : '',
         // customersupplier: data.PTTT ? data.PTTT : '',
         // customerpartner: data.SupplierName ? data.SupplierName : '',
@@ -301,7 +300,7 @@ class AddingCustomer extends React.Component {
     console.log(this.state);
     if (
       this.state.data &&
-      this.state.data.NhanVienTaoID !== this.state.userID
+      this.state.data.NhanVienTaoID.toString() !== this.state.userID.toString()
     ) {
       Alert.alert(
         'Đã có lỗi',
@@ -554,36 +553,6 @@ class AddingCustomer extends React.Component {
     });
   };
 
-  // Get image from gallery
-  chooseImg = () => {
-    var options = {
-      title: 'Select Image',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        // let source = response;
-        // You can also display the image using data:
-        let source = {
-          uri: 'data:image/jpeg;base64,' + response.data,
-          path: response.path,
-          fileName: response.fileName,
-        };
-        this.setState({
-          imgPath: source,
-        });
-      }
-    });
-  };
 
   // chosse file
   chooseFile = async () => {
